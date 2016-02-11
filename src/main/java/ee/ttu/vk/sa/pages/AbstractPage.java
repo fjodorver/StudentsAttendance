@@ -16,6 +16,7 @@ public class AbstractPage extends WebPage {
         navbar = new Navbar("header");
         navbar.setBrandName(Model.of("Hello"));
         addMenuItem(StudentsPage.class, "Students", Navbar.ComponentPosition.LEFT);
+        addMenuItem(SubjectsPage.class, "Subjects", Navbar.ComponentPosition.LEFT);
         add(navbar);
     }
 
