@@ -12,6 +12,8 @@ import java.util.List;
 /**
  * Created by fjodor on 6.02.16.
  */
+
+
 public class StudentsPage extends AbstractPage implements IAction<Student> {
 
     @SpringBean
