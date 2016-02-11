@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @Transactional
 public class GroupServiceImpl implements GroupService {
+
     @Inject
     private GroupRepository groupRepository;
 
