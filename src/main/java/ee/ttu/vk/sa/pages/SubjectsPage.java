@@ -17,7 +17,7 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
     private FileUploadPanel<Subject> panel;
 
     public SubjectsPage(){
-        panel = new FileUploadPanel<>("panel", new XlsParser(), this);
+        panel = new FileUploadPanel<>("panel", new XlsParser(), this , ".xls");
         add(panel);
     }
 
