@@ -2,6 +2,8 @@ package ee.ttu.vk.sa.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -15,6 +17,11 @@ public class Subject implements Serializable {
     private String lect;
     private String code;
     private String name;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "subject_group", joinColumns = {
+            @JoinColumn(name = "group_name") },
+            inverseJoinColumns = { @JoinColumn(name = "subject_code") })
+    private List<Group> groups;
 
     public Long getId() {
         return id;
@@ -64,5 +71,14 @@ public class Subject implements Serializable {
     @Override
     public int hashCode() {
         return code.hashCode();
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public Subject setGroups(List<Group> groups) {
+        this.groups = groups;
+        return this;
     }
 }

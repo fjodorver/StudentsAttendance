@@ -14,6 +14,7 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
 
     @SpringBean
     private SubjectService subjectService;
+
     private FileUploadPanel<Subject> panel;
 
     public SubjectsPage(){
@@ -24,5 +25,6 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
     @Override
     public void save(List<Subject> objects) {
         subjectService.saveSubjects(objects);
+
     }
 }
