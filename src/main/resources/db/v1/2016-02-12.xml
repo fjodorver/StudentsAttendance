@@ -1,0 +1,58 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="created table subject_group" author="vadim">
+        <createTable tableName="subject_group">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subject_code" type="char(7)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_name" type="char(6)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="created table attendance" author="vadim">
+        <createTable tableName="attendance">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="student_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="arrival" type="bool">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="added foreign key fk_subject_group_subject" author="vadim">
+        <addForeignKeyConstraint baseTableName="subject_group" baseColumnNames="subject_code" constraintName="fk_subject_group_subject"
+                                 referencedTableName="subject"
+                                 referencedColumnNames="code"/>
+    </changeSet>
+    <changeSet id="added foreign key fk_subject_group_group" author="vadim">
+        <addForeignKeyConstraint baseTableName="subject_group" baseColumnNames="group_name" constraintName="fk_subject_group_group"
+                                 referencedTableName="group"
+                                 referencedColumnNames="name"/>
+    </changeSet>
+    <changeSet id="added foreign key fk_attendance_student" author="vadim">
+        <addForeignKeyConstraint baseTableName="attendance" baseColumnNames="student_id" constraintName="fk_attendance_student"
+                                 referencedTableName="student"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="added foreign key fk_attendance_subject" author="vadim">
+        <addForeignKeyConstraint baseTableName="attendance" baseColumnNames="subject_id" constraintName="fk_attendance_subject"
+                                 referencedTableName="subject"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
