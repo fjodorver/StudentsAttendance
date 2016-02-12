@@ -20,21 +20,20 @@ public class SubjectServiceImpl implements SubjectService {
     SubjectRepository subjectRepository;
 
     @Inject
-    private GroupRepository groupRepository;
+    GroupRepository groupRepository;
 
     @Override
     public List<Subject> saveSubjects(List<Subject> subjects) {
-//        for (Subject subject : subjects) {
-//            for (Group group : subject.getGroups()) {
-//                Group temp = groupRepository.findByName(group.getName());
-//                if(temp != null && temp.getId() != group.getId())
-//                    group.setId(temp.getId());
-//            }
-//            Subject tempSubject = subjectRepository.findByCode(subject.getCode());
-//            if(tempSubject != null)
-//                subject.setId(tempSubject.getId());
-//            subjectRepository.saveAndFlush(subject);
-//        }
+        for (Subject subject : subjects) {
+            for (Group group : subject.getGroups()) {
+                Group tmpGroup = groupRepository.findByName(group.getName());
+                if(tmpGroup != null)
+                    group.setId(tmpGroup.getId());
+            }
+            Subject tmpSubject = subjectRepository.findByCode(subject.getCode());
+            if(tmpSubject != null)
+                subject.setId(tmpSubject.getId());
+        }
         return subjectRepository.save(subjects);
     }
 }
