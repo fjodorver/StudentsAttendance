@@ -24,14 +24,17 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> saveSubjects(List<Subject> subjects) {
-        for(Subject subject : subjects){
-            List<Group> groups = groupRepository.findAllBySubjects(subject.getGroups());
-            if(groups != null)
-                subject.setGroups(groups);
-
-            if(!subject.equals(subjectRepository.findByCode(subject.getCode())))
-                subjectRepository.save(subject);
-        }
-        return subjectRepository.findAll();
+//        for (Subject subject : subjects) {
+//            for (Group group : subject.getGroups()) {
+//                Group temp = groupRepository.findByName(group.getName());
+//                if(temp != null && temp.getId() != group.getId())
+//                    group.setId(temp.getId());
+//            }
+//            Subject tempSubject = subjectRepository.findByCode(subject.getCode());
+//            if(tempSubject != null)
+//                subject.setId(tempSubject.getId());
+//            subjectRepository.saveAndFlush(subject);
+//        }
+        return subjectRepository.save(subjects);
     }
 }

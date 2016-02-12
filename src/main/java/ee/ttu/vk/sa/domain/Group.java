@@ -3,7 +3,9 @@ package ee.ttu.vk.sa.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "group")
@@ -14,11 +16,9 @@ public class Group implements Serializable {
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="group_id_seq")
     private Long id;
     private String name;
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
-    private List<Subject> subjects;
 
-    @OneToMany
-    private List<Student> students;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
+    private Set<Subject> subjects = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -39,17 +39,26 @@ public class Group implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Group obj2 = (Group) obj;
-        return this.name.equals(obj2.name);
+        Group group = (Group) o;
+
+        return name != null ? name.equals(group.name) : group.name == null;
+
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return name != null ? name.hashCode() : 0;
     }
 
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
+    }
 }

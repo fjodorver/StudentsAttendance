@@ -1,5 +1,6 @@
 package ee.ttu.vk.sa.utils;
 
+import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -16,12 +17,12 @@ import java.util.*;
 
 public class XlsParser implements IParser<Subject>, Serializable {
 
-    private List<Subject> subjects;
-    private List<Group> groups;
+    private Set<Subject> subjects;
+    private Set<Group> groups;
 
     public XlsParser(){
-        groups = new ArrayList<>();
-        subjects = new ArrayList<>();
+        groups = new HashSet<>();
+        subjects = new HashSet<>();
     }
 
     @Override
@@ -38,9 +39,6 @@ public class XlsParser implements IParser<Subject>, Serializable {
                         Cell cell = cellIterator.next();
                         int columnIndex = cell.getColumnIndex();
                         switch (columnIndex) {
-                            case 1:
-                                subject.setLect((String) getCellValue(cell));
-                                break;
                             case 2:
                                 subject.setCode((String) getCellValue(cell));
                                 break;
@@ -52,8 +50,11 @@ public class XlsParser implements IParser<Subject>, Serializable {
                                 break;
                         }
                     }
-                    groups.add(group);
-                    subjects.add(subject.setGroups(groups));
+                    if(group.getName().length() <= 7)
+                        groups.add(group);
+                    subject.setGroups(groups);
+                    subjects.add(subject
+                    );
                 }
             }
 
@@ -64,7 +65,7 @@ public class XlsParser implements IParser<Subject>, Serializable {
 
     @Override
     public List<Subject> getElements() {
-        return subjects;
+        return Lists.newArrayList(subjects);
     }
 
     @Override

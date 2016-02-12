@@ -61,4 +61,21 @@
                                  referencedTableName="subject"
                                  referencedColumnNames="id"/>
     </changeSet>
+    <changeSet id="changed foreign keys for subject and subject_group" author="Fjodor">
+        <dropForeignKeyConstraint baseTableName="subject_group" constraintName="fk_subject_group_subject"/>
+        <dropForeignKeyConstraint baseTableName="subject_group" constraintName="fk_subject_group_group"/>
+        <modifyDataType tableName="subject_group" columnName="subject_code" newDataType="int"/>
+        <modifyDataType tableName="subject_group" columnName="group_name" newDataType="int"/>
+        <renameColumn tableName="subject_group" oldColumnName="subject_code" newColumnName="subject_id"/>
+        <renameColumn tableName="subject_group" oldColumnName="group_name" newColumnName="group_id"/>
+        <addForeignKeyConstraint baseTableName="subject_group" baseColumnNames="subject_id" constraintName="fk_subject_group_subject"
+                                 referencedTableName="subject"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="subject_group" baseColumnNames="group_id" constraintName="fk_subject_group_group"
+                                 referencedTableName="group"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="dropped column lect in Subject" author="Fjodor">
+        <dropColumn tableName="subject" columnName="lect"/>
+    </changeSet>
 </databaseChangeLog>
