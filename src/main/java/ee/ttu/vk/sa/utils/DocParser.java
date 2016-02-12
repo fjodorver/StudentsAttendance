@@ -21,6 +21,7 @@ public class DocParser implements IParser<Student>, Serializable {
     public DocParser() {
         students = new ArrayList<>();
     }
+    @Override
     public void parse(InputStream io){
         try(POIFSFileSystem fileSystem = new POIFSFileSystem(io)) {
             HWPFDocument document = new HWPFDocument(fileSystem);
@@ -48,5 +49,10 @@ public class DocParser implements IParser<Student>, Serializable {
     @Override
     public List<Student> getElements() {
         return students;
+    }
+
+    @Override
+    public String getExtension() {
+        return ".doc";
     }
 }

@@ -14,15 +14,17 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
 
     @SpringBean
     private SubjectService subjectService;
+
     private FileUploadPanel<Subject> panel;
 
     public SubjectsPage(){
-        panel = new FileUploadPanel<>("panel", new XlsParser(), this , ".xls");
+        panel = new FileUploadPanel<>("panel", new XlsParser(), this);
         add(panel);
     }
 
     @Override
     public void save(List<Subject> objects) {
         subjectService.saveSubjects(objects);
+
     }
 }

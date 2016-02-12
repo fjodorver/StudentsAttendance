@@ -9,4 +9,5 @@ import java.util.List;
 public interface IParser<T> {
     void parse(InputStream io);
     List<T> getElements();
+    String getExtension();
 }

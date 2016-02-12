@@ -13,14 +13,14 @@ import java.io.IOException;
 
 public class FileUploadPanel<T> extends Panel {
 
-    public FileUploadPanel(String id, IParser<T> parser, IAction<T> action, String extension) {
+    public FileUploadPanel(String id, IParser<T> parser, IAction<T> action) {
         super(id);
         BootstrapForm<?> form = new BootstrapForm<Void>("form");
         FileUploadField fileUploadField = new FileUploadField("fileUploadField"){
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
-                tag.put("accept", extension);
+                tag.put("accept", parser.getExtension());
 
             }
         };

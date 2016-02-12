@@ -35,6 +35,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="added column 'date' to attendance" author="vadim">
+        <addColumn tableName="attendance">
+            <column name="date" type="date"/>
+        </addColumn>
+    </changeSet>
+
     <changeSet id="added foreign key fk_subject_group_subject" author="vadim">
         <addForeignKeyConstraint baseTableName="subject_group" baseColumnNames="subject_code" constraintName="fk_subject_group_subject"
                                  referencedTableName="subject"
