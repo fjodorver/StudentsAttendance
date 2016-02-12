@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.utils;
 
 import ee.ttu.vk.sa.domain.Subject;
+import ee.ttu.vk.sa.domain.SubjectGroup;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -29,6 +30,7 @@ public class XlsParser implements IParser<Subject>, Serializable {
             for (Row row : sheet) {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 Subject subject = new Subject();
+                SubjectGroup subjectGroup = new SubjectGroup();
                 if (row.getRowNum() > 10) {
                     while (cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
@@ -57,6 +59,11 @@ public class XlsParser implements IParser<Subject>, Serializable {
     @Override
     public List<Subject> getElements() {
         return subjects;
+    }
+
+    @Override
+    public String getExtension() {
+        return ".xls";
     }
 
     private  Object getCellValue(Cell cell) {
