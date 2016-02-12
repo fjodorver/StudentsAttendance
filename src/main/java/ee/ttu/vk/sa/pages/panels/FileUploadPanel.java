@@ -4,6 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import ee.ttu.vk.sa.utils.IParser;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -12,10 +13,17 @@ import java.io.IOException;
 
 public class FileUploadPanel<T> extends Panel {
 
-    public FileUploadPanel(String id, IParser<T> parser, IAction<T> action) {
+    public FileUploadPanel(String id, IParser<T> parser, IAction<T> action, String extension) {
         super(id);
         BootstrapForm<?> form = new BootstrapForm<Void>("form");
-        FileUploadField fileUploadField = new FileUploadField("fileUploadField");
+        FileUploadField fileUploadField = new FileUploadField("fileUploadField"){
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.put("accept", extension);
+
+            }
+        };
         form.add(fileUploadField);
         form.add(new AjaxSubmitLink("uploadButton", form) {
             @Override

@@ -22,7 +22,7 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
     private FileUploadPanel<Student> panel;
 
     public StudentsPage() {
-        panel = new FileUploadPanel<>("panel", new DocParser(), this);
+        panel = new FileUploadPanel<>("panel", new DocParser(), this, ".doc");
         add(panel);
     }
 
