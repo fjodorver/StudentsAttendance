@@ -48,6 +48,9 @@ public class XlsParser implements IParser<Subject>, Serializable {
                             case 4:
                                 group.setName((String) getCellValue(cell));
                                 break;
+                            case 13:
+                                group.setLanguage((String) getCellValue(cell));
+                                break;
                         }
                     }
 
