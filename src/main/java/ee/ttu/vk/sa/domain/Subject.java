@@ -16,15 +16,14 @@ public class Subject implements Serializable {
     @SequenceGenerator(name="subject_id_seq",sequenceName="subject_id_seq", allocationSize=1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="subject_id_seq")
     private Long id;
-
-
     private String code;
-
     private String name;
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Teacher teacher;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "subject_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups = new HashSet<>();
+
 
     public Long getId() {
         return id;
@@ -72,5 +71,14 @@ public class Subject implements Serializable {
     @Override
     public int hashCode() {
         return code != null ? code.hashCode() : 0;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public Subject setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+        return this;
     }
 }

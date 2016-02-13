@@ -3,8 +3,10 @@ package ee.ttu.vk.sa.service.impl;
 
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
+import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.SubjectRepository;
+import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.SubjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,9 @@ public class SubjectServiceImpl implements SubjectService {
     @Inject
     GroupRepository groupRepository;
 
+    @Inject
+    private TeacherRepository teacherRepository;
+
     @Override
     public List<Subject> saveSubjects(List<Subject> subjects) {
         for (Subject subject : subjects) {
@@ -31,6 +36,8 @@ public class SubjectServiceImpl implements SubjectService {
                     group.setId(tmpGroup.getId());
             }
             Subject tmpSubject = subjectRepository.findByCode(subject.getCode());
+            Teacher teacher = teacherRepository.findByEmail(subject.getTeacher().getEmail());
+            subject.setTeacher(teacher);
             if(tmpSubject != null)
                 subject.setId(tmpSubject.getId());
         }
