@@ -19,4 +19,9 @@
         <addUniqueConstraint columnNames="email" tableName="teacher"/>
         <addNotNullConstraint columnName="password" tableName="teacher"/>
     </changeSet>
+    <changeSet author="vadim" id="add role to teacher">
+        <addColumn tableName="teacher">
+            <column name="role" type="char(10)" defaultValue="TEACHER"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

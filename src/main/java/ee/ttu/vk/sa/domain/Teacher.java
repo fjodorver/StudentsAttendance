@@ -2,6 +2,8 @@ package ee.ttu.vk.sa.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "teacher")
@@ -11,6 +13,11 @@ public class Teacher implements Serializable{
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="teacher_id_seq")
     private Long id;
     private String name;
+    private String email;
+    private String password;
+    private String role;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Subject> subjects = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -27,6 +34,42 @@ public class Teacher implements Serializable{
 
     public Teacher setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Teacher setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Teacher setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Teacher setRole(String role) {
+        this.role = role;
+        return this;
+    }
+
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public Teacher setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
         return this;
     }
 }
