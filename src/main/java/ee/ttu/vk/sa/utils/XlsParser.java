@@ -20,14 +20,14 @@ public class XlsParser implements IParser<Subject>, Serializable {
     private Set<Subject> subjects;
     private Set<Group> groups;
 
-    public XlsParser(){
+    public XlsParser() {
         groups = new HashSet<>();
         subjects = new HashSet<>();
     }
 
     @Override
     public void parse(InputStream io) {
-        try(POIFSFileSystem fileSystem = new POIFSFileSystem(io)){
+        try (POIFSFileSystem fileSystem = new POIFSFileSystem(io)) {
             HSSFWorkbook workbook = new HSSFWorkbook(fileSystem);
             HSSFSheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
@@ -50,11 +50,20 @@ public class XlsParser implements IParser<Subject>, Serializable {
                                 break;
                         }
                     }
-                    if(group.getName().length() <= 7)
+
+                    Subject tmpSubject = subjects.stream().filter(x -> x.getCode().equals(subject.getCode())).findFirst().orElse(null);
+                    if (tmpSubject != null) {
                         groups.add(group);
-                    subject.setGroups(groups);
-                    subjects.add(subject
-                    );
+                    }
+                    else{
+                        if(groups.size() > 0){
+                            subjects.iterator().next().setGroups(groups);
+                            groups = new HashSet<>();
+                        }
+                        groups.add(group);
+                        subject.setGroups(groups);
+                    }
+                    subjects.add(subject);
                 }
             }
 
@@ -73,7 +82,7 @@ public class XlsParser implements IParser<Subject>, Serializable {
         return ".xls";
     }
 
-    private  Object getCellValue(Cell cell) {
+    private Object getCellValue(Cell cell) {
         switch (cell.getCellType()) {
             case Cell.CELL_TYPE_STRING:
                 return cell.getStringCellValue();
