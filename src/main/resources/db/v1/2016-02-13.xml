@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="added column 'language' to group and 'email' and 'pass' to teacher" author="vadim">
+        <addColumn tableName="group">
+            <column name="language" type="char(10)"/>
+        </addColumn>
+        <addColumn tableName="teacher">
+            <column name="email" type="varchar(30)"/>
+        </addColumn>
+        <addColumn tableName="teacher">
+            <column name="password" type="varchar(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vadim" id="addNotNull and unique constraint to teacher email and pass">
+        <addNotNullConstraint columnName="email" tableName="teacher"/>
+        <addUniqueConstraint columnNames="email" tableName="teacher"/>
+        <addNotNullConstraint columnName="password" tableName="teacher"/>
+    </changeSet>
+</databaseChangeLog>

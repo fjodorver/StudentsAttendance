@@ -16,6 +16,7 @@ public class Group implements Serializable {
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="group_id_seq")
     private Long id;
     private String name;
+    private String language;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
     private Set<Subject> subjects = new HashSet<>();
@@ -60,5 +61,14 @@ public class Group implements Serializable {
 
     public void setSubjects(Set<Subject> subjects) {
         this.subjects = subjects;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public Group setLanguage(String language) {
+        this.language = language;
+        return this;
     }
 }
