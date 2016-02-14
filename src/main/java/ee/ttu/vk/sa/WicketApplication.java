@@ -1,8 +1,8 @@
 package ee.ttu.vk.sa;
 
 import de.agilecoders.wicket.core.Bootstrap;
+import ee.ttu.vk.sa.pages.DashboardPage;
 import ee.ttu.vk.sa.pages.LoginPage;
-import ee.ttu.vk.sa.pages.StudentsPage;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
@@ -13,7 +13,7 @@ public class WicketApplication extends AuthenticatedWebApplication
 	@Override
 	public Class<? extends WebPage> getHomePage()
 	{
-		return StudentsPage.class;
+		return DashboardPage.class;
 	}
 
 	@Override

@@ -19,6 +19,8 @@ public class AbstractPage extends WebPage {
         navbar.setBrandName(Model.of("Hello"));
             addMenuItem(LoginPage.class, "Login", Navbar.ComponentPosition.LEFT, !CustomAuthenticatedWebSession.get().isSignedIn());
             addMenuItem(LogOut.class, "Logout", Navbar.ComponentPosition.RIGHT, CustomAuthenticatedWebSession.get().isSignedIn());
+            addMenuItem(DashboardPage.class, "Dashboard", Navbar.ComponentPosition.LEFT, true);
+            addMenuItem(AttendancePage.class, "Attendance", Navbar.ComponentPosition.LEFT, CustomAuthenticatedWebSession.getSession().getRoles().hasRole(Roles.USER));
             addMenuItem(StudentsPage.class, "Students", Navbar.ComponentPosition.LEFT, CustomAuthenticatedWebSession.getSession().getRoles().hasRole(Roles.ADMIN));
             addMenuItem(SubjectsPage.class, "Subjects", Navbar.ComponentPosition.LEFT, CustomAuthenticatedWebSession.getSession().getRoles().hasRole(Roles.ADMIN));
         add(navbar);

@@ -6,7 +6,6 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.inject.Inject;
 
@@ -39,12 +38,8 @@ public class CustomAuthenticatedWebSession extends AuthenticatedWebSession {
     @Override
     public Roles getRoles() {
         Roles roles = new Roles();
-        if(isSignedIn()){
-            if(teacher.getEmail().equals("admin@admin.com"))
-                roles.add(Roles.ADMIN);
-            roles.add("TEACHER");
-        }
-
+        if(teacher != null)
+            roles.add(teacher.getRole());
         return roles;
     }
 

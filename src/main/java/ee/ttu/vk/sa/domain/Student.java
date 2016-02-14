@@ -66,6 +66,10 @@ public class Student implements Serializable {
         return this;
     }
 
+    public String getFullname(){
+        return String.format("%1$s %2$s", firstname, lastname);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

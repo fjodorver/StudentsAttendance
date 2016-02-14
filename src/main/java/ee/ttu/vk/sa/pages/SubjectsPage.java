@@ -28,6 +28,5 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
     @Override
     public void save(List<Subject> objects) {
         subjectService.saveSubjects(objects);
-
     }
 }

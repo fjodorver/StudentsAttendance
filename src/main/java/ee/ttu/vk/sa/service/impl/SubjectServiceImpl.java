@@ -36,8 +36,8 @@ public class SubjectServiceImpl implements SubjectService {
                     group.setId(tmpGroup.getId());
             }
             Subject tmpSubject = subjectRepository.findByCode(subject.getCode());
-            Teacher teacher = teacherRepository.findByEmail(subject.getTeacher().getEmail());
-            subject.setTeacher(teacher);
+//            Teacher teacher = teacherRepository.findByEmail(subject.getTeacher().getEmail());
+//            subject.setTeacher(new Teacher());
             if(tmpSubject != null)
                 subject.setId(tmpSubject.getId());
         }
