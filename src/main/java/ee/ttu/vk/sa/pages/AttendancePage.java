@@ -1,6 +1,9 @@
 package ee.ttu.vk.sa.pages;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.block.LabelType;
 import ee.ttu.vk.sa.domain.Attendance;
+import ee.ttu.vk.sa.enums.Status;
+import ee.ttu.vk.sa.pages.components.ColorEnumLabel;
 import ee.ttu.vk.sa.pages.providers.AttendanceDataProvider;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -10,6 +13,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.ComponentPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -32,7 +37,7 @@ public class AttendancePage extends AbstractPage {
             protected void populateItem(Item<Attendance> item) {
                 item.add(new Label("student.fullname"));
                 item.add(new Label("subject.name"));
-                item.add(new Label("status"));
+                item.add(new ColorEnumLabel<Status>("status", null).addEnumLabel(Status.PRESENT, LabelType.Success).addEnumLabel(Status.ABSENT, LabelType.Danger));
             }
         };
         container.add(dataView);
