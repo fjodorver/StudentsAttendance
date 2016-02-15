@@ -1,10 +1,10 @@
 package ee.ttu.vk.sa.pages.panels;
 
-import java.util.List;
+import java.io.InputStream;
 
 /**
  * Created by fjodor on 8.02.16.
  */
 public interface IAction<T> {
-    void save(List<T> objects);
+	void save(InputStream inputStream);
 }
