@@ -1,7 +1,7 @@
 package ee.ttu.vk.sa.pages.panels;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import ee.ttu.vk.sa.utils.IParser;
+import java.io.IOException;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.ComponentTag;
@@ -9,18 +9,18 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import java.io.IOException;
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 
 public class FileUploadPanel<T> extends Panel {
 
-    public FileUploadPanel(String id, IParser<T> parser, IAction<T> action) {
+	public FileUploadPanel(String id, String extension, IAction<T> action) {
         super(id);
         BootstrapForm<?> form = new BootstrapForm<Void>("form");
         FileUploadField fileUploadField = new FileUploadField("fileUploadField"){
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
-                tag.put("accept", parser.getExtension());
+				tag.put("accept", extension);
 
             }
         };
@@ -29,10 +29,9 @@ public class FileUploadPanel<T> extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
-                    parser.parse(fileUploadField.getFileUpload().getInputStream());
-                    action.save(parser.getElements());
+					action.save(fileUploadField.getFileUpload().getInputStream());
                 } catch (IOException e) {
-                    e.printStackTrace();
+					throw new IllegalArgumentException(e);
                 }
             }
         });
