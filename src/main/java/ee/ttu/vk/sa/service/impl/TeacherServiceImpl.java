@@ -1,5 +1,6 @@
 package ee.ttu.vk.sa.service.impl;
 
+import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.repository.SubjectRepository;
@@ -30,7 +31,17 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public void deleteTeacher(Teacher teacher) {
+        teacherRepository.delete(teacher);
+    }
+
+    @Override
     public List<Subject> setSubjects(Teacher teacher) {
         return subjectRepository.findAllByTeacher(teacher);
+    }
+
+    @Override
+    public List<Teacher> findAll() {
+        return Lists.newArrayList(teacherRepository.findAll());
     }
 }

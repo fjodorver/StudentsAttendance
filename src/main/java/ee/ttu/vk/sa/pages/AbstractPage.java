@@ -23,7 +23,9 @@ public class AbstractPage extends WebPage {
             addMenuItem(AttendancePage.class, "Attendance", Navbar.ComponentPosition.LEFT, CustomAuthenticatedWebSession.getSession().getRoles().hasRole(Roles.USER));
             addMenuItem(StudentsPage.class, "Students", Navbar.ComponentPosition.LEFT, CustomAuthenticatedWebSession.getSession().getRoles().hasRole(Roles.ADMIN));
             addMenuItem(SubjectsPage.class, "Subjects", Navbar.ComponentPosition.LEFT, CustomAuthenticatedWebSession.getSession().getRoles().hasRole(Roles.ADMIN));
+            addMenuItem(TeacherRegistrationPage.class, "Teachers", Navbar.ComponentPosition.LEFT, CustomAuthenticatedWebSession.getSession().getRoles().hasRole(Roles.ADMIN));
         add(navbar);
+
     }
 
     private <P extends AbstractPage> void addMenuItem(Class<P> page, String label, Navbar.ComponentPosition position, boolean visible) {

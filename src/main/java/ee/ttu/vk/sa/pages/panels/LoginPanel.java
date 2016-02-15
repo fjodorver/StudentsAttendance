@@ -16,5 +16,4 @@ public class LoginPanel extends SignInPanel {
         getForm().get("username").replaceWith(new TextField("username").setRequired(true));
         getForm().get("password").replaceWith(new PasswordTextField("password").setRequired(true));
     }
-
 }
