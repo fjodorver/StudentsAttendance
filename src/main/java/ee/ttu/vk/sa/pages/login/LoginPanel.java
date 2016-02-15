@@ -1,6 +1,6 @@
-package ee.ttu.vk.sa.pages.panels;
+package ee.ttu.vk.sa.pages.login;
 
-;
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import org.apache.wicket.authroles.authentication.panel.SignInPanel;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -13,7 +13,8 @@ public class LoginPanel extends SignInPanel {
 
     public LoginPanel(String id) {
         super(id);
-        getForm().get("username").replaceWith(new TextField("username").setRequired(true));
+        getForm().get("username").replaceWith(new EmailTextField("username").setRequired(true));
         getForm().get("password").replaceWith(new PasswordTextField("password").setRequired(true));
+        get("feedback").replaceWith(new NotificationPanel("feedback"));
     }
 }

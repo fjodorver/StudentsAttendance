@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.pages;
 
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
+import ee.ttu.vk.sa.pages.login.LoginPage;
 
 /**
  * Created by vadimstrukov on 2/13/16.

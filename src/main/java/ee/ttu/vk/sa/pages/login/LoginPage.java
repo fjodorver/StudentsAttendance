@@ -1,6 +1,6 @@
-package ee.ttu.vk.sa.pages;
+package ee.ttu.vk.sa.pages.login;
 
-import ee.ttu.vk.sa.pages.panels.LoginPanel;
+import ee.ttu.vk.sa.pages.AbstractPage;
 
 /**
  * Created by fjodor on 6.02.16.
