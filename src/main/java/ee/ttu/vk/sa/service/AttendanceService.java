@@ -8,5 +8,6 @@ import java.util.List;
  * Created by fjodor on 14.02.16.
  */
 public interface AttendanceService {
-    public List<Attendance> findAll();
+    List<Attendance> findAll();
+    void save(Attendance attendance);
 }

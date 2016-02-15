@@ -24,4 +24,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<Attendance> findAll() {
         return Lists.newArrayList(attendanceRepository.findAll());
     }
+
+    @Override
+    public void save(Attendance attendance) {
+        attendanceRepository.save(attendance);
+    }
 }

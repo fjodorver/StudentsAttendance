@@ -4,7 +4,7 @@
     </h2>
     <div class="row">
         <div class="col-lg-8">
-            <table class="table table-hover table-striped tablesorter">
+            <table class="table table-hover table-striped">
                 <thead>
                 <tr>
                     <th class="header col-md-2"><wicket:message key="attendance.table.fullname">[Fullname]</wicket:message></th>
@@ -15,19 +15,17 @@
                 </thead>
                 <tbody wicket:id="attendanceTable">
                 <tr wicket:id="attendance">
-                    <td>
+                    <td style="vertical-align: middle">
                         <span wicket:id="student.fullname">[Fullname]</span>
                     </td>
-                    <td>
+                    <td style="vertical-align: middle">
                         <span wicket:id="subject.name">[Subject]</span>
                     </td>
-                    <td>
+                    <td style="vertical-align: middle">
                         <span wicket:id="status">[Status]</span>
                     </td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" type="button">
-                            <span class="fa fa-trash-o"></span>
-                        </button>
+                    <td style="vertical-align: middle">
+                                <select wicket:id="statusChoice" class="form-control"></select>
                     </td>
                 </tr>
                 </tbody>
