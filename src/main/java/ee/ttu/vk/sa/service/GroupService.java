@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface GroupService {
     void addGroups(List<Group> groups);
+    List<Group> findAll();
 }

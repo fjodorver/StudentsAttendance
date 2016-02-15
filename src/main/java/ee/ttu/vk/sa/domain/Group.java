@@ -55,6 +55,11 @@ public class Group implements Serializable {
         return name != null ? name.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public Set<Subject> getSubjects() {
         return subjects;
     }

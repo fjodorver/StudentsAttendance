@@ -43,4 +43,9 @@ public class SubjectServiceImpl implements SubjectService {
         }
         return subjectRepository.save(subjects);
     }
+
+    @Override
+    public List<Subject> findAllByTeacher(Teacher teacher) {
+        return subjectRepository.findAllByTeacher(teacher);
+    }
 }

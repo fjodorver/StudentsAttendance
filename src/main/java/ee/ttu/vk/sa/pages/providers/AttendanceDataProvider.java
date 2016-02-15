@@ -1,5 +1,6 @@
 package ee.ttu.vk.sa.pages.providers;
 
+import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.domain.Attendance;
 import ee.ttu.vk.sa.service.AttendanceService;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilterStateLocator;
@@ -9,7 +10,10 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by fjodor on 14.02.16.
@@ -22,17 +26,19 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Att
     private Attendance attendance;
 
     public AttendanceDataProvider() {
+        attendance = new Attendance();
         Injector.get().inject(this);
     }
 
     @Override
     public Iterator<? extends Attendance> iterator(long first, long count) {
-        return attendanceService.findAll().iterator();
+        List<Attendance> attendances = attendanceService.findAll(attendance.getSubject(), attendance.getDate());
+        return Optional.of(attendances.iterator()).orElse(Lists.newArrayList(new Attendance()).iterator());
     }
 
     @Override
     public long size() {
-        return attendanceService.findAll().size();
+        return attendanceService.getSize();
     }
 
     @Override
@@ -42,11 +48,11 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Att
 
     @Override
     public Attendance getFilterState() {
-        return null;
+        return attendance;
     }
 
     @Override
     public void setFilterState(Attendance attendance) {
-
+        this.attendance = attendance;
     }
 }

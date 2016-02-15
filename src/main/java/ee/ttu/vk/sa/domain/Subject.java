@@ -80,4 +80,9 @@ public class Subject implements Serializable {
     public int hashCode() {
         return code != null ? code.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
