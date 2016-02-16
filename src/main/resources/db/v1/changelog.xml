@@ -8,4 +8,5 @@
     <include file="2016-02-12.xml" relativeToChangelogFile="true"/>
     <include file="2016-02-13.xml" relativeToChangelogFile="true"/>
     <include file="2016-02-14.xml" relativeToChangelogFile="true"/>
+    <include file="2016-02-16.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

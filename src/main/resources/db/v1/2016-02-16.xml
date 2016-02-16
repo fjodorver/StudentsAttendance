@@ -1,0 +1,24 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="added columns group_id and lecture_type to table Attendance" author="Fjodor">
+        <addColumn tableName="attendance">
+            <column name="lecture_type" type="varchar(10)" defaultValue="LECTURE">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="attendance">
+            <column name="group_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="added foreignkey fk_attendance_group" author="Fjodor">
+        <addForeignKeyConstraint baseTableName="attendance" baseColumnNames="group_id"
+                                 constraintName="fk_attendance_group"
+                                 referencedTableName="group"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
