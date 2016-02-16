@@ -1,7 +1,5 @@
 package ee.ttu.vk.sa.domain;
 
-import ee.ttu.vk.sa.enums.StudentFilterType;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -23,8 +21,6 @@ public class Student implements Serializable {
 
     private String lastname;
 
-    @Transient
-    private StudentFilterType studentFilterType;
 
     public Long getId() {
         return id;
@@ -91,11 +87,4 @@ public class Student implements Serializable {
         return code != null ? code.hashCode() : 0;
     }
 
-    public StudentFilterType getStudentFilterType() {
-        return studentFilterType;
-    }
-
-    public void setStudentFilterType(StudentFilterType studentFilterType) {
-        this.studentFilterType = studentFilterType;
-    }
 }

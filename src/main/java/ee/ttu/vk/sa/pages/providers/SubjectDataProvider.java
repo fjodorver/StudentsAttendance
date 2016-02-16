@@ -26,13 +26,15 @@ public class SubjectDataProvider extends SortableDataProvider<Subject, Subject> 
     }
 
     @Override
-    public Iterator<? extends Subject> iterator(long l, long l1) {
-        return subjectService.findAll().iterator();
+    public Iterator<? extends Subject> iterator(long first, long count) {
+        if(subject.getCode() != null)
+            return subjectService.findAll((int)(first/count), (int)count, subject.getCode()).iterator();
+        return subjectService.findAllSubjects((int)(first/count), (int)count).iterator();
     }
 
     @Override
     public long size() {
-        return subjectService.findAll().size();
+        return subjectService.getSize();
     }
 
     @Override

@@ -8,7 +8,6 @@ import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
-import ee.ttu.vk.sa.enums.SubjectFilterType;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
 import ee.ttu.vk.sa.pages.panels.IAction;
 import ee.ttu.vk.sa.pages.panels.SubjectsPanel;
@@ -45,12 +44,12 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
     public SubjectsPage(){
         subjectDataProvider = new SubjectDataProvider();
         subjectTable = new WebMarkupContainer("subjectTable");
+        subjectTable.setOutputMarkupId(true);
+        subjectPanel = new SubjectsPanel("subjectPanel", new CompoundPropertyModel<>(new Subject()));
         subjects = getSubjects();
         subjects.setItemsPerPage(10);
         subjectTable.add(subjects);
-        subjectTable.setOutputMarkupId(true);
         panel = new FileUploadPanel<>("xlsPanel", new XlsParser(), this);
-        subjectPanel = new SubjectsPanel("subjectPanel", new CompoundPropertyModel<>(new Subject()));
         add(subjectTable, panel, new BootstrapAjaxPagingNavigator("navigator", subjects), subjectPanel, getButtonAddSubject(), getSearchForm());
     }
 
@@ -86,7 +85,6 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
 
     private BootstrapForm<Subject> getSearchForm(){
         BootstrapForm<Subject> form = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new Subject()));
-        form.add(new DropDownChoice<>("subjectFilterType", Lists.newArrayList(SubjectFilterType.values())));
         form.add(new TextField<String>("code").add(new AjaxFormComponentUpdatingBehavior("input") {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {

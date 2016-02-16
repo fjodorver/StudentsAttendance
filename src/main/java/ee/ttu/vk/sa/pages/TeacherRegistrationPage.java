@@ -1,5 +1,7 @@
 package ee.ttu.vk.sa.pages;
 
+import com.google.common.collect.Lists;
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Teacher;
@@ -7,11 +9,14 @@ import ee.ttu.vk.sa.pages.panels.TeacherRegistrationPanel;
 import ee.ttu.vk.sa.pages.providers.TeacherDataProvider;
 import ee.ttu.vk.sa.service.TeacherService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -40,9 +45,8 @@ public class TeacherRegistrationPage extends AbstractPage {
         teachers.setItemsPerPage(10);
         teacherTable.add(teachers);
         registrationPanel = new TeacherRegistrationPanel("teacherPanel", new CompoundPropertyModel<>(new Teacher()));
-        add(teacherTable, new BootstrapAjaxPagingNavigator("navigator", teachers), registrationPanel, getButtonAddTeacher());
+        add(teacherTable, new BootstrapAjaxPagingNavigator("navigator", teachers), registrationPanel, getSearchForm(), getButtonAddTeacher());
     }
-
 
     private DataView<Teacher> getTeachers(){
         return new DataView<Teacher>("teachers", teacherDataProvider) {
@@ -77,6 +81,18 @@ public class TeacherRegistrationPage extends AbstractPage {
                 });
             }
         };
+    }
+
+    private BootstrapForm<Teacher> getSearchForm(){
+        BootstrapForm<Teacher> form = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new Teacher()));
+        form.add(new TextField<String>("name").add(new AjaxFormComponentUpdatingBehavior("input") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+                teacherDataProvider.setFilterState(form.getModelObject());
+                ajaxRequestTarget.add(teacherTable);
+            }
+        }));
+        return form;
     }
 
     private AjaxLink<Teacher> getButtonAddTeacher(){

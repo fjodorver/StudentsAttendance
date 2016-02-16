@@ -1,12 +1,10 @@
 package ee.ttu.vk.sa.pages;
 
-import com.google.common.collect.Lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Teacher;
-import ee.ttu.vk.sa.enums.StudentFilterType;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
 import ee.ttu.vk.sa.pages.panels.IAction;
 import ee.ttu.vk.sa.pages.panels.StudentsPanel;
@@ -21,7 +19,6 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -51,9 +48,9 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
     public StudentsPage() {
         studentDataProvider = new StudentDataProvider();
         studentTable = new WebMarkupContainer("studentTable");
+        studentTable.setOutputMarkupId(true);
         students = getStudents();
         students.setItemsPerPage(10);
-        studentTable.setOutputMarkupId(true);
         studentTable.add(students);
         studentsPanel = new StudentsPanel("studentPanel", new CompoundPropertyModel<>(new Student()));
         panel = new FileUploadPanel<>("docPanel", new DocParser(), this);
@@ -71,10 +68,6 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
                         ajaxRequestTarget.add(studentsPanel);
                         studentsPanel.appendShowDialogJavaScript(ajaxRequestTarget);
                     }
-                    @Override
-                    public boolean isEnabled() {
-                        return CustomAuthenticatedWebSession.getSession().isSignedIn();
-                    }
                 }.add(new Label("code")));
                 item.add(new Label("firstname"));
                 item.add(new Label("lastname"));
@@ -85,7 +78,6 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
                         studentService.deleteStudent(item.getModelObject());
                         ajaxRequestTarget.add(studentTable);
                     }
-
                     @Override
                     public boolean isVisible() {
                         return CustomAuthenticatedWebSession.getSession().isSignedIn();
@@ -97,8 +89,7 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
 
     private BootstrapForm<Student> getSearchForm(){
         BootstrapForm<Student> form = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new Student()));
-        form.add(new DropDownChoice<>("studentFilterType", Lists.newArrayList(StudentFilterType.values())));
-        form.add(new TextField<String>("code").add(new AjaxFormComponentUpdatingBehavior("input") {
+        form.add(new TextField<String>("lastname").add(new AjaxFormComponentUpdatingBehavior("input") {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 studentDataProvider.setFilterState(form.getModelObject());

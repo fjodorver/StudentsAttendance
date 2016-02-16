@@ -5,6 +5,10 @@ import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.StudentRepository;
 import ee.ttu.vk.sa.service.StudentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +35,25 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findAll() {
-        return studentRepository.findAll();
+    public Page<Student> findAll(int page, int size, String lastname){
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "lastname"));
+        Page<Student> students = studentRepository.findAllByLastname(pageable, lastname);
+        getAllObjects(students);
+        return students;
     }
+
+    @Override
+    public Page<Student> findAllStudents(Integer page, Integer size) {
+        Page<Student> students = studentRepository.findAll(new PageRequest(page, size, new Sort(Sort.Direction.ASC, "lastname")));
+        getAllObjects(students);
+        return students;
+    }
+
+    @Override
+    public int getSize() {
+       return (int) studentRepository.count();
+    }
+
 
     @Override
     public List<Student> findAllStudents(Group group) {
@@ -51,6 +71,12 @@ public class StudentServiceImpl implements StudentService {
                 studentRepository.save(student);
         }
         return studentRepository.findAll();
+    }
+
+    private void getAllObjects(Page<Student> studentPage){
+        for(Student student : studentPage){
+            student.getGroup().getId();
+        }
     }
 
 }
