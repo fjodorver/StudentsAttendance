@@ -1,23 +1,16 @@
 package ee.ttu.vk.sa.service.impl;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.inject.Inject;
-
-import com.google.common.collect.Maps;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.StudentRepository;
 import ee.ttu.vk.sa.service.StudentService;
-import ee.ttu.vk.sa.utils.DocParser;
-import ee.ttu.vk.sa.utils.IParser;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -39,6 +32,41 @@ public class StudentServiceImpl implements StudentService {
 	public List<Student> findAllStudents(Group group) {
 		return studentRepository.findAllByGroup(group);
 	}
+    @Override
+    public void addStudent(Student student) {
+        studentRepository.save(student);
+    }
+
+    @Override
+    public void deleteStudent(Student student) {
+        studentRepository.delete(student);
+    }
+
+    @Override
+    public Page<Student> findAll(int page, int size, String lastname){
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "lastname"));
+        Page<Student> students = studentRepository.findAllByLastname(pageable, lastname);
+        getAllObjects(students);
+        return students;
+    }
+
+    @Override
+    public Page<Student> findAllStudents(Integer page, Integer size) {
+        Page<Student> students = studentRepository.findAll(new PageRequest(page, size, new Sort(Sort.Direction.ASC, "lastname")));
+        getAllObjects(students);
+        return students;
+    }
+
+    @Override
+    public int getSize() {
+       return (int) studentRepository.count();
+    }
+
+
+    @Override
+    public List<Student> findAllStudents(Group group) {
+        return studentRepository.findAllByGroup(group);
+    }
 
 	@Override
 	public List<Student> saveStudents(List<Student> students) {
@@ -48,5 +76,11 @@ public class StudentServiceImpl implements StudentService {
 				.ifPresent(y -> x.setId(y.getId())));
 		return studentRepository.save(students);
 	}
+
+    private void getAllObjects(Page<Student> studentPage){
+        for(Student student : studentPage){
+            student.getGroup().getId();
+        }
+    }
 
 }

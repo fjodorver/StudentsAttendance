@@ -21,6 +21,7 @@ public class Student implements Serializable {
 
     private String lastname;
 
+
     public Long getId() {
         return id;
     }
@@ -85,4 +86,5 @@ public class Student implements Serializable {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
 }

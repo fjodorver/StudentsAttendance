@@ -26,13 +26,15 @@ public class TeacherDataProvider extends SortableDataProvider<Teacher, Teacher> 
     }
 
     @Override
-    public Iterator<? extends Teacher> iterator(long l, long l1) {
-        return teacherService.findAll().iterator();
+    public Iterator<? extends Teacher> iterator(long first, long count) {
+        if(teacher.getName() != null)
+            return teacherService.findAll((int)(first/count), (int)count, teacher.getName()).iterator();
+        return teacherService.findAllTeachers((int)(first/count), (int)count).iterator();
     }
 
     @Override
     public long size() {
-        return teacherService.findAll().size();
+        return teacherService.getSize();
     }
 
     @Override

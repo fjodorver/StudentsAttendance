@@ -1,18 +1,5 @@
 package ee.ttu.vk.sa.service.impl;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
@@ -21,8 +8,11 @@ import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.SubjectRepository;
 import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.SubjectService;
-import ee.ttu.vk.sa.utils.IParser;
-import ee.ttu.vk.sa.utils.XlsParser;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import java.util.List;
 
 @Service
 @Transactional
@@ -61,6 +51,37 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 		return subjectRepository.save(subjects);
 	}
+    @Override
+    public void deleteSubject(Subject subject) {
+        subjectRepository.delete(subject);
+    }
+
+    @Override
+    public void addSubject(Subject subject) {
+        subjectRepository.save(subject);
+    }
+
+    @Override
+    public List<Subject> findAll() {
+        return subjectRepository.findAll();
+    }
+
+    @Override
+    public List<Subject> saveSubjects(List<Subject> subjects) {
+        for (Subject subject : subjects) {
+            for (Group group : subject.getGroups()) {
+                Group tmpGroup = groupRepository.findByName(group.getName());
+                if(tmpGroup != null)
+                    group.setId(tmpGroup.getId());
+            }
+            Subject tmpSubject = subjectRepository.findByCode(subject.getCode());
+//            Teacher teacher = teacherRepository.findByEmail(subject.getTeacher().getEmail());
+//            subject.setTeacher(new Teacher());
+            if(tmpSubject != null)
+                subject.setId(tmpSubject.getId());
+        }
+        return subjectRepository.save(subjects);
+    }
 
 	@Override
 	public List<Subject> findAllByTeacher(Teacher teacher) {
@@ -75,4 +96,35 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 		return dbGroups;
 	}
+    @Override
+    public List<Subject> findAllByTeacher(Teacher teacher) {
+        return subjectRepository.findAllByTeacher(teacher);
+    }
+
+    @Override
+    public Page<Subject> findAll(int page, int size, String code) {
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "code"));
+        Page<Subject> subjects = subjectRepository.findAllByCode(pageable, code);
+        getAllObjects(subjects);
+        return subjects;
+    }
+
+    @Override
+    public Page<Subject> findAllSubjects(Integer page, Integer size) {
+        Page<Subject> subjects = subjectRepository.findAll(new PageRequest(page, size, new Sort(Sort.Direction.ASC, "code")));
+        getAllObjects(subjects);
+        return subjects;
+    }
+
+    @Override
+    public int getSize() {
+        return (int)subjectRepository.count();
+    }
+
+    private void getAllObjects(Page<Subject> subjectPage){
+        for(Subject subject : subjectPage){
+            if(subject.getTeacher() != null)
+                subject.getTeacher().getId();
+        }
+    }
 }
