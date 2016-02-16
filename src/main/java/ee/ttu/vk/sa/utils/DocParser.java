@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DocParser implements IParser<Student>, Serializable {
+public class DocParser implements IParser<Student> {
     private List<Student> students;
     public DocParser() {
         students = new ArrayList<>();
@@ -49,10 +49,5 @@ public class DocParser implements IParser<Student>, Serializable {
     @Override
     public List<Student> getElements() {
         return students;
-    }
-
-    @Override
-    public String getExtension() {
-        return ".doc";
     }
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.*;
 
 
-public class XlsParser implements IParser<Subject>, Serializable {
+public class XlsParser implements IParser<Subject> {
 
     private Set<Subject> subjects;
     private Set<Group> groups;
@@ -78,11 +78,6 @@ public class XlsParser implements IParser<Subject>, Serializable {
     @Override
     public List<Subject> getElements() {
         return Lists.newArrayList(subjects);
-    }
-
-    @Override
-    public String getExtension() {
-        return ".xls";
     }
 
     private Object getCellValue(Cell cell) {
