@@ -8,6 +8,7 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.Request;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Created by fjodor on 6.02.16.
@@ -38,8 +39,7 @@ public class CustomAuthenticatedWebSession extends AuthenticatedWebSession {
     @Override
     public Roles getRoles() {
         Roles roles = new Roles();
-        if(teacher != null)
-            roles.add(teacher.getRole());
+        Optional.ofNullable(teacher).ifPresent(x -> roles.add(x.getRole()));
         return roles;
     }
 
