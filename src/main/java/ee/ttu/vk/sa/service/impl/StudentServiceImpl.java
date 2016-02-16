@@ -2,9 +2,12 @@ package ee.ttu.vk.sa.service.impl;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,15 +42,11 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public List<Student> saveStudents(List<Student> students) {
-		for (Student student : students) {
-			Group group = groupRepository.findByName(student.getGroup().getName());
-			if (group != null)
-				student.setGroup(group);
-
-			if (!student.equals(studentRepository.findByCode(student.getCode())))
-				studentRepository.save(student);
-		}
-		return studentRepository.findAll();
+		students.forEach(x -> Optional.ofNullable(groupRepository.findByName(x.getGroup().getName()))
+				.ifPresent(x::setGroup));
+		students.forEach(x -> Optional.ofNullable(studentRepository.findByCode(x.getCode()))
+				.ifPresent(y -> x.setId(y.getId())));
+		return studentRepository.save(students);
 	}
 
 }

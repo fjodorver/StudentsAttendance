@@ -56,9 +56,7 @@ public class SubjectServiceImpl implements SubjectService {
 
 		for (Subject subject : subjects) {
 			Subject dbSubject = subjectRepository.findByCode(subject.getCode());
-			if (dbSubject != null) {
-				subject.setId(dbSubject.getId());
-			}
+			Optional.of(dbSubject).ifPresent(x -> subject.setId(x.getId()));
 			subject.setGroups(getGroups(subject, groupByName));
 		}
 		return subjectRepository.save(subjects);
