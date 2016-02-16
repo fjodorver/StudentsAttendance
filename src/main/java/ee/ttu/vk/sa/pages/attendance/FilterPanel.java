@@ -1,4 +1,4 @@
-package ee.ttu.vk.sa.pages.panels;
+package ee.ttu.vk.sa.pages.attendance;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;

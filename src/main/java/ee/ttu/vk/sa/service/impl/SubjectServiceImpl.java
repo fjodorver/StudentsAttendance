@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.swing.text.html.Option;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -57,8 +58,7 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 
 		for (Subject subject : subjects) {
-			Subject dbSubject = subjectRepository.findByCode(subject.getCode());
-			Optional.of(dbSubject).ifPresent(x -> subject.setId(x.getId()));
+			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
 			subject.setGroups(getGroups(subject, groupByName));
 		}
 		return subjectRepository.save(subjects);

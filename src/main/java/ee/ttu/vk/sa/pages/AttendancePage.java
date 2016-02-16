@@ -5,7 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.block.LabelType;
 import ee.ttu.vk.sa.domain.Attendance;
 import ee.ttu.vk.sa.enums.Status;
 import ee.ttu.vk.sa.pages.components.ColorEnumLabel;
-import ee.ttu.vk.sa.pages.panels.FilterPanel;
+import ee.ttu.vk.sa.pages.attendance.FilterPanel;
 import ee.ttu.vk.sa.pages.providers.AttendanceDataProvider;
 import ee.ttu.vk.sa.service.AttendanceService;
 import org.apache.wicket.ajax.AjaxRequestTarget;

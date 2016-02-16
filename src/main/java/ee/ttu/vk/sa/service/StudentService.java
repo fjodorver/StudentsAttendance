@@ -18,5 +18,5 @@ public interface StudentService {
     int getSize();
 	List<Student> parseStudents(InputStream stream);
     List<Student> findAllStudents(Group group);
-    List<Student> saveStudents(List<Student> students);
+    void saveStudents(List<Student> students);
 }

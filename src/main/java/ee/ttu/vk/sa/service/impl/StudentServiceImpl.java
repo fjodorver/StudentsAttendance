@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -72,12 +71,12 @@ public class StudentServiceImpl implements StudentService {
 
 
 	@Override
-	public List<Student> saveStudents(List<Student> students) {
-		students.forEach(x -> Optional.ofNullable(groupRepository.findByName(x.getGroup().getName()))
-				.ifPresent(x::setGroup));
-		students.forEach(x -> Optional.ofNullable(studentRepository.findByCode(x.getCode()))
-				.ifPresent(y -> x.setId(y.getId())));
-		return studentRepository.save(students);
+	public void saveStudents(List<Student> students) {
+        for (Student student : students) {
+            Optional.ofNullable(groupRepository.findByName(student.getGroup().getName())).ifPresent(student::setGroup);
+            Optional.ofNullable(studentRepository.findByCode(student.getCode())).ifPresent(x -> student.setId(x.getId()));
+            studentRepository.save(student);
+        }
 	}
 
     private void getAllObjects(Page<Student> studentPage){
