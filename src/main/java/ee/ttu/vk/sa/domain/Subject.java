@@ -85,5 +85,4 @@ public class Subject implements Serializable {
     public String toString() {
         return name;
     }
-
 }
