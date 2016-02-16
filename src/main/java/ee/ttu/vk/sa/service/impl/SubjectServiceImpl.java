@@ -1,6 +1,8 @@
 package ee.ttu.vk.sa.service.impl;
 
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
@@ -8,11 +10,21 @@ import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.SubjectRepository;
 import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.SubjectService;
+import ee.ttu.vk.sa.utils.IParser;
+import ee.ttu.vk.sa.utils.XlsParser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -66,22 +78,6 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectRepository.findAll();
     }
 
-    @Override
-    public List<Subject> saveSubjects(List<Subject> subjects) {
-        for (Subject subject : subjects) {
-            for (Group group : subject.getGroups()) {
-                Group tmpGroup = groupRepository.findByName(group.getName());
-                if(tmpGroup != null)
-                    group.setId(tmpGroup.getId());
-            }
-            Subject tmpSubject = subjectRepository.findByCode(subject.getCode());
-//            Teacher teacher = teacherRepository.findByEmail(subject.getTeacher().getEmail());
-//            subject.setTeacher(new Teacher());
-            if(tmpSubject != null)
-                subject.setId(tmpSubject.getId());
-        }
-        return subjectRepository.save(subjects);
-    }
 
 	@Override
 	public List<Subject> findAllByTeacher(Teacher teacher) {
@@ -96,10 +92,6 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 		return dbGroups;
 	}
-    @Override
-    public List<Subject> findAllByTeacher(Teacher teacher) {
-        return subjectRepository.findAllByTeacher(teacher);
-    }
 
     @Override
     public Page<Subject> findAll(int page, int size, String code) {

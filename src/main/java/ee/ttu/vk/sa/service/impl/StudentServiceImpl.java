@@ -5,11 +5,19 @@ import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.StudentRepository;
 import ee.ttu.vk.sa.service.StudentService;
+import ee.ttu.vk.sa.utils.DocParser;
+import ee.ttu.vk.sa.utils.IParser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,11 +70,6 @@ public class StudentServiceImpl implements StudentService {
        return (int) studentRepository.count();
     }
 
-
-    @Override
-    public List<Student> findAllStudents(Group group) {
-        return studentRepository.findAllByGroup(group);
-    }
 
 	@Override
 	public List<Student> saveStudents(List<Student> students) {

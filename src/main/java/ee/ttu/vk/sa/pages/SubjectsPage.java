@@ -1,24 +1,37 @@
 package ee.ttu.vk.sa.pages;
 
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
+import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
+import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
+import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
+import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
 import ee.ttu.vk.sa.pages.panels.IAction;
+import ee.ttu.vk.sa.pages.panels.SubjectsPanel;
+import ee.ttu.vk.sa.pages.providers.SubjectDataProvider;
 import ee.ttu.vk.sa.service.SubjectService;
 import ee.ttu.vk.sa.utils.XlsParser;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.io.InputStream;
 import java.util.List;
 
 @AuthorizeInstantiation(Roles.ADMIN)
 public class SubjectsPage extends AbstractPage implements IAction<Subject> {
 
-	@SpringBean
-	private SubjectService subjectService;
-
-	private FileUploadPanel<Subject> panel;
     @SpringBean
     private SubjectService subjectService;
     private DataView<Subject> subjects;
@@ -27,10 +40,6 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
     private SubjectsPanel subjectPanel;
     private FileUploadPanel<Subject> panel;
 
-	public SubjectsPage() {
-		panel = new FileUploadPanel<>("panel", "xls", this);
-		add(panel);
-	}
     public SubjectsPage(){
         subjectDataProvider = new SubjectDataProvider();
         subjectTable = new WebMarkupContainer("subjectTable");
@@ -39,7 +48,7 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
         subjects = getSubjects();
         subjects.setItemsPerPage(10);
         subjectTable.add(subjects);
-        panel = new FileUploadPanel<>("xlsPanel", new XlsParser(), this);
+        panel = new FileUploadPanel<>("xlsPanel", "xls", this);
         add(subjectTable, panel, new BootstrapAjaxPagingNavigator("navigator", subjects), subjectPanel, getButtonAddSubject(), getSearchForm());
     }
 

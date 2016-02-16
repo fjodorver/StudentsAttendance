@@ -3,7 +3,9 @@ package ee.ttu.vk.sa.service;
 
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
+import org.springframework.data.domain.Page;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface SubjectService {
