@@ -39,27 +39,6 @@ public class Group implements Serializable {
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Group group = (Group) o;
-
-        return name != null ? name.equals(group.name) : group.name == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-
     public Set<Subject> getSubjects() {
         return subjects;
     }
@@ -75,5 +54,21 @@ public class Group implements Serializable {
     public Group setLanguage(String language) {
         this.language = language;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Group group = (Group) o;
+
+        return id != null ? id.equals(group.id) : group.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

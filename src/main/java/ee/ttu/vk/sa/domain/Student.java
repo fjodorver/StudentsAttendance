@@ -77,12 +77,12 @@ public class Student implements Serializable {
 
         Student student = (Student) o;
 
-        return code != null ? code.equals(student.code) : student.code == null;
+        return id != null ? id.equals(student.id) : student.id == null;
 
     }
 
     @Override
     public int hashCode() {
-        return code != null ? code.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 }

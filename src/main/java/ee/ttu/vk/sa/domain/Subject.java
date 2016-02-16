@@ -72,17 +72,12 @@ public class Subject implements Serializable {
 
         Subject subject = (Subject) o;
 
-        return code != null ? code.equals(subject.code) : subject.code == null;
+        return id != null ? id.equals(subject.id) : subject.id == null;
 
     }
 
     @Override
     public int hashCode() {
-        return code != null ? code.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return name;
+        return id != null ? id.hashCode() : 0;
     }
 }
