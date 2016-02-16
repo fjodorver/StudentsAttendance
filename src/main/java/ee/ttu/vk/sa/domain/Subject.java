@@ -1,5 +1,7 @@
 package ee.ttu.vk.sa.domain;
 
+import ee.ttu.vk.sa.enums.SubjectFilterType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -23,6 +25,9 @@ public class Subject implements Serializable {
 
     @ManyToOne
     private Teacher teacher;
+
+    @Transient
+    private SubjectFilterType subjectFilterType;
 
 
     public Long getId() {
@@ -84,5 +89,13 @@ public class Subject implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    public SubjectFilterType getSubjectFilterType() {
+        return subjectFilterType;
+    }
+
+    public void setSubjectFilterType(SubjectFilterType subjectFilterType) {
+        this.subjectFilterType = subjectFilterType;
     }
 }

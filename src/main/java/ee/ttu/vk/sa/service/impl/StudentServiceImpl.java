@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -20,6 +19,21 @@ public class StudentServiceImpl implements StudentService {
 
     @Inject
     private StudentRepository studentRepository;
+
+    @Override
+    public void addStudent(Student student) {
+        studentRepository.save(student);
+    }
+
+    @Override
+    public void deleteStudent(Student student) {
+        studentRepository.delete(student);
+    }
+
+    @Override
+    public List<Student> findAll() {
+        return studentRepository.findAll();
+    }
 
     @Override
     public List<Student> findAllStudents(Group group) {

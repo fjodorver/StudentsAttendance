@@ -28,6 +28,21 @@ public class SubjectServiceImpl implements SubjectService {
     private TeacherRepository teacherRepository;
 
     @Override
+    public void deleteSubject(Subject subject) {
+        subjectRepository.delete(subject);
+    }
+
+    @Override
+    public void addSubject(Subject subject) {
+        subjectRepository.save(subject);
+    }
+
+    @Override
+    public List<Subject> findAll() {
+        return subjectRepository.findAll();
+    }
+
+    @Override
     public List<Subject> saveSubjects(List<Subject> subjects) {
         for (Subject subject : subjects) {
             for (Group group : subject.getGroups()) {
