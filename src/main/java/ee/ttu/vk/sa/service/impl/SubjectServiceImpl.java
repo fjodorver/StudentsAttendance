@@ -3,7 +3,6 @@ package ee.ttu.vk.sa.service.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
@@ -12,7 +11,7 @@ import ee.ttu.vk.sa.repository.SubjectRepository;
 import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.SubjectService;
 import ee.ttu.vk.sa.utils.IParser;
-import ee.ttu.vk.sa.utils.XlsParser;
+import ee.ttu.vk.sa.utils.SubjectXlsParser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import javax.swing.text.html.Option;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -43,7 +40,7 @@ public class SubjectServiceImpl implements SubjectService {
 
 	@Override
 	public List<Subject> parseSubjects(InputStream stream) {
-		IParser<Subject> parser = new XlsParser();
+		IParser<Subject> parser = new SubjectXlsParser();
 		parser.parse(stream);
 		return parser.getElements();
 	}

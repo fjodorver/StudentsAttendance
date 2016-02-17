@@ -12,7 +12,6 @@ import ee.ttu.vk.sa.pages.panels.IAction;
 import ee.ttu.vk.sa.pages.panels.SubjectsPanel;
 import ee.ttu.vk.sa.pages.providers.SubjectDataProvider;
 import ee.ttu.vk.sa.service.SubjectService;
-import ee.ttu.vk.sa.utils.XlsParser;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -48,7 +47,7 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
         subjects = getSubjects();
         subjects.setItemsPerPage(10);
         subjectTable.add(subjects);
-        panel = new FileUploadPanel<>("xlsPanel", "xls", this);
+        panel = new FileUploadPanel<>("xlsPanel", ".xls", this);
         add(subjectTable, panel, new BootstrapAjaxPagingNavigator("navigator", subjects), subjectPanel, getButtonAddSubject(), getSearchForm());
     }
 

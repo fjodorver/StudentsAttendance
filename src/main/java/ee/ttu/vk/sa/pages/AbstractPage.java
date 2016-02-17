@@ -39,7 +39,7 @@ public class AbstractPage extends WebPage {
         addMenuItem(AttendancePage.class, "navbar.menu.attendance", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
         addMenuItem(StudentsPage.class, "navbar.menu.students", FontAwesomeIconType.users, roles.hasRole(Roles.ADMIN));
         addMenuItem(SubjectsPage.class, "navbar.menu.subjects", FontAwesomeIconType.info, roles.hasRole(Roles.ADMIN));
-        addMenuItem(TeacherRegistrationPage.class, "navbar.menu.teachers", FontAwesomeIconType.university, roles.hasRole(Roles.ADMIN));
+        addMenuItem(TeachersPage.class, "navbar.menu.teachers", FontAwesomeIconType.university, roles.hasRole(Roles.ADMIN));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
 
         add(navbar);

@@ -5,6 +5,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Teacher;
+import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
+import ee.ttu.vk.sa.pages.panels.IAction;
 import ee.ttu.vk.sa.pages.panels.TeacherRegistrationPanel;
 import ee.ttu.vk.sa.pages.providers.TeacherDataProvider;
 import ee.ttu.vk.sa.service.TeacherService;
@@ -22,11 +24,14 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.io.InputStream;
+import java.util.List;
+
 /**
  * Created by vadimstrukov on 2/15/16.
  */
 @AuthorizeInstantiation(Roles.ADMIN)
-public class TeacherRegistrationPage extends AbstractPage {
+public class TeachersPage extends AbstractPage implements IAction<Teacher> {
 
 
     @SpringBean
@@ -35,17 +40,20 @@ public class TeacherRegistrationPage extends AbstractPage {
     private TeacherDataProvider teacherDataProvider;
     private WebMarkupContainer teacherTable;
     private TeacherRegistrationPanel registrationPanel;
+    private FileUploadPanel<Teacher> panel;
 
 
-    public TeacherRegistrationPage(){
+
+    public TeachersPage(){
         teacherDataProvider = new TeacherDataProvider();
         teacherTable = new WebMarkupContainer("teacherTable");
         teacherTable.setOutputMarkupId(true);
         teachers = getTeachers();
         teachers.setItemsPerPage(10);
         teacherTable.add(teachers);
+        panel = new FileUploadPanel<>("teacherXlsPanel", ".xls", this);
         registrationPanel = new TeacherRegistrationPanel("teacherPanel", new CompoundPropertyModel<>(new Teacher()));
-        add(teacherTable, new BootstrapAjaxPagingNavigator("navigator", teachers), registrationPanel, getSearchForm(), getButtonAddTeacher());
+        add(teacherTable, panel, new BootstrapAjaxPagingNavigator("navigator", teachers), registrationPanel, getSearchForm(), getButtonAddTeacher());
     }
 
     private DataView<Teacher> getTeachers(){
@@ -108,5 +116,12 @@ public class TeacherRegistrationPage extends AbstractPage {
                 return CustomAuthenticatedWebSession.getSession().isSignedIn();
             }
         };
+    }
+
+    @Override
+    public void save(InputStream objects) {
+        List<Teacher> teachers = teacherService.parseTeachers(objects);
+        teacherService.addTeachers(teachers);
+
     }
 }
