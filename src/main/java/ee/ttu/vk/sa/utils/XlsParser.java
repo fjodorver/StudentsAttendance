@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.utils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -11,18 +12,17 @@ import org.apache.poi.ss.usermodel.Row;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.*;
 
 
 public class XlsParser implements IParser<Subject> {
 
-    private Set<Subject> subjects;
-    private Set<Group> groups;
+    private Map<String, Subject> subjectMap;
+    private List<Group> groups;
 
     public XlsParser() {
-        groups = new HashSet<>();
-        subjects = new HashSet<>();
+        groups = Lists.newArrayList();
+        subjectMap = Maps.newHashMap();
     }
 
     @Override
@@ -53,20 +53,17 @@ public class XlsParser implements IParser<Subject> {
                                 break;
                         }
                     }
-
-                    Subject tmpSubject = subjects.stream().filter(x -> x.getCode().equals(subject.getCode())).findFirst().orElse(null);
-                    if (tmpSubject != null) {
+                    if(subjectMap.containsKey(subject.getCode()))
                         groups.add(group);
-                    }
                     else{
                         if(groups.size() > 0){
-                            subjects.iterator().next().setGroups(groups);
-                            groups = new HashSet<>();
+                            subjectMap.entrySet().iterator().next().getValue().setGroups(Lists.newArrayList(groups));
+                            groups.clear();
                         }
                         groups.add(group);
-                        subject.setGroups(groups);
                     }
-                    subjects.add(subject);
+                    subject.setGroups(Lists.newArrayList(groups));
+                    subjectMap.put(subject.getCode(), subject);
                 }
             }
 
@@ -77,7 +74,7 @@ public class XlsParser implements IParser<Subject> {
 
     @Override
     public List<Subject> getElements() {
-        return Lists.newArrayList(subjects);
+        return Lists.newArrayList(subjectMap.values());
     }
 
     private Object getCellValue(Cell cell) {

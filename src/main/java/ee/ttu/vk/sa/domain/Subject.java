@@ -1,9 +1,10 @@
 package ee.ttu.vk.sa.domain;
 
+import com.google.common.collect.Lists;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 
 @Entity
@@ -19,7 +20,7 @@ public class Subject implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "subject_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<Group> groups = new HashSet<>();
+    private List<Group> groups = Lists.newArrayList();
 
     @ManyToOne
     private Teacher teacher;
@@ -49,11 +50,11 @@ public class Subject implements Serializable {
         this.name = name;
     }
 
-    public Set<Group> getGroups() {
+    public List<Group> getGroups() {
         return groups;
     }
 
-    public void setGroups(Set<Group> groups) {
+    public void setGroups(List<Group> groups) {
         this.groups = groups;
     }
 

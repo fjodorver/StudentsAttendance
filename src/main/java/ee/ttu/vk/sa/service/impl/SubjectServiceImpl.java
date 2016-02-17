@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.service.impl;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import ee.ttu.vk.sa.domain.Group;
@@ -84,8 +85,8 @@ public class SubjectServiceImpl implements SubjectService {
 		return subjectRepository.findAllByTeacher(teacher);
 	}
 
-	private Set<Group> getGroups(Subject subject, Map<String, Group> groupByName) {
-		Set<Group> dbGroups = Sets.newHashSet();
+	private List<Group> getGroups(Subject subject, Map<String, Group> groupByName) {
+		List<Group> dbGroups = Lists.newArrayList();
 		for (Group group : subject.getGroups()) {
 			Group dbGroup = groupByName.get(group.getName());
 			dbGroups.add(dbGroup);
