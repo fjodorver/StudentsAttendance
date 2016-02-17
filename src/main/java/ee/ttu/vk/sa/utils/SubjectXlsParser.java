@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
+import ee.ttu.vk.sa.domain.Teacher;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -23,6 +24,7 @@ public class SubjectXlsParser extends XlsParser<Subject> {
     private final int SUBJECT_NAME_CELL = 3;
     private final int GROUP_NAME_CELL = 4;
     private final int GROUP_LANGUAGE_CELL = 13;
+    private final int TEACHER_NAME_CELL = 12;
 
     public SubjectXlsParser() {
         groupMap = Maps.newHashMap();
@@ -40,6 +42,7 @@ public class SubjectXlsParser extends XlsParser<Subject> {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 Subject subject = new Subject();
                 Group group = new Group();
+                Teacher teacher = new Teacher();
                 if (row.getRowNum() > START_ROW_NUMBER) {
                     while (cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
@@ -57,6 +60,9 @@ public class SubjectXlsParser extends XlsParser<Subject> {
                             case GROUP_LANGUAGE_CELL:
                                 group.setLanguage((String) getCellValue(cell));
                                 break;
+                            case TEACHER_NAME_CELL:
+                                teacher.setName((String)getCellValue(cell));
+                                break;
                         }
                     }
                     if(subjectMap.containsKey(subject.getCode()))
@@ -69,6 +75,7 @@ public class SubjectXlsParser extends XlsParser<Subject> {
                         groupMap.put(group.getName(), group);
                     }
                     subject.setGroups(Lists.newArrayList(groupMap.values()));
+                    subject.setTeacher(teacher);
                     subjectMap.put(subject.getCode(), subject);
                 }
             }

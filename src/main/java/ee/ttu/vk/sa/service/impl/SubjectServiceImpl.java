@@ -54,10 +54,13 @@ public class SubjectServiceImpl implements SubjectService {
 				groupByName.put(group.getName(), Optional.ofNullable(dbGroup).orElse(group));
 			}
 		}
-
 		for (Subject subject : subjects) {
 			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
 			subject.setGroups(getGroups(subject, groupByName));
+		}
+		for (Subject subject : subjects) {
+			Teacher teacher = teacherRepository.findByName(subject.getTeacher().getName());
+			subject.setTeacher(teacher);
 		}
 		return subjectRepository.save(subjects);
 	}
