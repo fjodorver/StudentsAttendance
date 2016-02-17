@@ -18,10 +18,10 @@ import java.util.*;
 public class XlsParser implements IParser<Subject> {
 
     private Map<String, Subject> subjectMap;
-    private List<Group> groups;
+    private Map<String, Group> groupMap;
 
     public XlsParser() {
-        groups = Lists.newArrayList();
+        groupMap = Maps.newHashMap();
         subjectMap = Maps.newHashMap();
     }
 
@@ -54,15 +54,15 @@ public class XlsParser implements IParser<Subject> {
                         }
                     }
                     if(subjectMap.containsKey(subject.getCode()))
-                        groups.add(group);
+                        groupMap.put(group.getName(), group);
                     else{
-                        if(groups.size() > 0){
-                            subjectMap.entrySet().iterator().next().getValue().setGroups(Lists.newArrayList(groups));
-                            groups.clear();
+                        if(groupMap.size() > 0){
+                            subjectMap.entrySet().iterator().next().getValue().setGroups(Lists.newArrayList(groupMap.values()));
+                            groupMap.clear();
                         }
-                        groups.add(group);
+                        groupMap.put(group.getName(), group);
                     }
-                    subject.setGroups(Lists.newArrayList(groups));
+                    subject.setGroups(Lists.newArrayList(groupMap.values()));
                     subjectMap.put(subject.getCode(), subject);
                 }
             }
