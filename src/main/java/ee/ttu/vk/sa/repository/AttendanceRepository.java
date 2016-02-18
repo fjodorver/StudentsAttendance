@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.repository;
 
 import ee.ttu.vk.sa.domain.Attendance;
+import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
 import org.springframework.data.jpa.repository.Temporal;
@@ -14,5 +15,5 @@ import java.util.List;
  * Created by fjodor on 14.02.16.
  */
 public interface AttendanceRepository extends CrudRepository<Attendance, Long> {
-    List<Attendance> findAllBySubjectAndDate(Subject subject, @Temporal(TemporalType.DATE) Date date);
+    List<Attendance> findAllBySubjectAndGroupAndDate(Subject subject, Group group, @Temporal(TemporalType.DATE) Date date);
 }

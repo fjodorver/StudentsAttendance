@@ -1,6 +1,6 @@
 package ee.ttu.vk.sa.domain;
 
-import ee.ttu.vk.sa.enums.LessonType;
+import ee.ttu.vk.sa.enums.Type;
 import ee.ttu.vk.sa.enums.Status;
 
 import javax.persistence.*;
@@ -31,7 +31,8 @@ public class Attendance implements Serializable {
     private Status status;
 
     @Enumerated(EnumType.STRING)
-    private LessonType lessonType;
+    @Column(name = "lecture_type")
+    private Type type;
 
     @Temporal(TemporalType.DATE)
     private Date date;
@@ -84,11 +85,11 @@ public class Attendance implements Serializable {
         this.group = group;
     }
 
-    public LessonType getLessonType() {
-        return lessonType;
+    public Type getType() {
+        return type;
     }
 
-    public void setLessonType(LessonType lessonType) {
-        this.lessonType = lessonType;
+    public void setType(Type type) {
+        this.type = type;
     }
 }

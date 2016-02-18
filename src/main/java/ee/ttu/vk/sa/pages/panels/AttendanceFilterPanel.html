@@ -1,0 +1,30 @@
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <div class="panel panel-default">
+        <div class="panel-heading">Panel Header</div>
+        <div class="panel-body">
+            <form wicket:id="form" class="form-horizontal" role="search">
+                <div class="input-group">
+                    <span class="input-group-addon">Subject</span>
+                    <select wicket:id="subject" class="form-control"></select>
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Type</span>
+                    <select wicket:id="type" class="form-control"></select>
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Group</span>
+                    <select wicket:id="group" class="form-control"></select>
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Date</span>
+                    <input wicket:id="date" type="date" class="form-control"/>
+                </div>
+                <br>
+                <button wicket:id="submit" class="btn btn-primary pull-right" type="button">[Submit]</button>
+            </form>
+        </div>
+    </div>
+</wicket:panel>

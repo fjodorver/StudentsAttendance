@@ -1,7 +1,7 @@
 package ee.ttu.vk.sa.service.impl;
 
-import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.domain.Attendance;
+import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.repository.AttendanceRepository;
 import ee.ttu.vk.sa.service.AttendanceService;
@@ -22,8 +22,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Inject
     private AttendanceRepository attendanceRepository;
 
-    public List<Attendance> findAll(Subject subject, Date date) {
-        return Lists.newArrayList(attendanceRepository.findAllBySubjectAndDate(subject, date));
+    public List<Attendance> findAll(Subject subject, Group group, Date date) {
+        List<Attendance> attendances = attendanceRepository.findAllBySubjectAndGroupAndDate(subject, group, date);
+        for (Attendance attendance : attendances) {
+            attendance.getStudent().getId();
+            attendance.getSubject().getId();
+            attendance.getGroup().getId();
+        }
+        return attendances;
     }
 
     @Override

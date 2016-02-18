@@ -82,7 +82,13 @@ public class SubjectServiceImpl implements SubjectService {
 
 	@Override
 	public List<Subject> findAllByTeacher(Teacher teacher) {
-		return subjectRepository.findAllByTeacher(teacher);
+		List<Subject> subjects = subjectRepository.findAllByTeacher(teacher);
+		for (Subject subject : subjects) {
+			for (Group group : subject.getGroups()) {
+				group.getId();
+			}
+		}
+		return subjects;
 	}
 
 	private List<Group> getGroups(Subject subject, Map<String, Group> groupByName) {
