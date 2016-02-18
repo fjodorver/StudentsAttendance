@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Page<Teacher> findAllByName(Pageable pageable, String name);
-    List<Teacher> findByName(String name);
     Teacher findByEmail(String email);
+    Teacher findByName(String name);
     Teacher findByEmailAndPassword(String email, String password);
 }
