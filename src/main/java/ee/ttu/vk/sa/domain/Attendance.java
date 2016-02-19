@@ -4,6 +4,7 @@ import ee.ttu.vk.sa.enums.Type;
 import ee.ttu.vk.sa.enums.Status;
 
 import javax.persistence.*;
+import java.io.Closeable;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -41,55 +42,63 @@ public class Attendance implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
+    public Attendance setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Student getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public Attendance setStudent(Student student) {
         this.student = student;
+        return this;
     }
 
     public Subject getSubject() {
         return subject;
     }
 
-    public void setSubject(Subject subject) {
+    public Attendance setSubject(Subject subject) {
         this.subject = subject;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+        return this;
     }
 
     public Group getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public Attendance setGroup(Group group) {
         this.group = group;
+        return this;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public Attendance setStatus(Status status) {
+        this.status = status;
+        return this;
     }
 
     public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public Attendance setType(Type type) {
         this.type = type;
+        return this;
     }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Attendance setDate(Date date) {
+        this.date = date;
+        return this;
+    }
+
 }

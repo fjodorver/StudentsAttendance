@@ -1,8 +1,9 @@
 package ee.ttu.vk.sa.domain;
 
+import com.google.common.collect.Lists;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,9 @@ public class Group implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
     private Set<Subject> subjects = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Student> students = Lists.newArrayList();
 
     public Long getId() {
         return id;
@@ -54,6 +58,14 @@ public class Group implements Serializable {
     public Group setLanguage(String language) {
         this.language = language;
         return this;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     @Override

@@ -1,7 +1,9 @@
 package ee.ttu.vk.sa.service.impl;
 
+import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
+import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.StudentRepository;
 import ee.ttu.vk.sa.service.StudentService;
@@ -27,6 +29,15 @@ public class StudentServiceImpl implements StudentService {
 
 	@Inject
 	private StudentRepository studentRepository;
+
+    @Override
+    public List<Student> findAllBySubject(Subject subject) {
+        List<Student> students = Lists.newArrayList();
+        for (Group group : subject.getGroups()) {
+            students.addAll(studentRepository.findAllByGroup(group));
+        }
+        return students;
+    }
 
 	@Override
 	public List<Student> parseStudents(InputStream stream) {

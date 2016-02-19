@@ -32,7 +32,7 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Att
 
     @Override
     public Iterator<? extends Attendance> iterator(long first, long count) {
-        List<Attendance> attendances = attendanceService.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getDate());
+        List<Attendance> attendances = attendanceService.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate());
         return Optional.of(attendances.iterator()).orElse(Lists.newArrayList(new Attendance()).iterator());
     }
 

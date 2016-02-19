@@ -11,4 +11,5 @@ import java.util.List;
  */
 public interface GroupRepository extends JpaRepository<Group, Long> {
     Group findByName(String name);
+    List<Group> findAllBySubjects(List<Subject> subjects);
 }

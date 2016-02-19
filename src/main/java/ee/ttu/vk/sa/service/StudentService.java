@@ -2,6 +2,7 @@ package ee.ttu.vk.sa.service;
 
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
+import ee.ttu.vk.sa.domain.Subject;
 import org.springframework.data.domain.Page;
 
 import java.io.InputStream;
@@ -19,4 +20,6 @@ public interface StudentService {
 	List<Student> parseStudents(InputStream stream);
     List<Student> findAllStudents(Group group);
     void saveStudents(List<Student> students);
+
+    List<Student> findAllBySubject(Subject subject);
 }

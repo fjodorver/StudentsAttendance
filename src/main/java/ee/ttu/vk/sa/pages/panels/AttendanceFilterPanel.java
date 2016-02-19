@@ -5,13 +5,13 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerWithIcon;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
-import ee.ttu.vk.sa.domain.Attendance;
-import ee.ttu.vk.sa.domain.Group;
-import ee.ttu.vk.sa.domain.Subject;
-import ee.ttu.vk.sa.domain.Teacher;
+import ee.ttu.vk.sa.domain.*;
+import ee.ttu.vk.sa.enums.Status;
 import ee.ttu.vk.sa.enums.Type;
 import ee.ttu.vk.sa.service.AttendanceService;
+import ee.ttu.vk.sa.service.StudentService;
 import ee.ttu.vk.sa.service.SubjectService;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -22,10 +22,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AttendanceFilterPanel extends Panel {
     @SpringBean
     private SubjectService subjectService;
+
+    @SpringBean
+    private StudentService studentService;
 
     @SpringBean
     private AttendanceService attendanceService;
@@ -46,6 +50,16 @@ public class AttendanceFilterPanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
                 callback.onSubmit(target, form.getModel());
+            }
+        });
+        form.add(new AjaxSubmitLink("gen", form) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
+                Attendance attendance = form.getModelObject().setStatus(Status.ABSENT);
+                List<Attendance> attendances = Lists.newArrayList();
+                List<Student> students = studentService.findAllBySubject(form.getModelObject().getSubject());
+                students.forEach(x -> attendances.add(SerializationUtils.clone(attendance).setStudent(x)));
+                attendanceService.save(attendances);
             }
         });
         add(form);
