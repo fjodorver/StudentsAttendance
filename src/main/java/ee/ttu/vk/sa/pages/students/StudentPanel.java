@@ -1,4 +1,4 @@
-package ee.ttu.vk.sa.pages.panels;
+package ee.ttu.vk.sa.pages.students;
 
 import com.google.common.collect.Lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
@@ -21,7 +21,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * Created by vadimstrukov on 2/16/16.
  */
 @AuthorizeInstantiation(Roles.ADMIN)
-public class StudentsPanel extends Modal<Student>{
+public class StudentPanel extends Modal<Student>{
 
     @SpringBean
     private StudentService studentService;
@@ -31,7 +31,7 @@ public class StudentsPanel extends Modal<Student>{
     private BootstrapForm<Student> studentForm;
 
 
-    public StudentsPanel(String id, IModel<Student> model) {
+    public StudentPanel(String id, IModel<Student> model) {
         super(id, model);
         studentForm  = new BootstrapForm<>("studentForm", getModel());
         studentForm.add(new TextField<String>("code"));

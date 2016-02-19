@@ -1,12 +1,10 @@
 package ee.ttu.vk.sa.pages;
 
-import com.google.common.collect.Lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
-import ee.ttu.vk.sa.pages.panels.IAction;
 import ee.ttu.vk.sa.pages.panels.TeacherRegistrationPanel;
 import ee.ttu.vk.sa.pages.providers.TeacherDataProvider;
 import ee.ttu.vk.sa.service.TeacherService;
@@ -17,7 +15,6 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -31,7 +28,7 @@ import java.util.List;
  * Created by vadimstrukov on 2/15/16.
  */
 @AuthorizeInstantiation(Roles.ADMIN)
-public class TeachersPage extends AbstractPage implements IAction<Teacher> {
+public class TeachersPage extends AbstractPage {
 
 
     @SpringBean
@@ -51,7 +48,13 @@ public class TeachersPage extends AbstractPage implements IAction<Teacher> {
         teachers = getTeachers();
         teachers.setItemsPerPage(10);
         teacherTable.add(teachers);
-        panel = new FileUploadPanel<>("teacherXlsPanel", ".xls", this);
+        panel = new FileUploadPanel<Teacher>("teacherXlsPanel", ".xls") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
+                List<Teacher> teachers = teacherService.parseTeachers(inputStream);
+                teacherService.addTeachers(teachers);
+            }
+        };
         registrationPanel = new TeacherRegistrationPanel("teacherPanel", new CompoundPropertyModel<>(new Teacher()));
         add(teacherTable, panel, new BootstrapAjaxPagingNavigator("navigator", teachers), registrationPanel, getSearchForm(), getButtonAddTeacher());
     }
@@ -116,12 +119,5 @@ public class TeachersPage extends AbstractPage implements IAction<Teacher> {
                 return CustomAuthenticatedWebSession.getSession().isSignedIn();
             }
         };
-    }
-
-    @Override
-    public void save(InputStream objects) {
-        List<Teacher> teachers = teacherService.parseTeachers(objects);
-        teacherService.addTeachers(teachers);
-
     }
 }

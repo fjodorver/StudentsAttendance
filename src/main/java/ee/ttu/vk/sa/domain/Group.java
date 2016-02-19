@@ -1,6 +1,8 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.collect.Lists;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,6 +22,7 @@ public class Group implements Serializable {
     private String language;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Subject> subjects = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY)

@@ -8,7 +8,6 @@ import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
-import ee.ttu.vk.sa.pages.panels.IAction;
 import ee.ttu.vk.sa.pages.panels.SubjectsPanel;
 import ee.ttu.vk.sa.pages.providers.SubjectDataProvider;
 import ee.ttu.vk.sa.service.SubjectService;
@@ -29,7 +28,7 @@ import java.io.InputStream;
 import java.util.List;
 
 @AuthorizeInstantiation(Roles.ADMIN)
-public class SubjectsPage extends AbstractPage implements IAction<Subject> {
+public class SubjectsPage extends AbstractPage {
 
     @SpringBean
     private SubjectService subjectService;
@@ -47,7 +46,13 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
         subjects = getSubjects();
         subjects.setItemsPerPage(10);
         subjectTable.add(subjects);
-        panel = new FileUploadPanel<>("xlsPanel", ".xls", this);
+        panel = new FileUploadPanel<Subject>("xlsPanel", ".xls") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
+                List<Subject> subjects = subjectService.parseSubjects(inputStream);
+                subjectService.saveSubjects(subjects);
+            }
+        };
         add(subjectTable, panel, new BootstrapAjaxPagingNavigator("navigator", subjects), subjectPanel, getButtonAddSubject(), getSearchForm());
     }
 
@@ -107,10 +112,4 @@ public class SubjectsPage extends AbstractPage implements IAction<Subject> {
             }
         };
     }
-
-	@Override
-	public void save(InputStream objects) {
-		List<Subject> subjects = subjectService.parseSubjects(objects);
-		subjectService.saveSubjects(subjects);
-	}
 }

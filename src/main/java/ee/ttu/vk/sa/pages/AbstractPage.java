@@ -12,6 +12,7 @@ import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.attendance.AttendancePage;
 import ee.ttu.vk.sa.pages.login.LogOut;
+import ee.ttu.vk.sa.pages.students.StudentsPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;

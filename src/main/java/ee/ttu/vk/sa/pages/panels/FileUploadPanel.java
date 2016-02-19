@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.pages.panels;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -11,9 +12,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 
-public class FileUploadPanel<T> extends Panel {
+public abstract class FileUploadPanel<T> extends Panel {
 
-	public FileUploadPanel(String id, String extension, IAction<T> action) {
+	public FileUploadPanel(String id, String extension) {
         super(id);
         BootstrapForm<?> form = new BootstrapForm<Void>("form");
         FileUploadField fileUploadField = new FileUploadField("fileUploadField"){
@@ -29,7 +30,7 @@ public class FileUploadPanel<T> extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
-					action.save(fileUploadField.getFileUpload().getInputStream());
+                    FileUploadPanel.this.onSubmit(target, fileUploadField.getFileUpload().getInputStream());
                 } catch (IOException e) {
 					throw new IllegalArgumentException(e);
                 }
@@ -37,4 +38,5 @@ public class FileUploadPanel<T> extends Panel {
         });
         add(form);
     }
+    protected abstract void onSubmit(AjaxRequestTarget target, InputStream inputStream);
 }

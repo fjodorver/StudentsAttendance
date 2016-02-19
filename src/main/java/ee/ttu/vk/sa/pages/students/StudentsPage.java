@@ -1,19 +1,15 @@
-package ee.ttu.vk.sa.pages;
+package ee.ttu.vk.sa.pages.students;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
-import ee.ttu.vk.sa.domain.Attendance;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Teacher;
+import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
-import ee.ttu.vk.sa.pages.panels.IAction;
-import ee.ttu.vk.sa.pages.panels.StudentsPanel;
-import ee.ttu.vk.sa.pages.providers.AttendanceDataProvider;
 import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
 import ee.ttu.vk.sa.service.GroupService;
 import ee.ttu.vk.sa.service.StudentService;
-import ee.ttu.vk.sa.utils.DocParser;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -25,39 +21,52 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * Created by fjodor on 6.02.16.
  */
 
 @AuthorizeInstantiation(Roles.ADMIN)
-public class StudentsPage extends AbstractPage implements IAction<Student> {
+public class StudentsPage extends AbstractPage {
 
     @SpringBean
     private StudentService studentService;
+
     @SpringBean
     private GroupService groupService;
+
+    private StudentsUploadPanel uploadPanel;
+
     private DataView<Student> students;
     private StudentDataProvider studentDataProvider;
     private WebMarkupContainer studentTable;
-    private StudentsPanel studentsPanel;
+    private StudentPanel studentPanel;
 
 	private FileUploadPanel<Student> panel;
 
     public StudentsPage() {
         studentDataProvider = new StudentDataProvider();
         studentTable = new WebMarkupContainer("studentTable");
+        uploadPanel = new StudentsUploadPanel("uploadPanel");
         studentTable.setOutputMarkupId(true);
         students = getStudents();
         students.setItemsPerPage(10);
         studentTable.add(students);
-        studentsPanel = new StudentsPanel("studentPanel", new CompoundPropertyModel<>(new Student()));
-        panel = new FileUploadPanel<>("docPanel", ".doc", this);
-        add(studentTable, panel, new BootstrapAjaxPagingNavigator("navigator", students), studentsPanel, getButtonAddStudent(), getSearchForm());
+        studentPanel = new StudentPanel("studentPanel", new CompoundPropertyModel<>(new Student()));
+        uploadPanel.setOutputMarkupId(true);
+        panel = new FileUploadPanel<Student>("docPanel", ".doc") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
+                uploadPanel.setModel(new ListModel<>(studentService.parseStudents(inputStream)));
+                target.add(uploadPanel);
+                uploadPanel.appendShowDialogJavaScript(target);
+            }
+        };
+        add(studentTable, panel, new BootstrapAjaxPagingNavigator("navigator", students), studentPanel, getButtonAddStudent(), getSearchForm(), uploadPanel);
     }
 
     private DataView<Student> getStudents(){
@@ -67,9 +76,9 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
                 item.add(new AjaxLink<Student>("edit") {
                     @Override
                     public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                        studentsPanel.setModel(item.getModel());
-                        ajaxRequestTarget.add(studentsPanel);
-                        studentsPanel.appendShowDialogJavaScript(ajaxRequestTarget);
+                        studentPanel.setModel(item.getModel());
+                        ajaxRequestTarget.add(studentPanel);
+                        studentPanel.appendShowDialogJavaScript(ajaxRequestTarget);
                     }
                 }.add(new Label("code")));
                 item.add(new Label("firstname"));
@@ -106,9 +115,9 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
         return new AjaxLink<Student>("addStudent") {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                studentsPanel.setModel(new CompoundPropertyModel<>(new Student()));
-                ajaxRequestTarget.add(studentsPanel);
-                studentsPanel.appendShowDialogJavaScript(ajaxRequestTarget);
+                studentPanel.setModel(new CompoundPropertyModel<>(new Student()));
+                ajaxRequestTarget.add(studentPanel);
+                studentPanel.appendShowDialogJavaScript(ajaxRequestTarget);
             }
             @Override
             public boolean isEnabled() {
@@ -116,10 +125,4 @@ public class StudentsPage extends AbstractPage implements IAction<Student> {
             }
         };
     }
-
-	@Override
-	public void save(InputStream inputStream) {
-		List<Student> students = studentService.parseStudents(inputStream);
-		studentService.saveStudents(students);
-	}
 }
