@@ -7,6 +7,7 @@ import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
+import ee.ttu.vk.sa.pages.panels.SearchPanel;
 import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
 import ee.ttu.vk.sa.service.GroupService;
 import ee.ttu.vk.sa.service.StudentService;
@@ -21,6 +22,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -66,7 +68,14 @@ public class StudentsPage extends AbstractPage {
                 uploadPanel.appendShowDialogJavaScript(target);
             }
         };
-        add(studentTable, panel, new BootstrapAjaxPagingNavigator("navigator", students), studentPanel, getButtonAddStudent(), getSearchForm(), uploadPanel);
+        add(studentTable, panel, new BootstrapAjaxPagingNavigator("navigator", students), studentPanel, getButtonAddStudent(), uploadPanel);
+        add(new SearchPanel<Student>("searchPanel", new CompoundPropertyModel<>(new Student()), "lastname") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target, IModel<Student> model) {
+                studentDataProvider.setFilterState(model.getObject());
+                target.add(studentTable);
+            }
+        });
     }
 
     private DataView<Student> getStudents(){
@@ -96,18 +105,6 @@ public class StudentsPage extends AbstractPage {
                 });
             }
         };
-    }
-
-    private BootstrapForm<Student> getSearchForm(){
-        BootstrapForm<Student> form = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new Student()));
-        form.add(new TextField<String>("lastname").add(new AjaxFormComponentUpdatingBehavior("input") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                studentDataProvider.setFilterState(form.getModelObject());
-                ajaxRequestTarget.add(studentTable);
-            }
-        }));
-        return form;
     }
 
     private AjaxLink<Student> getButtonAddStudent(){

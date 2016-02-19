@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Page<Student> findAllByLastname(Pageable pageable, String lastname);
+    Page<Student> findAllByLastnameContainingIgnoreCase(Pageable pageable, String lastname);
     List<Student> findAllByGroup(Group group);
     Student findByCode(String code);
 }

@@ -8,6 +8,9 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Iterator;
 
@@ -18,6 +21,7 @@ public class StudentDataProvider extends SortableDataProvider<Student, Student> 
 
     @SpringBean
     private StudentService studentService;
+
     private Student student;
 
     public StudentDataProvider(){
@@ -27,9 +31,10 @@ public class StudentDataProvider extends SortableDataProvider<Student, Student> 
 
     @Override
     public Iterator<? extends Student> iterator(long first, long count) {
+        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "lastname");
         if(student.getLastname() != null)
-            return studentService.findAll((int)(first/count), (int)count, student.getLastname()).iterator();
-        return studentService.findAllStudents((int)(first/count), (int)count).iterator();
+            return studentService.findAllByLastname(pageable, student.getLastname()).iterator();
+        return studentService.findAll(pageable).iterator();
     }
 
     @Override

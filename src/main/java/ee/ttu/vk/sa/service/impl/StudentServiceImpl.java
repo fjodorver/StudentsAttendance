@@ -10,9 +10,7 @@ import ee.ttu.vk.sa.service.StudentService;
 import ee.ttu.vk.sa.utils.DocParser;
 import ee.ttu.vk.sa.utils.IParser;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +48,17 @@ public class StudentServiceImpl implements StudentService {
 	public List<Student> findAllStudents(Group group) {
 		return studentRepository.findAllByGroup(group);
 	}
+
+    @Override
+    public Page<Student> findAllByLastname(Pageable pageable, String lastname) {
+        return studentRepository.findAllByLastnameContainingIgnoreCase(pageable, lastname);
+    }
+
+    @Override
+    public Page<Student> findAll(Pageable pageable) {
+        return studentRepository.findAll(pageable);
+    }
+
     @Override
     public void addStudent(Student student) {
         studentRepository.save(student);
@@ -58,21 +67,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteStudent(Student student) {
         studentRepository.delete(student);
-    }
-
-    @Override
-    public Page<Student> findAll(int page, int size, String lastname){
-        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "lastname"));
-        Page<Student> students = studentRepository.findAllByLastname(pageable, lastname);
-        getAllObjects(students);
-        return students;
-    }
-
-    @Override
-    public Page<Student> findAllStudents(Integer page, Integer size) {
-        Page<Student> students = studentRepository.findAll(new PageRequest(page, size, new Sort(Sort.Direction.ASC, "lastname")));
-        getAllObjects(students);
-        return students;
     }
 
     @Override
