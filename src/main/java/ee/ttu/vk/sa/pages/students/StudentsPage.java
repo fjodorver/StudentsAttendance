@@ -81,8 +81,7 @@ public class StudentsPage extends AbstractPage {
                         studentPanel.appendShowDialogJavaScript(ajaxRequestTarget);
                     }
                 }.add(new Label("code")));
-                item.add(new Label("firstname"));
-                item.add(new Label("lastname"));
+                item.add(new Label("fullname"));
                 item.add(new Label("group"));
                 item.add(new AjaxLink<Teacher>("delete") {
                     @Override

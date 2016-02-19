@@ -86,12 +86,12 @@
 		<dependency>
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-core</artifactId>
-			<version>0.10.5</version>
+			<version>0.10.6</version>
 		</dependency>
 		<dependency>
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-extensions</artifactId>
-			<version>0.10.5</version>
+			<version>0.10.6</version>
 		</dependency>
 		<!--HIBERNATE DEPENDENCIES-->
 		<dependency>
