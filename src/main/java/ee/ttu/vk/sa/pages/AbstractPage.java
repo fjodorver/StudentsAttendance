@@ -10,6 +10,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownBut
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Teacher;
+import ee.ttu.vk.sa.pages.attendance.AttendancePage;
 import ee.ttu.vk.sa.pages.login.LogOut;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
