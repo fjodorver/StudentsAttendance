@@ -6,6 +6,9 @@ import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.enums.Type;
 import ee.ttu.vk.sa.repository.AttendanceRepository;
 import ee.ttu.vk.sa.service.AttendanceService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,14 +28,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Inject
     private AttendanceRepository attendanceRepository;
 
-    public List<Attendance> findAll(Subject subject, Group group, Type type, Date date) {
-        List<Attendance> attendances = attendanceRepository.findAllBySubjectAndGroupAndTypeAndDate(subject, group, type, date);
-        for (Attendance attendance : attendances) {
+    public List<Attendance> findAll(Subject subject, Group group, Type type, Date date, Pageable pageable) {
+        Page<Attendance> attendancePage = attendanceRepository.findAllBySubjectAndGroupAndTypeAndDate(subject, group, type, date, pageable);
+        for (Attendance attendance : attendancePage.getContent()) {
             attendance.getStudent().getId();
             attendance.getSubject().getId();
             attendance.getGroup().getId();
         }
-        return attendances;
+        return attendancePage.getContent();
     }
 
     @Override
