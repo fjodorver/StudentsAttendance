@@ -1,9 +1,12 @@
 package ee.ttu.vk.sa.pages.students;
 
 import com.google.common.collect.Lists;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.sa.domain.Student;
+import ee.ttu.vk.sa.pages.components.BootstrapIndicatingAjaxLink;
 import ee.ttu.vk.sa.service.StudentService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -43,7 +46,13 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
         container.add(dataView);
         add(container);
         add(new BootstrapAjaxPagingNavigator("navigator", dataView));
-        addButton(getButton());
+        addButton(new BootstrapIndicatingAjaxLink<Void>("button", Buttons.Type.Primary) {
+            @Override
+            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                studentService.saveStudents(students);
+                appendCloseDialogJavaScript(ajaxRequestTarget);
+            }
+        }.setLabel(Model.of("Save")).setIconType(FontAwesomeIconType.save));
     }
 
     private DataView<Student> getDataView() {
@@ -62,16 +71,6 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
                 });
             }
         };
-    }
-
-    private AjaxLink<Void> getButton() {
-        return (AjaxLink<Void>) new AjaxLink<Void>("button") {
-            @Override
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                studentService.saveStudents(students);
-                appendCloseDialogJavaScript(ajaxRequestTarget);
-            }
-        }.setBody(Model.of("Save"));
     }
 
 
