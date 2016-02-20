@@ -1,37 +1,37 @@
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
-    <ul wicket:id="navigator"></ul>
     <table class="table table-hover table-striped">
         <thead>
         <tr>
-            <th class="header col-lg-1">
-                <wicket:message key="student.table.code">Code</wicket:message>
+            <th class="header col-lg-2">
+                <wicket:message key="students.table.code">[Code]</wicket:message>
             </th>
-            <th class="header col-lg-4">
-                <wicket:message key="student.table.fullname">Fullname</wicket:message>
+            <th class="header col-lg-8">
+                <wicket:message key="students.table.fullname">[Fullname]</wicket:message>
             </th>
-            <th class="header col-lg-1">
-                <wicket:message key="student.table.group">Group</wicket:message>
+            <th class="header col-lg-2">
+                <wicket:message key="students.table.group">[Group]</wicket:message>
             </th>
             <th></th>
         </tr>
         </thead>
         <tbody wicket:id="studentTable">
         <tr wicket:id="students">
-            <td>
-                <span wicket:id="code">Code</span>
+            <td style="vertical-align: middle">
+                <span wicket:id="code">[Code]</span>
             </td>
-            <td>
-                <span wicket:id="fullname">Fullname</span>
+            <td style="vertical-align: middle">
+                <span wicket:id="fullname">[Fullname]</span>
             </td>
-            <td>
-                <span wicket:id="group">Group</span>
+            <td style="vertical-align: middle">
+                <span wicket:id="group">[Group]</span>
             </td>
-            <td>
+            <td  style="vertical-align: middle">
                 <button  class="btn btn-sm btn-danger" type="button" wicket:id="remove">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
             </td>
         </tr>
         </tbody>
     </table>
+    <ul wicket:id="navigator"></ul>
 </wicket:extend>

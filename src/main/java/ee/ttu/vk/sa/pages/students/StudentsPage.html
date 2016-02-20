@@ -1,44 +1,41 @@
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Students</h1>
+            <h1 class="page-header"><wicket:message key="students.header">[Students]</wicket:message></h1>
         </div>
         <div class="col-lg-8">
             <span wicket:id="searchPanel"></span>
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
-
-                </tr>
-                <tr>
                     <th class="header col-lg-2">
-                        <wicket:message key="student.table.code">[Code]</wicket:message>
+                        <wicket:message key="students.table.code">[Code]</wicket:message>
                     </th>
                     <th class="header col-lg-8">
-                        <wicket:message key="student.table.fullname">[Fullname]</wicket:message>
+                        <wicket:message key="students.table.fullname">[Fullname]</wicket:message>
                     </th>
                     <th class="header col-lg-2">
-                        <wicket:message key="student.table.group">[Group]</wicket:message>
+                        <wicket:message key="students.table.group">[Group]</wicket:message>
                     </th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody wicket:id="studentTable">
                 <tr wicket:id="students">
-                    <td>
+                    <td style="vertical-align: middle">
                         <a href="#" wicket:id="edit">
                             <span wicket:id="code">[Code]</span>
                         </a>
                     </td>
-                    <td>
+                    <td style="vertical-align: middle">
                         <span wicket:id="fullname">[Fullname]</span>
                     </td>
-                    <td>
+                    <td style="vertical-align: middle">
                         <span wicket:id="group">[Group]</span>
                     </td>
-                    <td>
+                    <td style="vertical-align: middle">
                         <button class="btn btn-sm btn-danger" type="button" wicket:id="delete">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
                     </td>
                 </tr>
@@ -46,10 +43,9 @@
                 </tbody>
             </table>
             <ul wicket:id="navigator"></ul>
-
-            <button class="btn btn-sm btn-primary pull-right" type="button"
-                    wicket:id="addStudent">
-                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+            <button class="btn btn-sm btn-primary pull-right" type="button" wicket:id="addStudent">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                <wicket:message key="students.table.buttons.add">[Save]</wicket:message>
             </button>
             <div wicket:id="studentPanel"></div>
             <div wicket:id="uploadPanel"></div>

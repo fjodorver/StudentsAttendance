@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.InputStream;
@@ -48,7 +49,7 @@ public class TeachersPage extends AbstractPage {
         teachers = getTeachers();
         teachers.setItemsPerPage(10);
         teacherTable.add(teachers);
-        panel = new FileUploadPanel<Teacher>("teacherXlsPanel", ".xls") {
+        panel = new FileUploadPanel<Teacher>("teacherXlsPanel", Model.of("Excel file"), ".xls") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
                 List<Teacher> teachers = teacherService.parseTeachers(inputStream);

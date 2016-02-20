@@ -21,6 +21,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -32,6 +33,7 @@ import java.io.InputStream;
 
 @AuthorizeInstantiation(Roles.ADMIN)
 public class StudentsPage extends AbstractPage {
+    private final static long ITEMS_PER_PAGE = 10;
 
     @SpringBean
     private StudentService studentService;
@@ -41,46 +43,43 @@ public class StudentsPage extends AbstractPage {
 
     private StudentsUploadPanel uploadPanel;
 
-    private DataView<Student> students;
     private StudentDataProvider studentDataProvider;
     private WebMarkupContainer studentTable;
     private StudentPanel studentPanel;
 
-	private FileUploadPanel<Student> panel;
-
     public StudentsPage() {
         studentDataProvider = new StudentDataProvider();
         studentTable = new WebMarkupContainer("studentTable");
-        uploadPanel = new StudentsUploadPanel("uploadPanel");
         studentTable.setOutputMarkupId(true);
-        students = getStudents();
-        students.setItemsPerPage(10);
-        studentTable.add(students);
+        DataView<Student> students = getStudents();
+        students.setItemsPerPage(ITEMS_PER_PAGE);
         studentPanel = new StudentPanel("studentPanel", new CompoundPropertyModel<>(new Student()));
-        uploadPanel.setOutputMarkupId(true);
-        studentTable.add(new NoRecordsPanel("noRecordsPanel", 4){
-            @Override
-            public boolean isVisible() {
-                return students.size() == 0;
-            }
-        });
-        panel = new FileUploadPanel<Student>("docPanel", ".doc") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
-                uploadPanel.setModel(new ListModel<>(studentService.parseStudents(inputStream)));
-                target.add(uploadPanel);
-                uploadPanel.appendShowDialogJavaScript(target);
-            }
-        };
+        uploadPanel = new StudentsUploadPanel("uploadPanel");
+        studentTable.add(students, new NoRecordsPanel<>("noRecordsPanel", students));
+        add(getFileUploadPanel(), getSearchPanel(), getButtonAddStudent(), studentPanel, uploadPanel, studentTable);
         add(new BootstrapAjaxPagingNavigator("navigator", students));
-        add(studentTable, panel, studentPanel, getButtonAddStudent(), uploadPanel);
-        add(new SearchPanel<Student>("searchPanel", new CompoundPropertyModel<>(new Student()), "lastname") {
+    }
+
+    private SearchPanel<Student> getSearchPanel() {
+        return new SearchPanel<Student>("searchPanel", new CompoundPropertyModel<>(new Student()), "lastname") {
             @Override
             protected void onUpdate(AjaxRequestTarget target, IModel<Student> model) {
                 studentDataProvider.setFilterState(model.getObject());
                 target.add(studentTable);
             }
-        });
+        };
+    }
+
+    private FileUploadPanel<Student> getFileUploadPanel() {
+        return new FileUploadPanel<Student>("docPanel", new ResourceModel("students.upload.header"), ".doc") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
+                uploadPanel.setModel(new ListModel<>(studentService.parseStudents(inputStream)));
+                uploadPanel.header(new ResourceModel("students.upload.header"));
+                target.add(uploadPanel);
+                uploadPanel.appendShowDialogJavaScript(target);
+            }
+        };
     }
 
     private DataView<Student> getStudents(){

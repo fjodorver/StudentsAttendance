@@ -8,15 +8,17 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.fileinput.Fil
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
+import org.apache.wicket.model.IModel;
 
 public abstract class FileUploadPanel<T> extends Panel {
 
-	public FileUploadPanel(String id, String extension) {
+	public FileUploadPanel(String id, IModel<String> header, String extension) {
         super(id);
         BootstrapForm<?> form = new BootstrapForm<Void>("form");
         BootstrapFileInputField fileUploadField = new BootstrapFileInputField("fileUploadField"){
@@ -37,7 +39,7 @@ public abstract class FileUploadPanel<T> extends Panel {
         };
         fileUploadField.getConfig().showUpload(true).showPreview(false);
         form.add(fileUploadField);
-        add(form);
+        add(form, new Label("header", header));
     }
     protected abstract void onSubmit(AjaxRequestTarget target, InputStream inputStream);
 }

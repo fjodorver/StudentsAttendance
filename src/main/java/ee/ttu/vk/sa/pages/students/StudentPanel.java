@@ -30,7 +30,6 @@ public class StudentPanel extends Modal<Student>{
 
     private BootstrapForm<Student> studentForm;
 
-
     public StudentPanel(String id, IModel<Student> model) {
         super(id, model);
         studentForm  = new BootstrapForm<>("studentForm", getModel());

@@ -18,6 +18,7 @@ import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
                 studentService.saveStudents(students);
                 appendCloseDialogJavaScript(ajaxRequestTarget);
             }
-        }.setLabel(Model.of("Save")).setIconType(FontAwesomeIconType.save));
+        }.setLabel(Model.of(new ResourceModel("students.upload.buttons.save"))).setIconType(FontAwesomeIconType.save));
     }
 
     private DataView<Student> getDataView() {
@@ -86,4 +87,5 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
         students.clear();
         students.addAll(getModelObject());
     }
+
 }
