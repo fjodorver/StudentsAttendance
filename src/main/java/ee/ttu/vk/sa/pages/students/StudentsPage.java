@@ -1,24 +1,22 @@
 package ee.ttu.vk.sa.pages.students;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
+import ee.ttu.vk.sa.pages.panels.NoRecordsPanel;
 import ee.ttu.vk.sa.pages.panels.SearchPanel;
 import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
 import ee.ttu.vk.sa.service.GroupService;
 import ee.ttu.vk.sa.service.StudentService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -60,6 +58,12 @@ public class StudentsPage extends AbstractPage {
         studentTable.add(students);
         studentPanel = new StudentPanel("studentPanel", new CompoundPropertyModel<>(new Student()));
         uploadPanel.setOutputMarkupId(true);
+        studentTable.add(new NoRecordsPanel("noRecordsPanel", 4){
+            @Override
+            public boolean isVisible() {
+                return students.size() == 0;
+            }
+        });
         panel = new FileUploadPanel<Student>("docPanel", ".doc") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
@@ -68,7 +72,8 @@ public class StudentsPage extends AbstractPage {
                 uploadPanel.appendShowDialogJavaScript(target);
             }
         };
-        add(studentTable, panel, new BootstrapAjaxPagingNavigator("navigator", students), studentPanel, getButtonAddStudent(), uploadPanel);
+        add(new BootstrapAjaxPagingNavigator("navigator", students));
+        add(studentTable, panel, studentPanel, getButtonAddStudent(), uploadPanel);
         add(new SearchPanel<Student>("searchPanel", new CompoundPropertyModel<>(new Student()), "lastname") {
             @Override
             protected void onUpdate(AjaxRequestTarget target, IModel<Student> model) {

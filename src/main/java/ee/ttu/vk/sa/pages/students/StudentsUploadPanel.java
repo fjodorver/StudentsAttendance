@@ -26,23 +26,22 @@ import java.util.List;
  * Created by fjodor on 19.02.16.
  */
 public class StudentsUploadPanel extends Modal<List<Student>> {
+    private static final long ITEMS_PER_PAGE = 10;
 
     @SpringBean
     private StudentService studentService;
 
     private WebMarkupContainer container;
-
     private DataView<Student> dataView;
 
-    private List<Student> students;
+    private List<Student> students = Lists.newArrayList();
 
     public StudentsUploadPanel(String id) {
         super(id);
-        students = Lists.newArrayList();
         container = new WebMarkupContainer("studentTable");
         container.setOutputMarkupId(true);
         dataView = getDataView();
-        dataView.setItemsPerPage(10L);
+        dataView.setItemsPerPage(ITEMS_PER_PAGE);
         container.add(dataView);
         add(container);
         add(new BootstrapAjaxPagingNavigator("navigator", dataView));

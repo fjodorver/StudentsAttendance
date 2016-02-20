@@ -8,6 +8,9 @@
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
+
+                </tr>
+                <tr>
                     <th class="header col-lg-2">
                         <wicket:message key="student.table.code">[Code]</wicket:message>
                     </th>
@@ -34,29 +37,25 @@
                         <span wicket:id="group">[Group]</span>
                     </td>
                     <td>
-                        <button  class="btn btn-sm btn-danger" type="button" wicket:id="delete">
+                        <button class="btn btn-sm btn-danger" type="button" wicket:id="delete">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
                         </button>
                     </td>
                 </tr>
+                <span wicket:id="noRecordsPanel"></span>
                 </tbody>
             </table>
-            <div style=" height: 32px;  position: relative; ">
-                <button style="position: absolute; left: 0;" class="btn btn-sm btn-primary pull-right" type="button" wicket:id="addStudent">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
-                </button>
-            </div>
             <ul wicket:id="navigator"></ul>
+
+            <button class="btn btn-sm btn-primary pull-right" type="button"
+                    wicket:id="addStudent">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+            </button>
             <div wicket:id="studentPanel"></div>
             <div wicket:id="uploadPanel"></div>
         </div>
         <div class="col-lg-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Panel Header</div>
-                <div class="panel-body">
-                    <span wicket:id="docPanel"></span>
-                </div>
-            </div>
+            <span wicket:id="docPanel"></span>
         </div>
     </div>
 </wicket:extend>
