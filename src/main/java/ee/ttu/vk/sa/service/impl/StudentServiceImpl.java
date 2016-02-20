@@ -44,11 +44,6 @@ public class StudentServiceImpl implements StudentService {
 		return parser.getElements();
 	}
 
-	@Override
-	public List<Student> findAllStudents(Group group) {
-		return studentRepository.findAllByGroup(group);
-	}
-
     @Override
     public Page<Student> findAllByLastname(Pageable pageable, String lastname) {
         return studentRepository.findAllByLastnameContainingIgnoreCase(pageable, lastname);

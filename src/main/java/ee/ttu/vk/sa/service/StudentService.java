@@ -19,7 +19,6 @@ public interface StudentService {
     void deleteStudent(Student student);
     int getSize();
 	List<Student> parseStudents(InputStream stream);
-    List<Student> findAllStudents(Group group);
     void saveStudents(List<Student> students);
 
     List<Student> findAllBySubject(Subject subject);

@@ -1,6 +1,9 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.base.Objects;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,7 +19,7 @@ public class Student implements Serializable {
 
     private String code;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Group group;
 
     private String firstname;
