@@ -1,5 +1,6 @@
 package ee.ttu.vk.sa.domain;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ public class Subject implements Serializable {
     private String code;
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "subject_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups = Lists.newArrayList();
 
@@ -70,16 +71,13 @@ public class Subject implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Subject subject = (Subject) o;
-
-        return id != null ? id.equals(subject.id) : subject.id == null;
-
+        return Objects.equal(id, subject.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hashCode(id);
     }
 
     @Override

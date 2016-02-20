@@ -1,12 +1,14 @@
 package ee.ttu.vk.sa.pages.students;
 
 import com.google.common.collect.Lists;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.pages.components.BootstrapIndicatingAjaxLink;
+import ee.ttu.vk.sa.pages.panels.NoRecordsPanel;
 import ee.ttu.vk.sa.service.StudentService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -14,6 +16,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -33,29 +36,34 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
     private StudentService studentService;
 
     private WebMarkupContainer container;
-    private DataView<Student> dataView;
+    private DataView<Student> students;
 
-    private List<Student> students = Lists.newArrayList();
+    private List<Student> studentList = Lists.newArrayList();
 
     public StudentsUploadPanel(String id) {
         super(id);
+        ListDataProvider<Student>  dataProvider = getDataProvider(studentList);
         container = new WebMarkupContainer("studentTable");
         container.setOutputMarkupId(true);
-        dataView = getDataView();
-        dataView.setItemsPerPage(ITEMS_PER_PAGE);
-        container.add(dataView);
-        add(new BootstrapAjaxPagingNavigator("navigator", dataView), container);
-        addButton(new BootstrapIndicatingAjaxLink<Void>("button", Buttons.Type.Primary) {
-            @Override
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                studentService.saveStudents(students);
-                appendCloseDialogJavaScript(ajaxRequestTarget);
-            }
-        }.setLabel(Model.of(new ResourceModel("students.upload.buttons.save"))).setIconType(FontAwesomeIconType.save));
+        students = getStudents(dataProvider);
+        students.setItemsPerPage(ITEMS_PER_PAGE);
+        container.add(students, new NoRecordsPanel<>("noRecordsPanel", dataProvider));
+        add(new BootstrapAjaxPagingNavigator("navigator", students), container);
+        addButton(getSaveButton());
     }
 
-    private DataView<Student> getDataView() {
-        return new DataView<Student>("students", getDataProvider(students)) {
+    private BootstrapAjaxLink<Void> getSaveButton() {
+        return new BootstrapIndicatingAjaxLink<Void>("button", Buttons.Type.Primary) {
+            @Override
+            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                studentService.saveStudents(studentList);
+                appendCloseDialogJavaScript(ajaxRequestTarget);
+            }
+        }.setLabel(Model.of(new ResourceModel("students.upload.buttons.save"))).setIconType(FontAwesomeIconType.save);
+    }
+
+    private DataView<Student> getStudents(ListDataProvider<Student> dataProvider) {
+        return new DataView<Student>("students", dataProvider) {
             @Override
             protected void populateItem(Item<Student> item) {
                 item.add(new Label("code"));
@@ -64,7 +72,7 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
                 item.add(new AjaxLink<Student>("remove") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        students.remove((int)(dataView.getCurrentPage() * ITEMS_PER_PAGE + item.getIndex()));
+                        studentList.remove((int)(students.getCurrentPage() * ITEMS_PER_PAGE + item.getIndex()));
                         target.add(container);
                     }
                 });
@@ -84,8 +92,8 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
 
     @Override
     protected void onModelChanged() {
-        students.clear();
-        students.addAll(getModelObject());
+        studentList.clear();
+        studentList.addAll(getModelObject());
     }
 
 }

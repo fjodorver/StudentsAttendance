@@ -1,5 +1,6 @@
 package ee.ttu.vk.sa.domain;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -75,16 +76,13 @@ public class Group implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Group group = (Group) o;
-
-        return id != null ? id.equals(group.id) : group.id == null;
-
+        return Objects.equal(id, group.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hashCode(id);
     }
 
     @Override

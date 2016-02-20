@@ -1,5 +1,7 @@
 package ee.ttu.vk.sa.domain;
 
+import com.google.common.base.Objects;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -74,15 +76,12 @@ public class Student implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Student student = (Student) o;
-
-        return id != null ? id.equals(student.id) : student.id == null;
-
+        return Objects.equal(id, student.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hashCode(id);
     }
 }

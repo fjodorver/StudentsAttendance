@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -20,28 +21,28 @@ import java.util.List;
 public class NoRecordsPanel<T> extends Panel {
     private static final IModel<String> DEFAULT_MESSAGE_MODEL = new ResourceModel("dataview.no-records-found");
 
-    private DataView<T> dataView;
+    private IDataProvider<T> dataProvider;
 
-    public NoRecordsPanel(String id, IModel<?> model, DataView<T> dataView) {
+    public NoRecordsPanel(String id, IModel<?> model, IDataProvider<T> dataProvider) {
         super(id, model);
-        this.dataView = dataView;
+        this.dataProvider = dataProvider;
         WebMarkupContainer td = new WebMarkupContainer("td");
         td.add(AttributeModifier.replace("colspan", new AbstractReadOnlyModel<String>() {
             @Override
             public String getObject() {
-                return String.valueOf(dataView.getViewSize());
+                return String.valueOf(10);
             }
         }));
         td.add(new Label("msg", model));
         add(td);
     }
 
-    public NoRecordsPanel(String id, DataView<T> dataView) {
-        this(id, DEFAULT_MESSAGE_MODEL, dataView);
+    public NoRecordsPanel(String id, IDataProvider<T> dataProvider) {
+        this(id, DEFAULT_MESSAGE_MODEL, dataProvider);
     }
 
     @Override
     public boolean isVisible() {
-        return dataView.size() == 0;
+        return dataProvider.size() == 0;
     }
 }

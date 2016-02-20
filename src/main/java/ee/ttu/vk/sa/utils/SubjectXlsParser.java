@@ -1,5 +1,6 @@
 package ee.ttu.vk.sa.utils;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import ee.ttu.vk.sa.domain.Group;
@@ -20,11 +21,11 @@ public class SubjectXlsParser extends XlsParser<Subject> {
 
     private Map<String, Subject> subjectMap;
     private Map<String, Group> groupMap;
-    private final int SUBJECT_CODE_CELL = 2;
-    private final int SUBJECT_NAME_CELL = 3;
-    private final int GROUP_NAME_CELL = 4;
-    private final int GROUP_LANGUAGE_CELL = 13;
-    private final int TEACHER_NAME_CELL = 12;
+    private static final int SUBJECT_CODE_CELL = 2;
+    private static final int SUBJECT_NAME_CELL = 3;
+    private static final int GROUP_NAME_CELL = 4;
+    private static final int GROUP_LANGUAGE_CELL = 13;
+    private static final int TEACHER_NAME_CELL = 12;
 
     public SubjectXlsParser() {
         groupMap = Maps.newHashMap();
@@ -69,7 +70,7 @@ public class SubjectXlsParser extends XlsParser<Subject> {
                         groupMap.put(group.getName(), group);
                     else{
                         if(groupMap.size() > 0){
-                            subjectMap.entrySet().iterator().next().getValue().setGroups(Lists.newArrayList(groupMap.values()));
+                            Iterators.getLast(subjectMap.entrySet().iterator()).getValue().setGroups(Lists.newArrayList(groupMap.values()));
                             groupMap.clear();
                         }
                         groupMap.put(group.getName(), group);
