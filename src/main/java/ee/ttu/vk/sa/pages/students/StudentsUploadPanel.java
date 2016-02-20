@@ -43,8 +43,7 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
         dataView = getDataView();
         dataView.setItemsPerPage(ITEMS_PER_PAGE);
         container.add(dataView);
-        add(container);
-        add(new BootstrapAjaxPagingNavigator("navigator", dataView));
+        add(new BootstrapAjaxPagingNavigator("navigator", dataView), container);
         addButton(new BootstrapIndicatingAjaxLink<Void>("button", Buttons.Type.Primary) {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
@@ -64,7 +63,7 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
                 item.add(new AjaxLink<Student>("remove") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        students.remove(item.getIndex());
+                        students.remove((int)(dataView.getCurrentPage() * ITEMS_PER_PAGE + item.getIndex()));
                         target.add(container);
                     }
                 });
