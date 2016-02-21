@@ -56,7 +56,7 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
         return new BootstrapIndicatingAjaxLink<Void>("button", Buttons.Type.Primary) {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                studentService.saveStudents(studentList);
+                studentService.save(studentList);
                 appendCloseDialogJavaScript(ajaxRequestTarget);
             }
         }.setLabel(Model.of(new ResourceModel("students.upload.buttons.save"))).setIconType(FontAwesomeIconType.save);

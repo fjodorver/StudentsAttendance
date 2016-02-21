@@ -37,14 +37,14 @@ public class StudentDataProvider extends SortableDataProvider<Student, Student> 
         Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "lastname");
         size = null;
         if(student.getLastname() != null)
-            return studentService.findAllByLastname(pageable, student.getLastname()).iterator();
-        return studentService.findAll(pageable).iterator();
+            return studentService.findAll(student.getLastname(), pageable);
+        return studentService.findAll(pageable);
     }
 
     @Override
     public long size() {
         if(size == null)
-            size = (long) studentService.getSize();
+            size = studentService.size();
         return size;
     }
 

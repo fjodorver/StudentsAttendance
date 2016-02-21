@@ -15,6 +15,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxNavigationToolbar;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
@@ -37,9 +38,6 @@ public class StudentsPage extends AbstractPage {
 
     @SpringBean
     private StudentService studentService;
-
-    @SpringBean
-    private GroupService groupService;
 
     private StudentsUploadPanel uploadPanel;
 
@@ -74,7 +72,7 @@ public class StudentsPage extends AbstractPage {
         return new FileUploadPanel<Student>("docPanel", new ResourceModel("students.upload.header"), ".doc") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, InputStream inputStream) {
-                uploadPanel.setModel(new ListModel<>(studentService.parseStudents(inputStream)));
+                uploadPanel.setModel(new ListModel<>(studentService.parse(inputStream)));
                 uploadPanel.header(new ResourceModel("students.upload.header"));
                 target.add(uploadPanel);
                 uploadPanel.appendShowDialogJavaScript(target);
@@ -99,7 +97,7 @@ public class StudentsPage extends AbstractPage {
                 item.add(new AjaxLink<Teacher>("delete") {
                     @Override
                     public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                        studentService.deleteStudent(item.getModelObject());
+                        studentService.delete(item.getModelObject().getId());
                         ajaxRequestTarget.add(studentTable);
                     }
                     @Override

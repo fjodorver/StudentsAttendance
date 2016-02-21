@@ -41,7 +41,7 @@ public class StudentPanel extends Modal<Student>{
         addButton(new AjaxSubmitLink("button", studentForm) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                studentService.addStudent(getModelObject());
+                studentService.save(getModelObject());
                 target.add(this.getPage());
             }
         }.setBody(Model.of("Save")));

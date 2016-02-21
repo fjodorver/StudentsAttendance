@@ -59,8 +59,8 @@ public class AttendancePage extends AbstractPage {
                 switch (component.getId()){
                     case "generate":
                         List<Attendance> attendances = Lists.newArrayList();
-                        studentService.findAllBySubject(attendance.getSubject())
-                                .forEach(x -> attendances.add(SerializationUtils.clone(attendance).setStudent(x)));
+                        studentService.findAll(attendance.getSubject())
+                                .forEachRemaining(x -> attendances.add(SerializationUtils.clone(attendance).setStudent(x)));
                         attendanceService.save(attendances);
                         break;
                     case "find":
