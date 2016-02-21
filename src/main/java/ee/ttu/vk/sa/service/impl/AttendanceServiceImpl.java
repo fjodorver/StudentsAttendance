@@ -28,9 +28,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Inject
     private AttendanceRepository attendanceRepository;
 
-    public List<Attendance> findAll(Subject subject, Group group, Type type, Date date, Pageable pageable) {
-        Page<Attendance> attendancePage = attendanceRepository.findAllBySubjectAndGroupAndTypeAndDate(subject, group, type, date, pageable);
-        return attendancePage.getContent();
+    @Override
+    public List<Attendance> findAll(Attendance attendance, Pageable pageable) {
+        return attendanceRepository.findAllBySubjectAndGroupAndTypeAndDate(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate(), pageable).getContent();
     }
 
     @Override

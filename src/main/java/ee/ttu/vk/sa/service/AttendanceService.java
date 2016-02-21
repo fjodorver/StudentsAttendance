@@ -13,7 +13,7 @@ import java.util.List;
  * Created by fjodor on 14.02.16.
  */
 public interface AttendanceService {
-    List<Attendance> findAll(Subject subject, Group group, Type type, Date date, Pageable pageable);
+    List<Attendance> findAll(Attendance attendance, Pageable pageable);
     Attendance save(Attendance attendance);
     void save(List<Attendance> attendances);
     int getSize();

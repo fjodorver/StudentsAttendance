@@ -31,7 +31,7 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
     private Attendance attendance;
 
     public AttendanceDataProvider() {
-        attendanceMap = Maps.newHashMap();
+        attendanceMap = Maps.newLinkedHashMap();
         attendance = new Attendance();
         setSort("lastname", SortOrder.ASCENDING);
         Injector.get().inject(this);
@@ -41,8 +41,9 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
     public Iterator<? extends Attendance> iterator(long first, long count) {
         Pageable pageable = new PageRequest((int)(first/count), (int)(count), Sort.Direction.ASC, "student.lastname");
         if(attendance.getId() == null){
-            attendanceService.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate(), pageable)
-                    .forEach(x -> attendanceMap.put(x.getId(), x));
+            attendanceMap.clear();
+            List<Attendance> attendances = attendanceService.findAll(attendance, pageable);
+            attendances.forEach(x -> attendanceMap.put(x.getId(), x));
         }
         else {
             Attendance attendance = SerializationUtils.clone(this.attendance);
