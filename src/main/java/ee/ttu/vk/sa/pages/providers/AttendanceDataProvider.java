@@ -1,8 +1,10 @@
 package ee.ttu.vk.sa.pages.providers;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import ee.ttu.vk.sa.domain.Attendance;
 import ee.ttu.vk.sa.service.AttendanceService;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilterStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -21,8 +23,7 @@ import java.util.*;
  */
 public class AttendanceDataProvider extends SortableDataProvider<Attendance, String> implements IFilterStateLocator<Attendance>{
 
-    private List<Attendance> attendanceList;
-    private Integer index;
+    private Map<Long, Attendance> attendanceMap;
 
     @SpringBean
     private AttendanceService attendanceService;
@@ -30,7 +31,7 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
     private Attendance attendance;
 
     public AttendanceDataProvider() {
-        attendanceList = Lists.newArrayList();
+        attendanceMap = Maps.newHashMap();
         attendance = new Attendance();
         setSort("lastname", SortOrder.ASCENDING);
         Injector.get().inject(this);
@@ -39,15 +40,16 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
     @Override
     public Iterator<? extends Attendance> iterator(long first, long count) {
         Pageable pageable = new PageRequest((int)(first/count), (int)(count), Sort.Direction.ASC, "student.lastname");
-        if(index != null){
-            attendanceList.set(index, attendance);
+        if(attendance.getId() == null){
+            attendanceService.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate(), pageable)
+                    .forEach(x -> attendanceMap.put(x.getId(), x));
         }
-        else
-        {
-            attendanceList.clear();
-            attendanceList.addAll(attendanceService.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate(), pageable));
+        else {
+            Attendance attendance = SerializationUtils.clone(this.attendance);
+            attendanceMap.put(attendance.getId(), SerializationUtils.clone(attendance));
+            this.attendance.setId(null);
         }
-        return Optional.of(attendanceList.iterator()).orElse(Lists.newArrayList(new Attendance()).iterator());
+        return Optional.of(attendanceMap.values().iterator()).orElse(Lists.newArrayList(new Attendance()).iterator());
     }
 
     @Override
@@ -68,10 +70,5 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
     @Override
     public void setFilterState(Attendance attendance) {
         this.attendance = attendance;
-    }
-
-    public void update(Attendance attendance, int index){
-        this.attendance = attendance;
-        this.index = index;
     }
 }

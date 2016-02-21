@@ -85,7 +85,7 @@ public class AttendancePage extends AbstractPage {
                         .add(new AjaxFormComponentUpdatingBehavior("change") {
                             @Override
                             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                                attendanceDataProvider.update(attendanceService.save(item.getModelObject()), item.getIndex());
+                                attendanceDataProvider.setFilterState(attendanceService.save(item.getModelObject()));
                                 ajaxRequestTarget.add(container);
                             }
                         }));
