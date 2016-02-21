@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.*;
 
 @Service
@@ -46,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Iterator<Student> findAll(String fullname, Pageable pageable) {
-        return studentRepository.findAll(fullname, pageable).iterator();
+        return studentRepository.findAll(MessageFormat.format("%{0}%", fullname), pageable).iterator();
     }
 
     @Override
