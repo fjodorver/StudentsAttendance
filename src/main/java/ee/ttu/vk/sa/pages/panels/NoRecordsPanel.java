@@ -1,19 +1,14 @@
 package ee.ttu.vk.sa.pages.panels;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-
-import java.util.List;
 
 /**
  * Created by fjodor on 20.02.16.
@@ -21,11 +16,11 @@ import java.util.List;
 public class NoRecordsPanel<T> extends Panel {
     private static final IModel<String> DEFAULT_MESSAGE_MODEL = new ResourceModel("dataview.no-records-found");
 
-    private IDataProvider<T> dataProvider;
+    private DataView<T> dataView;
 
-    public NoRecordsPanel(String id, IModel<?> model, IDataProvider<T> dataProvider) {
+    public NoRecordsPanel(String id, IModel<?> model, DataView<T> dataView) {
         super(id, model);
-        this.dataProvider = dataProvider;
+        this.dataView = dataView;
         WebMarkupContainer td = new WebMarkupContainer("td");
         td.add(AttributeModifier.replace("colspan", new AbstractReadOnlyModel<String>() {
             @Override
@@ -37,12 +32,12 @@ public class NoRecordsPanel<T> extends Panel {
         add(td);
     }
 
-    public NoRecordsPanel(String id, IDataProvider<T> dataProvider) {
-        this(id, DEFAULT_MESSAGE_MODEL, dataProvider);
+    public NoRecordsPanel(String id, DataView<T> dataView) {
+        this(id, DEFAULT_MESSAGE_MODEL, dataView);
     }
 
     @Override
     public boolean isVisible() {
-        return dataProvider.size() == 0;
+        return dataView.getItemCount() == 0;
     }
 }

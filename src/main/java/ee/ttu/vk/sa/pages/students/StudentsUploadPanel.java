@@ -47,7 +47,7 @@ public class StudentsUploadPanel extends Modal<List<Student>> {
         container.setOutputMarkupId(true);
         students = getStudents(dataProvider);
         students.setItemsPerPage(ITEMS_PER_PAGE);
-        container.add(students, new NoRecordsPanel<>("noRecordsPanel", dataProvider));
+        container.add(students, new NoRecordsPanel<>("noRecordsPanel", students));
         add(new BootstrapAjaxPagingNavigator("navigator", students), container);
         addButton(getSaveButton());
     }

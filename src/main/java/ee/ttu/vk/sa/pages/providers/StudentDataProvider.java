@@ -13,11 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * Created by vadimstrukov on 2/15/16.
  */
 public class StudentDataProvider extends SortableDataProvider<Student, Student> implements IFilterStateLocator<Student> {
+
+    private Long size;
 
     @SpringBean
     private StudentService studentService;
@@ -32,6 +35,7 @@ public class StudentDataProvider extends SortableDataProvider<Student, Student> 
     @Override
     public Iterator<? extends Student> iterator(long first, long count) {
         Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "lastname");
+        size = null;
         if(student.getLastname() != null)
             return studentService.findAllByLastname(pageable, student.getLastname()).iterator();
         return studentService.findAll(pageable).iterator();
@@ -39,7 +43,9 @@ public class StudentDataProvider extends SortableDataProvider<Student, Student> 
 
     @Override
     public long size() {
-        return studentService.getSize();
+        if(size == null)
+            size = (long) studentService.getSize();
+        return size;
     }
 
     @Override

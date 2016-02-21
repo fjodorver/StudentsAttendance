@@ -1,15 +1,14 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.base.Objects;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "student")
+@NamedEntityGraph(name = "student.group", attributeNodes = @NamedAttributeNode("group"))
 public class Student implements Serializable {
 
     @Id

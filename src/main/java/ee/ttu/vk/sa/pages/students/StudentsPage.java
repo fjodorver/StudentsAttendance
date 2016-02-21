@@ -55,7 +55,7 @@ public class StudentsPage extends AbstractPage {
         students.setItemsPerPage(ITEMS_PER_PAGE);
         studentPanel = new StudentPanel("studentPanel", new CompoundPropertyModel<>(new Student()));
         uploadPanel = new StudentsUploadPanel("uploadPanel");
-        studentTable.add(students, new NoRecordsPanel<>("noRecordsPanel", studentDataProvider));
+        studentTable.add(students, new NoRecordsPanel<>("noRecordsPanel", students));
         add(getFileUploadPanel(), getSearchPanel(), getButtonAddStudent(), studentPanel, uploadPanel, studentTable);
         add(new BootstrapAjaxPagingNavigator("navigator", students));
     }
