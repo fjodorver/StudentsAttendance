@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface AttendanceService {
     List<Attendance> findAll(Subject subject, Group group, Type type, Date date, Pageable pageable);
-    void save(Attendance attendance);
+    Attendance save(Attendance attendance);
     void save(List<Attendance> attendances);
     int getSize();
 }

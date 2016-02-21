@@ -30,17 +30,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     public List<Attendance> findAll(Subject subject, Group group, Type type, Date date, Pageable pageable) {
         Page<Attendance> attendancePage = attendanceRepository.findAllBySubjectAndGroupAndTypeAndDate(subject, group, type, date, pageable);
-        for (Attendance attendance : attendancePage.getContent()) {
-            attendance.getStudent().getId();
-            attendance.getSubject().getId();
-            attendance.getGroup().getId();
-        }
         return attendancePage.getContent();
     }
 
     @Override
-    public void save(Attendance attendance) {
-        attendanceRepository.save(attendance);
+    public Attendance save(Attendance attendance) {
+        return attendanceRepository.save(attendance);
     }
 
     @Override

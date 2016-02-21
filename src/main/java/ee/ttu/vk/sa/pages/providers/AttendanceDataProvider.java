@@ -9,7 +9,6 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvid
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +21,16 @@ import java.util.*;
  */
 public class AttendanceDataProvider extends SortableDataProvider<Attendance, String> implements IFilterStateLocator<Attendance>{
 
+    private List<Attendance> attendanceList;
+    private Integer index;
+
     @SpringBean
     private AttendanceService attendanceService;
 
     private Attendance attendance;
 
     public AttendanceDataProvider() {
+        attendanceList = Lists.newArrayList();
         attendance = new Attendance();
         setSort("lastname", SortOrder.ASCENDING);
         Injector.get().inject(this);
@@ -36,8 +39,15 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
     @Override
     public Iterator<? extends Attendance> iterator(long first, long count) {
         Pageable pageable = new PageRequest((int)(first/count), (int)(count), Sort.Direction.ASC, "student.lastname");
-        List<Attendance> attendances = attendanceService.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate(), pageable);
-        return Optional.of(attendances.iterator()).orElse(Lists.newArrayList(new Attendance()).iterator());
+        if(index != null){
+            attendanceList.set(index, attendance);
+        }
+        else
+        {
+            attendanceList.clear();
+            attendanceList.addAll(attendanceService.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate(), pageable));
+        }
+        return Optional.of(attendanceList.iterator()).orElse(Lists.newArrayList(new Attendance()).iterator());
     }
 
     @Override
@@ -58,5 +68,10 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
     @Override
     public void setFilterState(Attendance attendance) {
         this.attendance = attendance;
+    }
+
+    public void update(Attendance attendance, int index){
+        this.attendance = attendance;
+        this.index = index;
     }
 }

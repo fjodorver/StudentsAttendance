@@ -14,6 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "attendance")
+@NamedEntityGraph(name = "attendance.detail", attributeNodes = {@NamedAttributeNode("student"), @NamedAttributeNode("subject")})
 public class Attendance implements Serializable {
     @Id
     @SequenceGenerator(name="attendance_id_seq",sequenceName="attendance_id_seq", allocationSize=1)

@@ -1,7 +1,6 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.base.Objects;
-import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
 import java.io.Serializable;
