@@ -55,7 +55,7 @@ public class AttendancePage extends AbstractPage {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
                 Component component = (Component) ajaxForm.findSubmittingButton();
-                Attendance attendance = ((Attendance) ajaxForm.getModelObject()).setStatus(Status.ABSENT);
+                Attendance attendance = ((Attendance) ajaxForm.getModelObject()).setStatus(Status.INACTIVE);
                 switch (component.getId()){
                     case "generate":
                         List<Attendance> attendances = Lists.newArrayList();
@@ -80,7 +80,8 @@ public class AttendancePage extends AbstractPage {
             protected void populateItem(Item<Attendance> item) {
                 item.add(new Label("student.fullname"));
                 item.add(new Label("subject.name"));
-                item.add(new ColorEnumLabel<Status>("status", null).addEnumLabel(Status.PRESENT, LabelType.Success).addEnumLabel(Status.ABSENT, LabelType.Danger));
+                item.add(new ColorEnumLabel<Status>("status", null).addEnumLabel(Status.PRESENT, LabelType.Success)
+                        .addEnumLabel(Status.ABSENT, LabelType.Danger).addEnumLabel(Status.INACTIVE, LabelType.Default));
                 item.add(new DropDownChoice<>("statusChoice", new PropertyModel<>(item.getDefaultModel(), "status"), Lists.newArrayList(Status.values()))
                         .add(new AjaxFormComponentUpdatingBehavior("change") {
                             @Override
