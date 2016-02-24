@@ -1,10 +1,9 @@
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
-    <span wicket:id="xlsPanel"></span>
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Subjects</h1>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-8">
                 <form wicket:id="searchForm" role="search">
                     <div class="form-group pull-left" style="position: relative;left: -50%;">
                         <div class="input-group col-lg-offset-6 col-lg-6">
@@ -13,7 +12,7 @@
                         </div>
                     </div>
                 </form>
-                <table class="table table-hover table-striped">
+                <table class="table table-bordered">
                     <thead>
                     <tr>
                         <th class="header col-md-3">
@@ -56,6 +55,9 @@
                 </div>
                 <ul wicket:id="navigator"></ul>
                 <div wicket:id="subjectPanel"></div>
+            </div>
+            <div class="col-lg-4">
+                <span wicket:id="xlsPanel"></span>
             </div>
         </div>
 </wicket:extend>

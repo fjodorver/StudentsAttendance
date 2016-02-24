@@ -1,4 +1,4 @@
-package ee.ttu.vk.sa.pages.panels;
+package ee.ttu.vk.sa.pages.subjects;
 
 import com.google.common.collect.Lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;

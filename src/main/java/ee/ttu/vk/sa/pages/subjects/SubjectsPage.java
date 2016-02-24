@@ -1,4 +1,4 @@
-package ee.ttu.vk.sa.pages;
+package ee.ttu.vk.sa.pages.subjects;
 
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
@@ -7,8 +7,8 @@ import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
+import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
-import ee.ttu.vk.sa.pages.panels.SubjectsPanel;
 import ee.ttu.vk.sa.pages.providers.SubjectDataProvider;
 import ee.ttu.vk.sa.service.SubjectService;
 import org.apache.wicket.ajax.AjaxRequestTarget;

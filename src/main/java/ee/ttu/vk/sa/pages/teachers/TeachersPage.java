@@ -1,11 +1,11 @@
-package ee.ttu.vk.sa.pages;
+package ee.ttu.vk.sa.pages.teachers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Teacher;
+import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
-import ee.ttu.vk.sa.pages.panels.TeacherRegistrationPanel;
 import ee.ttu.vk.sa.pages.providers.TeacherDataProvider;
 import ee.ttu.vk.sa.service.TeacherService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,7 +37,7 @@ public class TeachersPage extends AbstractPage {
     private DataView<Teacher> teachers;
     private TeacherDataProvider teacherDataProvider;
     private WebMarkupContainer teacherTable;
-    private TeacherRegistrationPanel registrationPanel;
+    private TeacherPanel registrationPanel;
     private FileUploadPanel<Teacher> panel;
 
 
@@ -56,7 +56,7 @@ public class TeachersPage extends AbstractPage {
                 teacherService.addTeachers(teachers);
             }
         };
-        registrationPanel = new TeacherRegistrationPanel("teacherPanel", new CompoundPropertyModel<>(new Teacher()));
+        registrationPanel = new TeacherPanel("teacherPanel", new CompoundPropertyModel<>(new Teacher()));
         add(teacherTable, panel, new BootstrapAjaxPagingNavigator("navigator", teachers), registrationPanel, getSearchForm(), getButtonAddTeacher());
     }
 

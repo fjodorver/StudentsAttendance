@@ -1,4 +1,4 @@
-package ee.ttu.vk.sa.pages.panels;
+package ee.ttu.vk.sa.pages.teachers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
@@ -22,13 +22,13 @@ import javax.inject.Inject;
  * Created by vadimstrukov on 2/15/16.
  */
 @AuthorizeInstantiation(Roles.ADMIN)
-public class TeacherRegistrationPanel extends Modal<Teacher> {
+public class TeacherPanel extends Modal<Teacher> {
 
     @SpringBean
     private TeacherService teacherService;
     private BootstrapForm<Teacher> teacherForm;
 
-    public TeacherRegistrationPanel(String id, IModel<Teacher> model) {
+    public TeacherPanel(String id, IModel<Teacher> model) {
         super(id, model);
         teacherForm  = new BootstrapForm<>("teacherForm", getModel());
         teacherForm.add(new TextField<String>("name"));
