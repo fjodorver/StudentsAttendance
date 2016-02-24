@@ -1,32 +1,39 @@
 package ee.ttu.vk.sa.pages.students;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
+import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.AbstractPage;
+import ee.ttu.vk.sa.pages.components.BootstrapAjaxNavigationToolbar;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
-import ee.ttu.vk.sa.pages.panels.NoRecordsPanel;
 import ee.ttu.vk.sa.pages.panels.SearchPanel;
 import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
-import ee.ttu.vk.sa.service.GroupService;
 import ee.ttu.vk.sa.service.StudentService;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxNavigationToolbar;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilteredPropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.TextFilter;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by fjodor on 6.02.16.
@@ -34,36 +41,40 @@ import java.io.InputStream;
 
 @AuthorizeInstantiation(Roles.ADMIN)
 public class StudentsPage extends AbstractPage {
-    private final static long ITEMS_PER_PAGE = 10;
-
     @SpringBean
     private StudentService studentService;
 
     private StudentsUploadPanel uploadPanel;
-
     private StudentDataProvider studentDataProvider;
-    private WebMarkupContainer studentTable;
-    private StudentPanel studentPanel;
+    private DataTable<Student, String> dataTable;
 
     public StudentsPage() {
         studentDataProvider = new StudentDataProvider();
-        studentTable = new WebMarkupContainer("studentTable");
-        studentTable.setOutputMarkupId(true);
-        DataView<Student> students = getStudents();
-        students.setItemsPerPage(ITEMS_PER_PAGE);
-        studentPanel = new StudentPanel("studentPanel", new CompoundPropertyModel<>(new Student()));
-        uploadPanel = new StudentsUploadPanel("uploadPanel");
-        studentTable.add(students, new NoRecordsPanel<>("noRecordsPanel", students));
-        add(getFileUploadPanel(), getSearchPanel(), getButtonAddStudent(), studentPanel, uploadPanel, studentTable);
-        add(new BootstrapAjaxPagingNavigator("navigator", students));
+        List<IColumn<Student, String>> columns = Lists.newArrayList();
+        columns.add(getFilteredColumn("Code", "code", "filterState.code"));
+        columns.add(getFilteredColumn("Firstname", "firstname", "filterState.firstname"));
+        columns.add(getFilteredColumn("Lastname", "lastname", "filterState.lastname"));
+        columns.add(getFilteredColumn("Group", "group", "filterState.group.name"));
+        dataTable = new DataTable<>("table", columns, studentDataProvider, 10);
+        dataTable.setOutputMarkupId(true);
+        dataTable.setVersioned(false);
+        FilterForm<Student> filterForm = new FilterForm<>("form", studentDataProvider);
+        FilterToolbar filterToolbar = new FilterToolbar(dataTable, filterForm);
+        dataTable.addTopToolbar(new AjaxFallbackHeadersToolbar<>(dataTable, studentDataProvider));
+        dataTable.addTopToolbar(filterToolbar);
+        dataTable.addBottomToolbar(new BootstrapAjaxNavigationToolbar(dataTable));
+        dataTable.addBottomToolbar(new NoRecordsToolbar(dataTable));
+        filterForm.add(dataTable);
+        add(filterForm, getFileUploadPanel(), uploadPanel = new StudentsUploadPanel("uploadPanel"));
     }
 
-    private SearchPanel<Student> getSearchPanel() {
-        return new SearchPanel<Student>("searchPanel", new CompoundPropertyModel<>(new Student()), "lastname") {
+    private IColumn<Student, String> getFilteredColumn(String name, String stringExpression, String stringFilter) {
+        return new FilteredPropertyColumn<Student, String>(Model.of(name), stringExpression) {
             @Override
-            protected void onUpdate(AjaxRequestTarget target, IModel<Student> model) {
-                studentDataProvider.setFilterState(model.getObject());
-                target.add(studentTable);
+            public Component getFilter(String s, FilterForm<?> filterForm) {
+                TextFilter<Student> textFilter = new TextFilter<>(s, new PropertyModel<>(studentDataProvider, stringFilter), filterForm);
+                textFilter.getFilter().add(new AttributeAppender("class", " form-control"));
+                return textFilter;
             }
         };
     }
@@ -76,50 +87,6 @@ public class StudentsPage extends AbstractPage {
                 uploadPanel.header(new ResourceModel("students.upload.header"));
                 target.add(uploadPanel);
                 uploadPanel.appendShowDialogJavaScript(target);
-            }
-        };
-    }
-
-    private DataView<Student> getStudents(){
-        return new DataView<Student>("students", studentDataProvider) {
-            @Override
-            protected void populateItem(Item<Student> item) {
-                item.add(new AjaxLink<Student>("edit") {
-                    @Override
-                    public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                        studentPanel.setModel(item.getModel());
-                        ajaxRequestTarget.add(studentPanel);
-                        studentPanel.appendShowDialogJavaScript(ajaxRequestTarget);
-                    }
-                }.add(new Label("code")));
-                item.add(new Label("fullname"));
-                item.add(new Label("group"));
-                item.add(new AjaxLink<Teacher>("delete") {
-                    @Override
-                    public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                        studentService.delete(item.getModelObject().getId());
-                        ajaxRequestTarget.add(studentTable);
-                    }
-                    @Override
-                    public boolean isVisible() {
-                        return CustomAuthenticatedWebSession.getSession().isSignedIn();
-                    }
-                });
-            }
-        };
-    }
-
-    private AjaxLink<Student> getButtonAddStudent(){
-        return new AjaxLink<Student>("addStudent") {
-            @Override
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                studentPanel.setModel(new CompoundPropertyModel<>(new Student()));
-                ajaxRequestTarget.add(studentPanel);
-                studentPanel.appendShowDialogJavaScript(ajaxRequestTarget);
-            }
-            @Override
-            public boolean isEnabled() {
-                return CustomAuthenticatedWebSession.getSession().isSignedIn();
             }
         };
     }

@@ -19,9 +19,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @EntityGraph(value = "student.group", type = EntityGraph.EntityGraphType.LOAD)
     Page<Student> findAll(Pageable pageable);
 
-    @Query("select s from Student s where concat(s.firstname, s.lastname) like :fullname")
+    @Query("select s from Student s where s.code like ?1 and s.firstname like ?2 and s.lastname like ?3 and s.group.name like ?4")
     @EntityGraph(value = "student.group", type = EntityGraph.EntityGraphType.LOAD)
-    Page<Student> findAll(@Param("fullname") String fullname, Pageable pageable);
+    Page<Student> findAll(String code, String firstname, String lastname, String group, Pageable pageable);
 
     Student findByCode(String code);
+
+    @Query("select count(s) from Student s where s.code like ?1 and s.firstname like ?2 and s.lastname like ?3 and s.group.name like ?4")
+    long count(String code, String firstname, String lastname, String group);
 }

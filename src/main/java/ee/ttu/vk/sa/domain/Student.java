@@ -1,9 +1,13 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "student")
@@ -17,60 +21,63 @@ public class Student implements Serializable {
 
     private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private Group group;
 
     private String firstname;
 
     private String lastname;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Group group = new Group();
+
+    @OneToMany(mappedBy = "student")
+    private List<Attendance> attendances = Lists.newArrayList();
+
     public Long getId() {
         return id;
     }
 
-    public Student setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public String getCode() {
         return code;
     }
 
-    public Student setCode(String code) {
+    public void setCode(String code) {
         this.code = code;
-        return this;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public Student setGroup(Group group) {
-        this.group = group;
-        return this;
     }
 
     public String getFirstname() {
         return firstname;
     }
 
-    public Student setFirstname(String firstname) {
+    public void setFirstname(String firstname) {
         this.firstname = firstname;
-        return this;
     }
 
     public String getLastname() {
         return lastname;
     }
 
-    public Student setLastname(String lastname) {
+    public void setLastname(String lastname) {
         this.lastname = lastname;
-        return this;
     }
 
-    public String getFullname(){
-        return String.format("%1$s %2$s", firstname, lastname);
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
     }
 
     @Override

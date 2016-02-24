@@ -15,9 +15,9 @@ public interface StudentService {
     List<Student> parse(InputStream inputStream);
     Iterator<Student> findAll(Subject subject);
     Iterator<Student> findAll(Pageable pageable);
-    Iterator<Student> findAll(String fullname, Pageable pageable);
+    Iterator<Student> findAll(Student student, Pageable pageable);
     Iterator<Student> save(List<Student> students);
     Student save(Student student);
     void delete(Long id);
-    long size();
+    long size(Student student);
 }

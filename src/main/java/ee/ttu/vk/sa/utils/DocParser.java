@@ -37,7 +37,11 @@ public class DocParser implements IParser<Student> {
                     String userLine = line.replaceAll("OK", "").replaceAll("REV", "").replaceAll("TREV", "").replaceAll("\\*", "").trim();
                     String[] userParts = Arrays.stream(userLine.split("\\t")).map(x -> x = x.trim()).toArray(String[]::new);
                     Group group = new Group().setName(group_name);
-                    Student student = new Student().setCode(userParts[2]).setFirstname(userParts[0]).setLastname(userParts[1]).setGroup(group);
+                    Student student = new Student();
+                    student.setCode(userParts[2]);
+                    student.setFirstname(userParts[0]);
+                    student.setLastname(userParts[1]);
+                    student.setGroup(group);
                     students.add(student);
                 }
             }

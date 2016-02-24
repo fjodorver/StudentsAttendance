@@ -1,7 +1,6 @@
 package ee.ttu.vk.sa.service.impl;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.repository.GroupRepository;
@@ -16,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -46,8 +47,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Iterator<Student> findAll(String fullname, Pageable pageable) {
-        return studentRepository.findAll(MessageFormat.format("%{0}%", fullname), pageable).iterator();
+    public Iterator<Student> findAll(Student student, Pageable pageable) {
+        String code = MessageFormat.format("%{0}%",Optional.ofNullable(student.getCode()).orElse(""));
+        String firstname = MessageFormat.format("%{0}%",Optional.ofNullable(student.getFirstname()).orElse(""));
+        String lastname = MessageFormat.format("%{0}%",Optional.ofNullable(student.getLastname()).orElse(""));
+        String group = MessageFormat.format("%{0}%",Optional.ofNullable(student.getGroup().getName()).orElse(""));
+        return studentRepository.findAll(code, firstname, lastname, group, pageable).iterator();
     }
 
     @Override
@@ -73,8 +78,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public long size() {
-        return studentRepository.count();
+    public long size(Student student) {
+        String code = MessageFormat.format("%{0}%",Optional.ofNullable(student.getCode()).orElse(""));
+        String firstname = MessageFormat.format("%{0}%",Optional.ofNullable(student.getFirstname()).orElse(""));
+        String lastname = MessageFormat.format("%{0}%",Optional.ofNullable(student.getLastname()).orElse(""));
+        String group = MessageFormat.format("%{0}%",Optional.ofNullable(student.getGroup().getName()).orElse(""));
+        return studentRepository.count(code, firstname, lastname, group);
     }
 
 }

@@ -1,5 +1,6 @@
 package ee.ttu.vk.sa.pages.providers;
 
+import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.service.StudentService;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilterStateLocator;
@@ -13,14 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Iterator;
-import java.util.Optional;
 
 /**
  * Created by vadimstrukov on 2/15/16.
  */
-public class StudentDataProvider extends SortableDataProvider<Student, Student> implements IFilterStateLocator<Student> {
-
-    private Long size;
+public class StudentDataProvider extends SortableDataProvider<Student, String> implements IFilterStateLocator<Student> {
 
     @SpringBean
     private StudentService studentService;
@@ -35,17 +33,12 @@ public class StudentDataProvider extends SortableDataProvider<Student, Student> 
     @Override
     public Iterator<? extends Student> iterator(long first, long count) {
         Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "lastname");
-        size = null;
-        if(student.getLastname() != null)
-            return studentService.findAll(student.getLastname(), pageable);
-        return studentService.findAll(pageable);
+        return studentService.findAll(student, pageable);
     }
 
     @Override
     public long size() {
-        if(size == null)
-            size = studentService.size();
-        return size;
+        return studentService.size(student);
     }
 
     @Override
