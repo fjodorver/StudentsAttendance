@@ -55,7 +55,8 @@ public class AttendancePage extends AbstractPage {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
                 Component component = (Component) ajaxForm.findSubmittingButton();
-                Attendance attendance = ((Attendance) ajaxForm.getModelObject()).setStatus(Status.INACTIVE);
+                Attendance attendance = (Attendance) ajaxForm.getModelObject();
+                attendance.setStatus(Status.INACTIVE);
                 switch (component.getId()){
                     case "generate":
                         List<Attendance> attendances = Lists.newArrayList();
