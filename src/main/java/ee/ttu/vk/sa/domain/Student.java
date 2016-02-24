@@ -1,12 +1,11 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.List;
 
 @Entity
@@ -29,7 +28,7 @@ public class Student implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Group group = new Group();
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
     private List<Attendance> attendances = Lists.newArrayList();
 
     public Long getId() {
@@ -78,6 +77,10 @@ public class Student implements Serializable {
 
     public void setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
+    }
+
+    public String getFullname(){
+        return MessageFormat.format("{0} {1}", firstname, lastname);
     }
 
     @Override
