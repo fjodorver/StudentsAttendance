@@ -7,6 +7,7 @@ import de.agilecoders.wicket.core.settings.SingleThemeProvider;
 import de.agilecoders.wicket.core.settings.Theme;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import ee.ttu.vk.sa.pages.DashboardPage;
+import ee.ttu.vk.sa.pages.assets.NutchUiCssReference;
 import ee.ttu.vk.sa.pages.login.LoginPage;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
@@ -27,7 +28,7 @@ public class WicketApplication extends AuthenticatedWebApplication
 		super.init();
 		BootstrapSettings settings = new BootstrapSettings();
 		Bootstrap.install(this, settings);
-		Theme theme = new Theme("bootstrap", BootstrapCssReference.instance(), FontAwesomeCssReference.instance());
+		Theme theme = new Theme("bootstrap", BootstrapCssReference.instance(), FontAwesomeCssReference.instance(), NutchUiCssReference.instance());
 		settings.setThemeProvider(new SingleThemeProvider(theme));
 		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
 	}

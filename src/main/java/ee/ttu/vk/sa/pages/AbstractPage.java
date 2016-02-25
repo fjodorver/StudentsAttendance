@@ -12,6 +12,7 @@ import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.attendance.AttendancePage;
 import ee.ttu.vk.sa.pages.login.LogOut;
+import ee.ttu.vk.sa.pages.menu.VerticalMenu;
 import ee.ttu.vk.sa.pages.students.StudentsPage;
 import ee.ttu.vk.sa.pages.subjects.SubjectsPage;
 import ee.ttu.vk.sa.pages.teachers.TeachersPage;
@@ -30,11 +31,13 @@ import java.util.Optional;
  * Created by fjodor on 6.02.16.
  */
 public class AbstractPage extends WebPage {
-    private Navbar navbar;
+    private VerticalMenu navbar;
 
     public AbstractPage() {
-        navbar = new Navbar("header");
+        navbar = new VerticalMenu("navigation");
         navbar.setBrandName(new StringResourceModel("navbar.title"));
+        navbar.setInverted(true);
+        navbar.setPosition(Navbar.Position.TOP);
         navbar.fluid();
 
         Roles roles = CustomAuthenticatedWebSession.getSession().getRoles();
@@ -44,6 +47,7 @@ public class AbstractPage extends WebPage {
         addMenuItem(StudentsPage.class, "navbar.menu.students", FontAwesomeIconType.users, roles.hasRole(Roles.ADMIN));
         addMenuItem(SubjectsPage.class, "navbar.menu.subjects", FontAwesomeIconType.info, roles.hasRole(Roles.ADMIN));
         addMenuItem(TeachersPage.class, "navbar.menu.teachers", FontAwesomeIconType.university, roles.hasRole(Roles.ADMIN));
+        navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, addSettingsMenu()));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
 
         add(navbar);
@@ -60,6 +64,22 @@ public class AbstractPage extends WebPage {
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, button));
     }
 
+    private Component addSettingsMenu(){
+        return new NavbarDropDownButton(new StringResourceModel("navbar.menu.settings")) {
+            @Override
+            protected List<AbstractLink> newSubMenuButtons(String s) {
+                List<AbstractLink> subSettings = Lists.newArrayList();
+                subSettings.add(new MenuBookmarkablePageLink<Void>(UserSettingsPage.class, new StringResourceModel("navbar.menu.settings.user")).setIconType(FontAwesomeIconType.user));
+                subSettings.add(new MenuBookmarkablePageLink<Void>(LocalizationSettingsPage.class, new StringResourceModel("navbar.menu.settings.local")).setIconType(FontAwesomeIconType.language));
+                return subSettings;
+            }
+            @Override
+            public boolean isVisible() {
+                return CustomAuthenticatedWebSession.get().isSignedIn();
+            }
+        }.setIconType(FontAwesomeIconType.gears);
+    }
+
     private Component addUserMenu(){
         String fullname = Optional.ofNullable(CustomAuthenticatedWebSession.getSession().getTeacher()).orElse(new Teacher()).getName();
         return new NavbarDropDownButton(Model.of(fullname)){
@@ -67,7 +87,6 @@ public class AbstractPage extends WebPage {
             @Override
             protected List<AbstractLink> newSubMenuButtons(String s) {
                 List<AbstractLink> subMenu = Lists.newArrayList();
-                subMenu.add(new MenuBookmarkablePageLink<Void>(SettingsPage.class, new StringResourceModel("navbar.userMenu.settings")).setIconType(FontAwesomeIconType.gears));
                 subMenu.add(new MenuBookmarkablePageLink<Void>(LogOut.class, new StringResourceModel("navbar.userMenu.logout")).setIconType(FontAwesomeIconType.sign_out));
                 return subMenu;
             }
