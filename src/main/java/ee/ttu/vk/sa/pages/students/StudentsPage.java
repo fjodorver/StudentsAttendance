@@ -6,6 +6,7 @@ import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.components.BootstrapAjaxNavigationToolbar;
+import ee.ttu.vk.sa.pages.panels.AbstractTablePanel;
 import ee.ttu.vk.sa.pages.panels.FileUploadPanel;
 import ee.ttu.vk.sa.pages.panels.SearchPanel;
 import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
@@ -41,42 +42,27 @@ import java.util.List;
 
 @AuthorizeInstantiation(Roles.ADMIN)
 public class StudentsPage extends AbstractPage {
+
     @SpringBean
     private StudentService studentService;
 
     private StudentsUploadPanel uploadPanel;
-    private StudentDataProvider studentDataProvider;
-    private DataTable<Student, String> dataTable;
+    private StudentDataProvider dataProvider;
 
     public StudentsPage() {
-        studentDataProvider = new StudentDataProvider();
-        List<IColumn<Student, String>> columns = Lists.newArrayList();
-        columns.add(getFilteredColumn("Code", "code", "filterState.code"));
-        columns.add(getFilteredColumn("Firstname", "firstname", "filterState.firstname"));
-        columns.add(getFilteredColumn("Lastname", "lastname", "filterState.lastname"));
-        columns.add(getFilteredColumn("Group", "group", "filterState.group.name"));
-        dataTable = new DataTable<>("table", columns, studentDataProvider, 10);
-        dataTable.setOutputMarkupId(true);
-        dataTable.setVersioned(false);
-        FilterForm<Student> filterForm = new FilterForm<>("form", studentDataProvider);
-        FilterToolbar filterToolbar = new FilterToolbar(dataTable, filterForm);
-        dataTable.addTopToolbar(new AjaxFallbackHeadersToolbar<>(dataTable, studentDataProvider));
-        dataTable.addTopToolbar(filterToolbar);
-        dataTable.addBottomToolbar(new BootstrapAjaxNavigationToolbar(dataTable));
-        dataTable.addBottomToolbar(new NoRecordsToolbar(dataTable));
-        filterForm.add(dataTable);
-        add(filterForm, getFileUploadPanel(), uploadPanel = new StudentsUploadPanel("uploadPanel"));
-    }
-
-    private IColumn<Student, String> getFilteredColumn(String name, String stringExpression, String stringFilter) {
-        return new FilteredPropertyColumn<Student, String>(Model.of(name), stringExpression) {
+        dataProvider = new StudentDataProvider();
+        AbstractTablePanel<Student, String> tablePanel = new AbstractTablePanel<Student, String>("studentsPanel", dataProvider) {
             @Override
-            public Component getFilter(String s, FilterForm<?> filterForm) {
-                TextFilter<Student> textFilter = new TextFilter<>(s, new PropertyModel<>(studentDataProvider, stringFilter), filterForm);
-                textFilter.getFilter().add(new AttributeAppender("class", " form-control"));
-                return textFilter;
+            protected List<IColumn<Student, String>> getColumnList() {
+                    List<IColumn<Student, String>> columns = Lists.newArrayList();
+                    columns.add(getFilteredColumn("Code", "code", "filterState.code"));
+                    columns.add(getFilteredColumn("Firstname", "firstname", "filterState.firstname"));
+                    columns.add(getFilteredColumn("Lastname", "lastname", "filterState.lastname"));
+                    columns.add(getFilteredColumn("Group", "group", "filterState.group.name"));
+                return columns;
             }
         };
+        add(tablePanel, getFileUploadPanel(), uploadPanel = new StudentsUploadPanel("uploadPanel"));
     }
 
     private FileUploadPanel<Student> getFileUploadPanel() {

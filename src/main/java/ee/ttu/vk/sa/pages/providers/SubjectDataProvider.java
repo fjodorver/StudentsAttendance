@@ -2,8 +2,6 @@ package ee.ttu.vk.sa.pages.providers;
 
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.service.SubjectService;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilterStateLocator;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -14,7 +12,7 @@ import java.util.Iterator;
 /**
  * Created by vadimstrukov on 2/15/16.
  */
-public class SubjectDataProvider extends SortableDataProvider<Subject, Subject> implements IFilterStateLocator<Subject> {
+public class SubjectDataProvider extends AbstractDataProvider<Subject, String> {
 
     @SpringBean
     private SubjectService subjectService;
