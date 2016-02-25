@@ -1,11 +1,12 @@
 package ee.ttu.vk.sa.pages.login;
 
-import ee.ttu.vk.sa.pages.AbstractPage;
+
+import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Created by fjodor on 6.02.16.
  */
-public class LoginPage extends AbstractPage {
+public class LoginPage extends WebPage {
     public LoginPage(){
         this.add(new LoginPanel("loginPanel"));
     }
