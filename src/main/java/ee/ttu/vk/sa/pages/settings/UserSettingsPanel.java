@@ -21,7 +21,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 /**
  * Created by vadimstrukov on 2/27/16.
  */
-public abstract class UserSettingsPanel extends Panel {
+public  class UserSettingsPanel extends Panel {
 
     @SpringBean
     private TeacherService teacherService;
@@ -37,11 +37,10 @@ public abstract class UserSettingsPanel extends Panel {
         form.add(new AjaxSubmitLink("save", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
-                UserSettingsPanel.this.onSubmit(target, ajaxForm);
+                teacherService.saveTeacher(authTeacher);
             }
         });
         add(form);
     }
-    protected abstract void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm);
 
 }
