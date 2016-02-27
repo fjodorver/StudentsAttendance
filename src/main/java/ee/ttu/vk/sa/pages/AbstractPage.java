@@ -13,7 +13,6 @@ import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.attendance.AttendancePage;
 import ee.ttu.vk.sa.pages.login.LogOut;
 import ee.ttu.vk.sa.pages.menu.VerticalMenu;
-import ee.ttu.vk.sa.pages.students.StudentsPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -42,8 +41,7 @@ public class AbstractPage extends WebPage {
 
         addMenuItem(DashboardPage.class, "navbar.menu.dashboard", FontAwesomeIconType.dashboard, CustomAuthenticatedWebSession.get().isSignedIn());
         addMenuItem(AttendancePage.class, "navbar.menu.attendance", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
-        addMenuItem(StudentsPage.class, "navbar.menu.students", FontAwesomeIconType.users, roles.hasRole(Roles.ADMIN));
-        addMenuItem(TabbedPanelPage.class, "navbar.menu.teachers-subjects", FontAwesomeIconType.university, roles.hasRole(Roles.ADMIN));
+        addMenuItem(DataManagement.class, "navbar.menu.data-management", FontAwesomeIconType.database, roles.hasRole(Roles.ADMIN));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, addSettingsMenu()));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
 
