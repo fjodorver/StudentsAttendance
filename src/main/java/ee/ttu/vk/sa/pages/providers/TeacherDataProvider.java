@@ -14,7 +14,7 @@ import java.util.Iterator;
 /**
  * Created by vadimstrukov on 2/15/16.
  */
-public class TeacherDataProvider extends SortableDataProvider<Teacher, Teacher> implements IFilterStateLocator<Teacher> {
+public class TeacherDataProvider extends AbstractDataProvider<Teacher, String> {
 
     @SpringBean
     private TeacherService teacherService;

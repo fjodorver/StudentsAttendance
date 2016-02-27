@@ -16,7 +16,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import org.apache.wicket.model.IModel;
 
-public abstract class FileUploadPanel<T> extends Panel {
+public abstract class FileUploadPanel extends Panel {
 
 	public FileUploadPanel(String id, IModel<String> header, String extension) {
         super(id);
