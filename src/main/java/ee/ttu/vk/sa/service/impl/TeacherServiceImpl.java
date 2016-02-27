@@ -35,7 +35,7 @@ public class TeacherServiceImpl implements TeacherService {
     private SubjectRepository subjectRepository;
 
     @Override
-    public void addTeacher(Teacher teacher) {
+    public void saveTeacher(Teacher teacher) {
         teacherRepository.save(teacher);
     }
 
