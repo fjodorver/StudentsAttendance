@@ -1,0 +1,34 @@
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <table class="table">
+        <thead>
+        <th>
+            <wicket:message key="students.table.code">[Code]</wicket:message>
+        </th>
+        <th>
+            <wicket:message key="students.table.firstname">[Firstname]</wicket:message>
+        </th>
+        <th>
+            <wicket:message key="students.table.lastname">[Lastname]</wicket:message>
+        </th>
+        <th>
+            <wicket:message key="students.table.group">[Group]</wicket:message>
+        </th>
+        </thead>
+        <tbody wicket:id="body">
+        <tr wicket:id="rows">
+            <td>
+                <span wicket:id="code">[Code]</span>
+            </td>
+            <td>
+                <span wicket:id="firstname">[Firstname]</span>
+            </td>
+            <td>
+                <span wicket:id="lastname">[Lastname]</span>
+            </td>
+            <td>
+                <span wicket:id="group">[Group]</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</wicket:panel>
