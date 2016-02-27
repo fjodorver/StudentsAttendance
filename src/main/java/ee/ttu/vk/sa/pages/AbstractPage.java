@@ -13,6 +13,7 @@ import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.pages.attendance.AttendancePage;
 import ee.ttu.vk.sa.pages.login.LogOut;
 import ee.ttu.vk.sa.pages.menu.VerticalMenu;
+import ee.ttu.vk.sa.pages.settings.Settings;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -42,7 +43,7 @@ public class AbstractPage extends WebPage {
         addMenuItem(DashboardPage.class, "navbar.menu.dashboard", FontAwesomeIconType.dashboard, CustomAuthenticatedWebSession.get().isSignedIn());
         addMenuItem(AttendancePage.class, "navbar.menu.attendance", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
         addMenuItem(DataManagement.class, "navbar.menu.data-management", FontAwesomeIconType.database, roles.hasRole(Roles.ADMIN));
-        navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, addSettingsMenu()));
+        addMenuItem(Settings.class, "navbar.menu.settings", FontAwesomeIconType.gear, CustomAuthenticatedWebSession.get().isSignedIn());
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
 
         add(navbar);
@@ -57,22 +58,6 @@ public class AbstractPage extends WebPage {
             }
         }.setIconType(icon);
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, button));
-    }
-
-    private Component addSettingsMenu(){
-        return new NavbarDropDownButton(new StringResourceModel("navbar.menu.settings")) {
-            @Override
-            protected List<AbstractLink> newSubMenuButtons(String s) {
-                List<AbstractLink> subSettings = Lists.newArrayList();
-                subSettings.add(new MenuBookmarkablePageLink<Void>(UserSettingsPage.class, new StringResourceModel("navbar.menu.settings.user")).setIconType(FontAwesomeIconType.user));
-                subSettings.add(new MenuBookmarkablePageLink<Void>(LocalizationSettingsPage.class, new StringResourceModel("navbar.menu.settings.local")).setIconType(FontAwesomeIconType.language));
-                return subSettings;
-            }
-            @Override
-            public boolean isVisible() {
-                return CustomAuthenticatedWebSession.get().isSignedIn();
-            }
-        }.setIconType(FontAwesomeIconType.gears);
     }
 
     private Component addUserMenu(){

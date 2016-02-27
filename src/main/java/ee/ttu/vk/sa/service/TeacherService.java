@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface TeacherService  {
 
-    void addTeacher(Teacher teacher);
+    void saveTeacher(Teacher teacher);
     void deleteTeacher(Teacher teacher);
     List<Teacher> addTeachers(List<Teacher> teachers);
     List<Teacher> findAll();
