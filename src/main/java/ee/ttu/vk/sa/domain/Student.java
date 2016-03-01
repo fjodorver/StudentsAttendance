@@ -35,52 +35,54 @@ public class Student implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
+    public Student setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public Student setCode(String code) {
         this.code = code;
+        return this;
     }
 
     public String getFirstname() {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
+    public Student setFirstname(String firstname) {
         this.firstname = firstname;
+        return this;
     }
 
     public String getLastname() {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
+    public Student setLastname(String lastname) {
         this.lastname = lastname;
+        return this;
     }
 
     public Group getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public Student setGroup(Group group) {
         this.group = group;
+        return this;
     }
 
     public List<Attendance> getAttendances() {
         return attendances;
     }
 
-    public void setAttendances(List<Attendance> attendances) {
+    public Student setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
-    }
-
-    public String getFullname(){
-        return MessageFormat.format("{0} {1}", firstname, lastname);
+        return this;
     }
 
     @Override

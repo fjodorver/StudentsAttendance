@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by vadimstrukov on 2/13/16.
@@ -46,6 +47,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> addTeachers(List<Teacher> teachers) {
+        for (Teacher teacher : teachers) {
+            Optional.ofNullable(teacherRepository.findByName(teacher.getName())).ifPresent(x -> teacher.setId(x.getId()));
+        }
         return teacherRepository.save(teachers);
     }
 

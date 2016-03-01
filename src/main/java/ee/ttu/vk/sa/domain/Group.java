@@ -47,14 +47,6 @@ public class Group implements Serializable {
         return this;
     }
 
-    public Set<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
-    }
-
     public String getLanguage() {
         return language;
     }
@@ -64,12 +56,22 @@ public class Group implements Serializable {
         return this;
     }
 
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public Group setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
+        return this;
+    }
+
     public List<Student> getStudents() {
         return students;
     }
 
-    public void setStudents(List<Student> students) {
+    public Group setStudents(List<Student> students) {
         this.students = students;
+        return this;
     }
 
     @Override

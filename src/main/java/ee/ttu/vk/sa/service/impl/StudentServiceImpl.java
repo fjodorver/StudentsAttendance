@@ -79,10 +79,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public long size(Student student) {
-        String code = MessageFormat.format("%{0}%",Optional.ofNullable(student.getCode()).orElse(""));
-        String firstname = MessageFormat.format("%{0}%",Optional.ofNullable(student.getFirstname()).orElse(""));
-        String lastname = MessageFormat.format("%{0}%",Optional.ofNullable(student.getLastname()).orElse(""));
-        String group = MessageFormat.format("%{0}%",Optional.ofNullable(student.getGroup().getName()).orElse(""));
+        String code = Optional.ofNullable(student.getCode()).orElse("");
+        String firstname = Optional.ofNullable(student.getFirstname()).orElse("");
+        String lastname = Optional.ofNullable(student.getLastname()).orElse("");
+        String group = Optional.ofNullable(student.getGroup().getName()).orElse("");
         return studentRepository.count(code, firstname, lastname, group);
     }
 
