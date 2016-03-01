@@ -25,7 +25,7 @@ public class LocalizationSettings extends Panel {
     public LocalizationSettings(String id) {
         super(id);
         locale = this.getSession().getLocale();
-        List<Locale> locales = Arrays.asList(new Locale("en", "US"), new Locale("ru", "RU"));
+        List<Locale> locales = Arrays.asList(new Locale("en", "US"), new Locale("ru", "RU"), new Locale("et", "EE"));
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(this));
         form.add(new DropDownChoice<>("locale", locales, new ChoiceRenderer<>("displayLanguage")));
         form.add(new AjaxSubmitLink("save", form) {
