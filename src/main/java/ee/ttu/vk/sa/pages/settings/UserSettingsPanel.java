@@ -31,8 +31,8 @@ public  class UserSettingsPanel extends Panel {
         super(id);
         Teacher authTeacher = CustomAuthenticatedWebSession.getSession().getTeacher();
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(authTeacher));
-        form.add(new RequiredTextField<>("name", Model.of(authTeacher.getName())));
-        form.add(new EmailTextField("email", Model.of(authTeacher.getEmail())).setEnabled(false));
+        form.add(new RequiredTextField<>("name"));
+        form.add(new EmailTextField("email"));
         form.add(new PasswordTextField("password"));
         form.add(new AjaxSubmitLink("save", form) {
             @Override
