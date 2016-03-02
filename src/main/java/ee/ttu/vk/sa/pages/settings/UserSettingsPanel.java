@@ -29,6 +29,7 @@ public  class UserSettingsPanel extends Panel {
     private BootstrapForm<Teacher> form;
     private NotificationPanel notificationPanel;
 
+
     public UserSettingsPanel(String id) {
         super(id);
         FormComponent password, cpassword;

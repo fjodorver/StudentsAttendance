@@ -66,8 +66,8 @@ public class DMPanel extends Modal<Void> {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
                 studentService.save(studentsModel.getObject());
-                subjectService.saveSubjects(subjectsModel.getObject());
                 teacherService.addTeachers(teachersModel.getObject());
+                subjectService.saveSubjects(subjectsModel.getObject());
                 appendCloseDialogJavaScript(ajaxRequestTarget);
             }
         }.setLabel(new ResourceModel("upload-panel.buttons.save")).setIconType(FontAwesomeIconType.save));
