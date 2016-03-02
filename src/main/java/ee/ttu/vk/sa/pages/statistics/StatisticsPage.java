@@ -66,8 +66,9 @@ public class StatisticsPage extends AbstractPage {
         DataView<Attendance> dataView = new DataView<Attendance>("attendance", dataProvider) {
             @Override
             protected void populateItem(Item<Attendance> item) {
+                Attendance attendance = item.getModelObject();
                 item.add(new Label("student.fullname"));
-                item.add(new Label("result", Model.of("3%")));
+                item.add(new Label("result", Model.of(attendanceService.getAttendance(attendance.getSubject(), attendance.getGroup(), attendance.getStudent()))));
             }
         };
         container.add(dataView);

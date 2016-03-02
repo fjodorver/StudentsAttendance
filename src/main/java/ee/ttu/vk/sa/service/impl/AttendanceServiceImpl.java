@@ -2,18 +2,16 @@ package ee.ttu.vk.sa.service.impl;
 
 import ee.ttu.vk.sa.domain.Attendance;
 import ee.ttu.vk.sa.domain.Group;
+import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
-import ee.ttu.vk.sa.enums.Type;
+import ee.ttu.vk.sa.enums.Status;
 import ee.ttu.vk.sa.repository.AttendanceRepository;
 import ee.ttu.vk.sa.service.AttendanceService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,5 +47,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public int getSize() {
         return (int) attendanceRepository.count();
+    }
+
+    @Override
+    public double getAttendance(Subject subject, Group group, Student student) {
+        return Optional.ofNullable(attendanceRepository.findResult(subject, group, student, Status.PRESENT)).orElse(0);
     }
 }
