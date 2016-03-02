@@ -19,52 +19,56 @@ public class Subject implements Serializable {
     private String code;
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "subject_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups = Lists.newArrayList();
 
     @ManyToOne
     private Teacher teacher;
 
-
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public Subject setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public Subject setCode(String code) {
         this.code = code;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Subject setName(String name) {
         this.name = name;
+        return this;
     }
 
     public List<Group> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Group> groups) {
+    public Subject setGroups(List<Group> groups) {
         this.groups = groups;
+        return this;
     }
 
     public Teacher getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(Teacher teacher) {
+    public Subject setTeacher(Teacher teacher) {
         this.teacher = teacher;
+        return this;
     }
 
     @Override
