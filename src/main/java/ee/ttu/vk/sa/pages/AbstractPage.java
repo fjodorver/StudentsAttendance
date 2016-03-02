@@ -14,6 +14,7 @@ import ee.ttu.vk.sa.pages.attendance.AttendancePage;
 import ee.ttu.vk.sa.pages.login.LogOut;
 import ee.ttu.vk.sa.pages.menu.VerticalMenu;
 import ee.ttu.vk.sa.pages.settings.Settings;
+import ee.ttu.vk.sa.pages.statistics.StatisticsPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -41,6 +42,7 @@ public class AbstractPage extends WebPage {
         Roles roles = CustomAuthenticatedWebSession.getSession().getRoles();
 
         addMenuItem(DashboardPage.class, "navbar.menu.dashboard", FontAwesomeIconType.dashboard, CustomAuthenticatedWebSession.get().isSignedIn());
+        addMenuItem(StatisticsPage.class, "navbar.menu.statistics", FontAwesomeIconType.bar_chart_o, CustomAuthenticatedWebSession.get().isSignedIn());
         addMenuItem(AttendancePage.class, "navbar.menu.attendance", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
         addMenuItem(DataManagementPage.class, "navbar.menu.data-management", FontAwesomeIconType.database, roles.hasRole(Roles.ADMIN));
         addMenuItem(Settings.class, "navbar.menu.settings", FontAwesomeIconType.gear, CustomAuthenticatedWebSession.get().isSignedIn());

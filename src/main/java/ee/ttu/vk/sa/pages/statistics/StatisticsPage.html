@@ -1,0 +1,34 @@
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+    <h2>
+        <wicket:message key="attendance.title">[Title]</wicket:message>
+    </h2>
+    <div class="row">
+        <div class="col-lg-9">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th class="header col-md-6">
+                        <wicket:message key="attendance.statistics.fullname">[Fullname]</wicket:message>
+                    </th>
+                    <th class="header col-md-6">
+                        <wicket:message key="attendance.statistics.result">[Result]</wicket:message>
+                    </th>
+                </tr>
+                </thead>
+                <tbody wicket:id="attendanceTable">
+                <tr wicket:id="attendance">
+                    <td style="vertical-align: middle">
+                        <span wicket:id="student.fullname">[Fullname]</span>
+                    </td>
+                    <td style="vertical-align: middle">
+                        <span wicket:id="result">[Result]</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-3">
+            <span wicket:id="filterPanel"></span>
+        </div>
+    </div>
+</wicket:extend>
