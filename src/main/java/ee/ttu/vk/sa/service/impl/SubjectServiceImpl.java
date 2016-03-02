@@ -49,7 +49,6 @@ public class SubjectServiceImpl implements SubjectService {
 	public List<Subject> saveSubjects(List<Subject> subjects) {
 		Map<String, Group> groupByName = Maps.newHashMap();
 		for (Subject subject : subjects) {
-			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
 			for (Group group : subject.getGroups()) {
 				Group dbGroup = groupRepository.findByName(group.getName());
 				groupByName.put(group.getName(), Optional.ofNullable(dbGroup).orElse(group));
