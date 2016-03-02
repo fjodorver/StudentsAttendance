@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * Created by vadimstrukov on 2/27/16.
@@ -36,8 +37,8 @@ public  class UserSettingsPanel extends Panel {
         Teacher authTeacher = CustomAuthenticatedWebSession.getSession().getTeacher();
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(authTeacher));
         form.add(new RequiredTextField<>("name"));
-        form.add(new EmailTextField("email"));
-        form.add(new PasswordTextField("password"));
+        form.add(new EmailTextField("email").setRequired(true));
+        form.add(new PasswordTextField("password").setRequired(true));
         form.add(new AjaxSubmitLink("save", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
@@ -46,7 +47,13 @@ public  class UserSettingsPanel extends Panel {
                 teacherService.saveTeacher(teacher);
             }
         });
+        UserSettingsPanel.this.onWarning();
+        add(new NotificationPanel("feedback"));
         add(form);
+    }
+    protected void onWarning(){
+        this.warn(new NotificationMessage(Model.of("All fields required!"), Model.of("Warning!"), false));
+
     }
 
 }
