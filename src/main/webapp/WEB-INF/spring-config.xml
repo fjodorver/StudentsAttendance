@@ -25,6 +25,7 @@
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
+
     <context:component-scan base-package="ee.ttu.vk.sa"/>
     <jpa:repositories base-package="ee.ttu.vk.sa.repository"/>
     <jee:jndi-lookup id="jndiDataSource" jndi-name="jdbc/dbVershinin"

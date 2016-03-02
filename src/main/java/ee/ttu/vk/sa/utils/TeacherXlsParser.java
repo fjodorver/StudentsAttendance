@@ -24,11 +24,14 @@ import java.util.Map;
 public class TeacherXlsParser extends XlsParser<Teacher> {
 
     private Map<String,Teacher> teacherMap;
+    private PasswordEncryptor encryptor;
+
     private final int TEACHER_NAME_CELL = 2;
     private final int TEACHER_EMAIL_CELL = 1;
 
     public TeacherXlsParser(){
         teacherMap = Maps.newHashMap();
+        encryptor = new PasswordEncryptor();
         this.SHEET_NUMBER = 1;
         this.START_ROW_NUMBER = 2;
     }
@@ -55,7 +58,7 @@ public class TeacherXlsParser extends XlsParser<Teacher> {
                         }
                     }
                     //Temporary
-                    teacher.setPassword("pass").setRole(Roles.USER);
+                    teacher.setPassword(encryptor.encryptPassword("pass")).setRole(Roles.USER);
                     //
                     teacherMap.put(teacher.getEmail(), teacher);
                 }
