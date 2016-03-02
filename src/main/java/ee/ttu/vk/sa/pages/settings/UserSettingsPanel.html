@@ -2,21 +2,22 @@
     <div class="panel panel-default">
         <div class="panel-heading">Profile Settings</div>
         <div class="panel-body">
+            <div wicket:id="feedback"></div>
             <form wicket:id="form" class="form-groupr" role="form">
                 <fieldset>
                     <div class="form-group">
                         <span class="text-input">Name</span>
-                        <input wicket:id="name" class="form-control" type="text">
+                        <input wicket:id="name" class="form-control" type="text" required>
                     </div>
                     <br>
                     <div class="form-group">
                         <span class="text-input">Email</span>
-                        <input wicket:id="email" class="form-control" type="email">
+                        <input wicket:id="email" class="form-control" type="email" required>
                     </div>
                     <br>
                     <div class="form-group">
                         <span class="text-input">Password</span>
-                        <input wicket:id="password" class="form-control" type="password">
+                        <input wicket:id="password" class="form-control" type="password" required>
                     </div>
                     <br>
                 </fieldset>
