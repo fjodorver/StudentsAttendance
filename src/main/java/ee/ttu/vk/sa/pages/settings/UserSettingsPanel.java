@@ -4,8 +4,10 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationMessa
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
+import ee.ttu.vk.sa.domain.Attendance;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.service.TeacherService;
+import ee.ttu.vk.sa.utils.PasswordEncryptor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.EmailTextField;
@@ -26,9 +28,11 @@ public  class UserSettingsPanel extends Panel {
     @SpringBean
     private TeacherService teacherService;
     private BootstrapForm<Teacher> form;
+    private PasswordEncryptor encryptor;
 
     public UserSettingsPanel(String id) {
         super(id);
+        encryptor = new PasswordEncryptor();
         Teacher authTeacher = CustomAuthenticatedWebSession.getSession().getTeacher();
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(authTeacher));
         form.add(new RequiredTextField<>("name"));
@@ -37,7 +41,9 @@ public  class UserSettingsPanel extends Panel {
         form.add(new AjaxSubmitLink("save", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
-                teacherService.saveTeacher(authTeacher);
+                Teacher teacher = (Teacher) ajaxForm.getModelObject();
+                teacher.setPassword(encryptor.encryptPassword(teacher.getPassword()));
+                teacherService.saveTeacher(teacher);
             }
         });
         add(form);

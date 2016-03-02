@@ -2,10 +2,12 @@ package ee.ttu.vk.sa;
 
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.repository.TeacherRepository;
+import ee.ttu.vk.sa.utils.PasswordEncryptor;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.Request;
+import org.springframework.context.annotation.Bean;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -28,7 +30,11 @@ public class CustomAuthenticatedWebSession extends AuthenticatedWebSession {
 
     @Override
     protected boolean authenticate(String username, String password) {
-        teacher = teacherRepository.findByEmailAndPassword(username, password);
+        PasswordEncryptor encryptor = new PasswordEncryptor();
+        String encryptedPassword = teacherRepository.findByEmail(username).getPassword();
+        if(encryptor.decryptPassword(encryptedPassword).equals(password)) {
+            teacher = teacherRepository.findByEmailAndPassword(username, encryptedPassword);
+        }
         return teacher != null;
     }
 
