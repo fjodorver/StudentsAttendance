@@ -14,12 +14,14 @@ import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
+import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.validation.validator.PatternValidator;
 
 /**
  * Created by vadimstrukov on 2/27/16.
@@ -31,14 +33,26 @@ public  class UserSettingsPanel extends Panel {
     private BootstrapForm<Teacher> form;
     private PasswordEncryptor encryptor;
 
+
     public UserSettingsPanel(String id) {
         super(id);
         encryptor = new PasswordEncryptor();
         Teacher authTeacher = CustomAuthenticatedWebSession.getSession().getTeacher();
+
+        final PasswordTextField password = new PasswordTextField("password",
+                Model.of(""));
+        password.setLabel(Model.of("Password"));
+
+        final PasswordTextField cpassword = new PasswordTextField("cpassword",
+                Model.of(""));
+        cpassword.setLabel(Model.of("Confirm Password"));
+
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(authTeacher));
         form.add(new RequiredTextField<>("name"));
         form.add(new EmailTextField("email").setRequired(true));
-        form.add(new PasswordTextField("password").setRequired(true));
+        form.add(password);
+        form.add(cpassword);
+        form.add(new EqualPasswordInputValidator(password, cpassword));
         form.add(new AjaxSubmitLink("save", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
@@ -47,13 +61,9 @@ public  class UserSettingsPanel extends Panel {
                 teacherService.saveTeacher(teacher);
             }
         });
-        UserSettingsPanel.this.onWarning();
-        add(new NotificationPanel("feedback"));
+        add(new FeedbackPanel("feedback"));
         add(form);
     }
-    protected void onWarning(){
-        this.warn(new NotificationMessage(Model.of("All fields required!"), Model.of("Warning!"), false));
 
-    }
 
 }
