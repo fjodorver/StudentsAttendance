@@ -15,6 +15,7 @@ public interface TeacherService  {
 
     void saveTeacher(Teacher teacher);
     void deleteTeacher(Teacher teacher);
+    Teacher find(String email, String password);
     List<Teacher> addTeachers(List<Teacher> teachers);
     List<Teacher> findAll();
     Page<Teacher> findAll(int page, int size, String name);

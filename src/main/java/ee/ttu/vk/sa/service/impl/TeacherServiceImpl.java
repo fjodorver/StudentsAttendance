@@ -1,14 +1,12 @@
 package ee.ttu.vk.sa.service.impl;
 
 import com.google.common.collect.Lists;
-import ee.ttu.vk.sa.domain.Student;
-import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.repository.SubjectRepository;
 import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.TeacherService;
 import ee.ttu.vk.sa.utils.IParser;
-import ee.ttu.vk.sa.utils.SubjectXlsParser;
+import ee.ttu.vk.sa.utils.PasswordEncryptor;
 import ee.ttu.vk.sa.utils.TeacherXlsParser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +28,9 @@ import java.util.Optional;
 public class TeacherServiceImpl implements TeacherService {
 
     @Inject
+    private PasswordEncryptor encryptor;
+
+    @Inject
     private TeacherRepository teacherRepository;
 
     @Inject
@@ -37,12 +38,21 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void saveTeacher(Teacher teacher) {
+        teacher.setPassword(encryptor.encryptPassword(teacher.getPassword()));
         teacherRepository.save(teacher);
     }
 
     @Override
     public void deleteTeacher(Teacher teacher) {
         teacherRepository.delete(teacher);
+    }
+
+    @Override
+    public Teacher find(String email, String password) {
+        Teacher teacher = teacherRepository.findByEmail(email);
+        if(teacher != null && encryptor.decryptPassword(teacher.getPassword()).equals(password))
+            return teacher;
+        return null;
     }
 
     @Override

@@ -42,5 +42,4 @@ public class Settings extends AbstractPage {
         });
         add(tabbedPanel = new AjaxBootstrapTabbedPanel<>("tabs", tabs));
     }
-
 }

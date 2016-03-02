@@ -2,10 +2,9 @@ package ee.ttu.vk.sa.utils;
 
 
 import org.jasypt.util.text.BasicTextEncryptor;
+import org.springframework.stereotype.Component;
 
-/**
- * Created by strukov on 3/2/16.
- */
+@Component
 public class PasswordEncryptor {
 
 private BasicTextEncryptor passwordEncryptor;

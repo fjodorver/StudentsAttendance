@@ -1,28 +1,26 @@
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
-    <div class="panel panel-default">
-        <div class="panel-heading">Profile Settings</div>
-        <div class="panel-body">
-            <div wicket:id="feedback"></div>
-            <form wicket:id="form" class="form-groupr" role="form">
-                <fieldset>
-                    <div class="form-group">
-                        <span class="text-input">Name</span>
-                        <input wicket:id="name" class="form-control" type="text" required>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <span class="text-input">Email</span>
-                        <input wicket:id="email" class="form-control" type="email" required>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <span class="text-input">Password</span>
-                        <input wicket:id="password" class="form-control" type="password" required>
-                    </div>
-                    <br>
-                </fieldset>
-                <button wicket:id="save" class="btn btn-lg btn-success btn-block" type="submit">Save</button>
-            </form>
-        </div>
-    </div>
+    <div wicket:id="feedback"></div>
+    <form wicket:id="form" class="form">
+        <fieldset>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input wicket:id="email" wicket:message="placeholder:settings.fields.email" class="form-control" type="email">
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input wicket:id="name" wicket:message="placeholder:settings.fields.fullname" class="form-control" type="text">
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input wicket:id="password" wicket:message="placeholder:settings.fields.password" placeholder="Password" type="password" class="form-control">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input wicket:id="cpassword" wicket:message="placeholder:settings.fields.cpassword" type="password" class="form-control">
+                </div>
+            </div>
+        <button wicket:id="save" class="btn btn-primary pull-right" type="button"><wicket:message key="settings.buttons.save">[SAVE]</wicket:message></button>
+        </fieldset>
+    </form>
 </wicket:panel>

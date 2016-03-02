@@ -1,15 +1,12 @@
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
-    <div class="panel panel-default">
-        <div class="panel-heading">Localization</div>
-        <div class="panel-body">
-            <form wicket:id="form" class="form-horizontal" role="search">
-                <div class="input-group">
-                    <span class="input-group-addon">Localization</span>
-                    <select wicket:id="locale" class="form-control"></select>
-                </div>
-                <br>
-                <button wicket:id="save" class="btn btn-primary pull-left" type="button">Save</button>
-            </form>
-        </div>
-    </div>
+    <form wicket:id="form" class="form-horizontal" role="search">
+        <fieldset>
+            <div class="input-group">
+                <span class="input-group-addon"><wicket:message key="settings.labels.localization">[Localization]</wicket:message></span>
+                <select wicket:id="locale" class="form-control"></select>
+            </div>
+            <br>
+            <button wicket:id="save" class="btn btn-primary pull-right" type="button"><wicket:message key="settings.buttons.save">[SAVE]</wicket:message></button>
+        </fieldset>
+    </form>
 </wicket:panel>

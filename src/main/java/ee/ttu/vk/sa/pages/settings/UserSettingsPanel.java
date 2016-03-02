@@ -10,14 +10,11 @@ import ee.ttu.vk.sa.service.TeacherService;
 import ee.ttu.vk.sa.utils.PasswordEncryptor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.form.EmailTextField;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.PasswordTextField;
-import org.apache.wicket.markup.html.form.RequiredTextField;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.*;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 
@@ -28,32 +25,39 @@ public  class UserSettingsPanel extends Panel {
 
     @SpringBean
     private TeacherService teacherService;
+
     private BootstrapForm<Teacher> form;
-    private PasswordEncryptor encryptor;
+    private NotificationPanel notificationPanel;
 
     public UserSettingsPanel(String id) {
         super(id);
-        encryptor = new PasswordEncryptor();
+        FormComponent password, cpassword;
         Teacher authTeacher = CustomAuthenticatedWebSession.getSession().getTeacher();
+        notificationPanel = new NotificationPanel("feedback");
+        notificationPanel.setOutputMarkupId(true);
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(authTeacher));
-        form.add(new RequiredTextField<>("name"));
+        form.add(new RequiredTextField<>("name").setRequired(true));
         form.add(new EmailTextField("email").setRequired(true));
-        form.add(new PasswordTextField("password").setRequired(true));
+        form.add(password = getPasswordTextField("password", null, "settings.fields.password"));
+        form.add(cpassword = getPasswordTextField("cpassword", new PropertyModel<>(form.getModelObject(), "password"), "settings.fields.cpassword"));
+        form.add(new EqualPasswordInputValidator(password, cpassword));
         form.add(new AjaxSubmitLink("save", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
-                Teacher teacher = (Teacher) ajaxForm.getModelObject();
-                teacher.setPassword(encryptor.encryptPassword(teacher.getPassword()));
-                teacherService.saveTeacher(teacher);
+                teacherService.saveTeacher((Teacher) ajaxForm.getModelObject());
+                target.add(notificationPanel);
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+                target.add(notificationPanel);
             }
         });
-        UserSettingsPanel.this.onWarning();
-        add(new NotificationPanel("feedback"));
+        add(notificationPanel);
         add(form);
     }
-    protected void onWarning(){
-        this.warn(new NotificationMessage(Model.of("All fields required!"), Model.of("Warning!"), false));
 
+    private FormComponent<String> getPasswordTextField(String id, IModel<String> model, String label) {
+        return new PasswordTextField(id, model).setLabel(new ResourceModel(label)).setRequired(true);
     }
-
 }
