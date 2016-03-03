@@ -4,6 +4,20 @@
     </h2>
     <div class="row">
         <div class="col-lg-9">
+            <form wicket:id="searchForm" class="form-inline pull-right">
+                <div class="input-group">
+                    <span class="input-group-addon">Subject</span>
+                    <div class="form-group">
+                        <select wicket:id="subject" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Group</span>
+                    <div class="form-group">
+                        <select wicket:id="group" class="form-control"></select>
+                    </div>
+                </div>
+            </form>
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
@@ -15,10 +29,10 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody wicket:id="attendanceTable">
-                <tr wicket:id="attendance">
+                <tbody wicket:id="body">
+                <tr wicket:id="rows">
                     <td style="vertical-align: middle">
-                        <span wicket:id="student.fullname">[Fullname]</span>
+                        <span wicket:id="fullname">[Fullname]</span>
                     </td>
                     <td style="vertical-align: middle">
                         <span wicket:id="result">[Result]</span>
@@ -26,9 +40,6 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="col-lg-3">
-            <span wicket:id="filterPanel"></span>
         </div>
     </div>
 </wicket:extend>

@@ -55,7 +55,7 @@ public class AttendanceDataProvider extends SortableDataProvider<Attendance, Str
 
     @Override
     public long size() {
-        return attendanceService.getSize();
+        return attendanceService.size(attendance);
     }
 
     @Override

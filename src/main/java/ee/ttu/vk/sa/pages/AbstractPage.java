@@ -43,7 +43,7 @@ public class AbstractPage extends WebPage {
 
         addMenuItem(DashboardPage.class, "navbar.menu.dashboard", FontAwesomeIconType.dashboard, CustomAuthenticatedWebSession.get().isSignedIn());
         addMenuItem(StatisticsPage.class, "navbar.menu.statistics", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
-        addMenuItem(AttendancePage.class, "navbar.menu.attendance", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
+        addMenuItem(AttendancePage.class, "navbar.menu.attendance", FontAwesomeIconType.pie_chart, roles.hasRole(Roles.USER));
         addMenuItem(DataManagementPage.class, "navbar.menu.data-management", FontAwesomeIconType.database, roles.hasRole(Roles.ADMIN));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
 

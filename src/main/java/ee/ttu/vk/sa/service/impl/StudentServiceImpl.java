@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.service.impl;
 
 import com.google.common.collect.Lists;
+import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.repository.GroupRepository;
@@ -39,6 +40,11 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Iterator<Student> findAll(Subject subject) {
         return studentRepository.findAllByGroupIn(subject.getGroups()).iterator();
+    }
+
+    @Override
+    public Iterator<Student> findAll(List<Group> groups, Pageable pageable) {
+        return studentRepository.findAllByGroupIn(groups).iterator();
     }
 
     @Override

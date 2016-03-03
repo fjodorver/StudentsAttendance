@@ -1,26 +1,24 @@
 package ee.ttu.vk.sa.pages.statistics;
 
 import com.google.common.collect.Lists;
-import de.agilecoders.wicket.core.markup.html.bootstrap.block.LabelType;
-import ee.ttu.vk.sa.domain.Attendance;
-import ee.ttu.vk.sa.enums.Status;
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
+import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
+import ee.ttu.vk.sa.domain.*;
 import ee.ttu.vk.sa.pages.AbstractPage;
-import ee.ttu.vk.sa.pages.attendance.AttendancePanel;
-import ee.ttu.vk.sa.pages.components.ColorEnumLabel;
-import ee.ttu.vk.sa.pages.providers.AttendanceDataProvider;
+import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
 import ee.ttu.vk.sa.service.AttendanceService;
+import ee.ttu.vk.sa.service.GroupService;
 import ee.ttu.vk.sa.service.StudentService;
-import org.apache.commons.lang3.SerializationUtils;
-import org.apache.wicket.Component;
+import ee.ttu.vk.sa.service.SubjectService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -35,43 +33,64 @@ public class StatisticsPage extends AbstractPage {
     private AttendanceService attendanceService;
 
     @SpringBean
+    private SubjectService subjectService;
+
+    @SpringBean
     private StudentService studentService;
 
-    private AttendanceDataProvider attendanceDataProvider;
+    @SpringBean
+    private GroupService groupService;
 
-    private WebMarkupContainer container;
-    private AttendancePanel filterPanel;
+    private Subject subject;
+    private Group group;
+
+    private StudentDataProvider studentDataProvider;
+    private WebMarkupContainer body;
+    private BootstrapForm<Void> searchForm;
 
     public StatisticsPage() {
-        attendanceDataProvider = new AttendanceDataProvider();
-        filterPanel = addAttendancePanel();
-        add(getAttendanceTable(attendanceDataProvider), filterPanel);
+        studentDataProvider = new StudentDataProvider();
+        studentDataProvider.setFilterState(new Student().setCode("***"));
+        add(getStudentsTable(studentDataProvider));
+        add(searchForm = getSearchForm());
+
     }
 
-    private AttendancePanel addAttendancePanel() {
-        return new AttendancePanel("filterPanel") {
+    private BootstrapForm<Void> getSearchForm() {
+        List<Subject> subjects = subjectService.findAll(CustomAuthenticatedWebSession.getSession().getTeacher());
+        List<Group> groups = Lists.newArrayList();
+        subjects.forEach(x -> groups.addAll(x.getGroups()));
+        BootstrapForm<Void> form = new BootstrapForm<>("searchForm");
+        form.add(new DropDownChoice<>("subject", new PropertyModel<>(this, "subject"), subjects).add(getOnUpdate()));
+        form.add(new DropDownChoice<>("group", new PropertyModel<>(this, "group"), groups).add(getOnUpdate()));
+        return form;
+    }
+
+    private AjaxFormComponentUpdatingBehavior getOnUpdate() {
+        return new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
-                Attendance attendance = (Attendance) ajaxForm.getModelObject();
-                attendance.setStatus(Status.INACTIVE);
-                attendanceDataProvider.setFilterState(attendance);
-                target.add(container);
+            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+                if(subject != null && group != null && groupService.findAll(Lists.newArrayList(subject)).get(0).equals(group))
+                    studentDataProvider.setFilterState(new Student().setGroup(group));
+                else
+                    studentDataProvider.setFilterState(new Student().setCode("***"));
+                ajaxRequestTarget.add(body);
             }
         };
     }
 
-    private WebMarkupContainer getAttendanceTable(IDataProvider<Attendance> dataProvider) {
-        container = new WebMarkupContainer("attendanceTable");
-        container.setOutputMarkupId(true);
-        DataView<Attendance> dataView = new DataView<Attendance>("attendance", dataProvider) {
+
+    private WebMarkupContainer getStudentsTable(IDataProvider<Student> dataProvider) {
+        body = new WebMarkupContainer("body");
+        body.setOutputMarkupId(true);
+        DataView<Student> rows = new DataView<Student>("rows", dataProvider) {
             @Override
-            protected void populateItem(Item<Attendance> item) {
-                Attendance attendance = item.getModelObject();
-                item.add(new Label("student.fullname"));
-                item.add(new Label("result", Model.of(attendanceService.getAttendance(attendance.getSubject(), attendance.getGroup(), attendance.getStudent()))));
+            protected void populateItem(Item<Student> item) {
+                item.add(new Label("fullname"));
+                item.add(new Label("result", Model.of(attendanceService.getPresentsNumber(subject, group, item.getModelObject()))));
             }
         };
-        container.add(dataView);
-        return container;
+        body.add(rows);
+        return body;
     }
 }

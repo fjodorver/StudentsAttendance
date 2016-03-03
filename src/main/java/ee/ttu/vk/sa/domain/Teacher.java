@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.base.Objects;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,7 +16,7 @@ public class Teacher implements Serializable{
     private String name;
     private String email;
     private String password;
-    private String role;
+    private String role = Roles.USER;
 
     public Long getId() {
         return id;

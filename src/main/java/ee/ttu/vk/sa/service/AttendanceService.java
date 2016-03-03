@@ -16,7 +16,8 @@ import java.util.List;
 public interface AttendanceService {
     List<Attendance> findAll(Attendance attendance, Pageable pageable);
     Attendance save(Attendance attendance);
-    void save(List<Attendance> attendances);
-    int getSize();
-    double getAttendance(Subject subject, Group group, Student student);
+    List<Attendance> save(List<Attendance> attendances);
+    long size(Attendance attendance);
+    int getPresentsNumber(Subject subject, Group group, Student student);
+    int getAbsentsNumber(Subject subject, Group group, Student student);
 }
