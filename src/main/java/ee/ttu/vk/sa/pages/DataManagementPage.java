@@ -106,14 +106,14 @@ public class DataManagementPage extends AbstractPage {
                     if(mediaType.equals(MediaType.MICROSOFT_WORD))
                         students = studentService.parse(fileUpload.getInputStream());
                     if(mediaType.equals(MediaType.MICROSOFT_EXCEL)){
-                        subjects = subjectService.parse(fileUpload.getInputStream());
                         teachers = teacherService.parse(fileUpload.getInputStream());
+                        subjects = subjectService.parse(fileUpload.getInputStream());
                     }
 
                 }
                 panel.setStudentsModel(new ListModel<>(students));
-                panel.setSubjectsModel(new ListModel<>(subjects));
                 panel.setTeachersModel(new ListModel<>(teachers));
+                panel.setSubjectsModel(new ListModel<>(subjects));
                 panel.appendShowDialogJavaScript(target);
                 target.add(panel);
             }

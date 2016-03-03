@@ -1,9 +1,6 @@
 package ee.ttu.vk.sa.service;
 
-import ee.ttu.vk.sa.domain.Student;
-import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.InputStream;

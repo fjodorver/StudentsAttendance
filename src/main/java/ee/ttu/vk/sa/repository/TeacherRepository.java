@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Teacher findByEmail(String email);
 
+    Teacher findByName(String name);
+
     @Query("select t from Teacher t where t.email like concat('%',?1,'%') and t.name like concat('%',?2,'%')")
     Page<Teacher> findAll(String email, String name, Pageable pageable);
 

@@ -23,7 +23,7 @@ public class Subject implements Serializable {
     @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "subject_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups = Lists.newArrayList();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Teacher teacher;
 
     public Long getId() {

@@ -47,19 +47,20 @@ public class SubjectServiceImpl implements SubjectService {
 
 	@Override
 	public List<Subject> save(List<Subject> subjects) {
+		List<Subject> subjectList = Lists.newArrayList();
 		Map<String, Group> groupByName = Maps.newHashMap();
 		for (Subject subject : subjects) {
+			Teacher teacher = teacherRepository.findByName(subject.getTeacher().getName());
+			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
+			Optional.ofNullable(teacher).ifPresent(subject::setTeacher);
 			for (Group group : subject.getGroups()) {
 				Group dbGroup = groupRepository.findByName(group.getName());
 				groupByName.put(group.getName(), Optional.ofNullable(dbGroup).orElse(group));
 			}
-		}
-		for (Subject subject : subjects) {
-			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
-			Optional.ofNullable(teacherRepository.findByEmail(subject.getTeacher().getEmail())).ifPresent(subject::setTeacher);
 			subject.setGroups(getGroups(subject, groupByName));
+			subjectList.add(subjectRepository.save(subject));
 		}
-		return subjectRepository.save(subjects);
+		return subjectList;
 	}
 
 	@Override
