@@ -86,8 +86,13 @@ public class StatisticsPage extends AbstractPage {
         DataView<Student> rows = new DataView<Student>("rows", dataProvider) {
             @Override
             protected void populateItem(Item<Student> item) {
+                int presents = attendanceService.getPresentsNumber(subject, group, item.getModelObject());
+                int absents = attendanceService.getAbsentsNumber(subject, group, item.getModelObject());
+                double percent = presents / (presents + absents)*100;
                 item.add(new Label("fullname"));
-                item.add(new Label("result", Model.of(attendanceService.getPresentsNumber(subject, group, item.getModelObject()))));
+                item.add(new Label("presents", Model.of(presents)));
+                item.add(new Label("absents", Model.of(absents)));
+                item.add(new Label("result", Model.of(percent + "%")));
             }
         };
         body.add(rows);
