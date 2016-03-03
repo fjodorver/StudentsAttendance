@@ -23,6 +23,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -88,11 +89,11 @@ public class StatisticsPage extends AbstractPage {
             protected void populateItem(Item<Student> item) {
                 int presents = attendanceService.getPresentsNumber(subject, group, item.getModelObject());
                 int absents = attendanceService.getAbsentsNumber(subject, group, item.getModelObject());
-                double percent = presents / (presents + absents)*100;
+                double percent = (double)presents / (presents + absents);
                 item.add(new Label("fullname"));
                 item.add(new Label("presents", Model.of(presents)));
                 item.add(new Label("absents", Model.of(absents)));
-                item.add(new Label("result", Model.of(percent + "%")));
+                item.add(new Label("result", Model.of(MessageFormat.format("{0,number,#.##%}", percent))));
             }
         };
         body.add(rows);
