@@ -58,10 +58,10 @@ public class DataManagementPage extends AbstractPage {
                     @Override
                     protected List<IColumn<Student, String>> getColumnList() {
                         List<IColumn<Student, String>> columns = Lists.newArrayList();
-                        columns.add(getFilteredColumn("Code", "code", "filterState.code"));
-                        columns.add(getFilteredColumn("Firstname", "firstname", "filterState.firstname"));
-                        columns.add(getFilteredColumn("Lastname", "lastname", "filterState.lastname"));
-                        columns.add(getFilteredColumn("Group", "group", "filterState.group.name"));
+                        columns.add(getFilteredColumn("Code", "code", "filterState.code", "col-lg-2"));
+                        columns.add(getFilteredColumn("Firstname", "firstname", "filterState.firstname", "col-lg-4"));
+                        columns.add(getFilteredColumn("Lastname", "lastname", "filterState.lastname", "col-lg-4"));
+                        columns.add(getFilteredColumn("Group", "group", "filterState.group.name", "col-lg-2"));
                         return columns;
                     }
                 };
@@ -74,8 +74,8 @@ public class DataManagementPage extends AbstractPage {
                     @Override
                     protected List<IColumn<Subject, String>> getColumnList() {
                         List<IColumn<Subject, String>> columns = Lists.newArrayList();
-                        columns.add(getFilteredColumn("Code", "code", "filterState.code"));
-                        columns.add(getFilteredColumn("Name", "name", "filterState.name"));
+                        columns.add(getFilteredColumn("Code", "code", "filterState.code", "col-lg-2"));
+                        columns.add(getFilteredColumn("Name", "name", "filterState.name", "col-lg-10"));
                         return columns;
                     }
                 };
@@ -88,8 +88,8 @@ public class DataManagementPage extends AbstractPage {
                     @Override
                     protected List<IColumn<Teacher, String>> getColumnList() {
                         List<IColumn<Teacher, String>> columns = Lists.newArrayList();
-                        columns.add(getFilteredColumn("Email", "email", "filterState.email"));
-                        columns.add(getFilteredColumn("Name", "name", "filterState.name"));
+                        columns.add(getFilteredColumn("Email", "email", "filterState.email", "col-lg-4"));
+                        columns.add(getFilteredColumn("Name", "name", "filterState.name", "col-lg-10"));
                         return columns;
                     }
                 };

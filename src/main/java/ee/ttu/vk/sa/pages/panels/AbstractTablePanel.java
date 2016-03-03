@@ -43,13 +43,18 @@ public abstract class AbstractTablePanel<T, S> extends Panel {
 
     protected abstract List<IColumn<T, S>> getColumnList();
 
-    protected IColumn<T, S> getFilteredColumn(String name, String stringExpression, String stringFilter) {
+    protected IColumn<T, S> getFilteredColumn(String name, String stringExpression, String stringFilter, String cssClass) {
         return new FilteredPropertyColumn<T, S>(Model.of(name), stringExpression) {
             @Override
             public Component getFilter(String s, FilterForm<?> filterForm) {
                 TextFilter<T> textFilter = new TextFilter<>(s, new PropertyModel<>(dataProvider, stringFilter), filterForm);
                 textFilter.getFilter().add(new AttributeAppender("class", " form-control"));
                 return textFilter;
+            }
+
+            @Override
+            public String getCssClass() {
+                return cssClass;
             }
         };
     }

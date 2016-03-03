@@ -42,10 +42,9 @@ public class AbstractPage extends WebPage {
         Roles roles = CustomAuthenticatedWebSession.getSession().getRoles();
 
         addMenuItem(DashboardPage.class, "navbar.menu.dashboard", FontAwesomeIconType.dashboard, CustomAuthenticatedWebSession.get().isSignedIn());
-        addMenuItem(StatisticsPage.class, "navbar.menu.statistics", FontAwesomeIconType.bar_chart_o, CustomAuthenticatedWebSession.get().isSignedIn());
+        addMenuItem(StatisticsPage.class, "navbar.menu.statistics", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
         addMenuItem(AttendancePage.class, "navbar.menu.attendance", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
         addMenuItem(DataManagementPage.class, "navbar.menu.data-management", FontAwesomeIconType.database, roles.hasRole(Roles.ADMIN));
-        addMenuItem(Settings.class, "navbar.menu.settings", FontAwesomeIconType.gear, CustomAuthenticatedWebSession.get().isSignedIn());
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
 
         add(navbar);
@@ -69,6 +68,7 @@ public class AbstractPage extends WebPage {
             @Override
             protected List<AbstractLink> newSubMenuButtons(String s) {
                 List<AbstractLink> subMenu = Lists.newArrayList();
+                subMenu.add(new MenuBookmarkablePageLink<Void>(Settings.class, new StringResourceModel("navbar.menu.settings")).setIconType(FontAwesomeIconType.gears));
                 subMenu.add(new MenuBookmarkablePageLink<Void>(LogOut.class, new StringResourceModel("navbar.userMenu.logout")).setIconType(FontAwesomeIconType.sign_out));
                 return subMenu;
             }
