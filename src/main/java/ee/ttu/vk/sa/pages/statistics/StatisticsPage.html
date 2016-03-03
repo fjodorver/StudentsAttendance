@@ -18,40 +18,7 @@
                     </div>
                 </div>
             </form>
-            <table class="table table-hover table-striped">
-                <thead>
-                <tr>
-                    <th class="header col-md-4">
-                        <wicket:message key="attendance.statistics.fullname">[Fullname]</wicket:message>
-                    </th>
-                    <th class="header col-md-4">
-                        <wicket:message key="attendance.statistics.presents">[PRESENTS]</wicket:message>
-                    </th>
-                    <th class="header col-md-4">
-                        <wicket:message key="attendance.statistics.absents">[ABSENTS]</wicket:message>
-                    </th>
-                    <th class="header col-md-4">
-                        <wicket:message key="attendance.statistics.result">[Result]</wicket:message>
-                    </th>
-                </tr>
-                </thead>
-                <tbody wicket:id="body">
-                <tr wicket:id="rows">
-                    <td style="vertical-align: middle">
-                        <span wicket:id="fullname">[Fullname]</span>
-                    </td>
-                    <td style="vertical-align: middle">
-                        <span wicket:id="presents">[PRESENTS]</span>
-                    </td>
-                    <td style="vertical-align: middle">
-                        <span wicket:id="absents">[ABSENTS]</span>
-                    </td>
-                    <td style="vertical-align: middle">
-                        <span wicket:id="result">[Result]</span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <span wicket:id="chartPanel"></span>
         </div>
     </div>
 </wicket:extend>
