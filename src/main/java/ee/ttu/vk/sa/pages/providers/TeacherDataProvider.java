@@ -8,6 +8,9 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Iterator;
 
@@ -18,6 +21,7 @@ public class TeacherDataProvider extends AbstractDataProvider<Teacher, String> {
 
     @SpringBean
     private TeacherService teacherService;
+
     private Teacher teacher;
 
     public TeacherDataProvider(){
@@ -27,14 +31,13 @@ public class TeacherDataProvider extends AbstractDataProvider<Teacher, String> {
 
     @Override
     public Iterator<? extends Teacher> iterator(long first, long count) {
-        if(teacher.getName() != null)
-            return teacherService.findAll((int)(first/count), (int)count, teacher.getName()).iterator();
-        return teacherService.findAllTeachers((int)(first/count), (int)count).iterator();
+        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "name");
+        return teacherService.findAll(teacher, pageable).iterator();
     }
 
     @Override
     public long size() {
-        return teacherService.getSize();
+        return teacherService.getSize(teacher);
     }
 
     @Override

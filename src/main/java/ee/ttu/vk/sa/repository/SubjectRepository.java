@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-        Page<Subject> findAllByCode(Pageable pageable, String code);
         Subject findByCode(String code);
         List<Subject> findAllByTeacher(Teacher teacher);
 

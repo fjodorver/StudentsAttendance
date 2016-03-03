@@ -33,18 +33,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Inject
     private TeacherRepository teacherRepository;
 
-    @Inject
-    private SubjectRepository subjectRepository;
-
     @Override
-    public void saveTeacher(Teacher teacher) {
-        teacher.setPassword(encryptor.encryptPassword(teacher.getPassword()));
-        teacherRepository.save(teacher);
-    }
-
-    @Override
-    public void deleteTeacher(Teacher teacher) {
-        teacherRepository.delete(teacher);
+    public List<Teacher> findAll(Teacher teacher, Pageable pageable) {
+        String email = Optional.ofNullable(teacher.getEmail()).orElse("");
+        String name = Optional.ofNullable(teacher.getName()).orElse("");
+        return teacherRepository.findAll(email, name, pageable).getContent();
     }
 
     @Override
@@ -56,39 +49,31 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> addTeachers(List<Teacher> teachers) {
+    public Teacher save(Teacher teacher) {
+        teacher.setPassword(encryptor.encryptPassword(teacher.getPassword()));
+        return teacherRepository.save(teacher);
+    }
+
+    @Override
+    public List<Teacher> save(List<Teacher> teachers) {
         for (Teacher teacher : teachers) {
-            Optional.ofNullable(teacherRepository.findByName(teacher.getName())).ifPresent(x -> teacher.setId(x.getId()));
+            Optional.ofNullable(teacherRepository.findByEmail(teacher.getEmail())).ifPresent(x -> teacher.setId(x.getId()));
+            teacher.setPassword(encryptor.encryptPassword(teacher.getPassword()));
         }
         return teacherRepository.save(teachers);
     }
 
-
     @Override
-    public List<Teacher> findAll() {
-        return Lists.newArrayList(teacherRepository.findAll());
-    }
-
-    @Override
-    public Page<Teacher> findAll(int page, int size, String name) {
-        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "name"));
-        return teacherRepository.findAllByName(pageable, name);
-    }
-
-    @Override
-    public Page<Teacher> findAllTeachers(Integer page, Integer size) {
-        return teacherRepository.findAll(new PageRequest(page, size, new Sort(Sort.Direction.ASC, "name")));
-    }
-
-    @Override
-    public List<Teacher> parseTeachers(InputStream stream) {
+    public List<Teacher> parse(InputStream inputStream) {
         IParser<Teacher> parser = new TeacherXlsParser();
-        parser.parse(stream);
+        parser.parse(inputStream);
         return parser.getElements();
     }
 
     @Override
-    public int getSize() {
-        return (int)teacherRepository.count();
+    public long getSize(Teacher teacher) {
+        String email = Optional.ofNullable(teacher.getEmail()).orElse("");
+        String name = Optional.ofNullable(teacher.getName()).orElse("");
+        return teacherRepository.count(email, name);
     }
 }

@@ -65,7 +65,7 @@ public class DMPanel extends Modal<Void> {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
                 studentService.save(studentsModel.getObject());
-                teacherService.addTeachers(teachersModel.getObject());
+                teacherService.save(teachersModel.getObject());
                 subjectService.save(subjectsModel.getObject());
                 appendCloseDialogJavaScript(ajaxRequestTarget);
             }

@@ -45,7 +45,7 @@ public  class UserSettingsPanel extends Panel {
         form.add(new AjaxSubmitLink("save", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
-                teacherService.saveTeacher((Teacher) ajaxForm.getModelObject());
+                teacherService.save((Teacher) ajaxForm.getModelObject());
                 target.add(notificationPanel);
             }
 
