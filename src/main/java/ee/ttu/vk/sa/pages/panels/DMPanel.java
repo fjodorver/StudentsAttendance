@@ -80,16 +80,19 @@ public class DMPanel extends Modal<Void> {
     }
 
     public DMPanel setStudentsModel(ListModel<Student> studentsModel) {
+        this.studentsModel.getObject().clear();
         this.studentsModel.getObject().addAll(studentsModel.getObject());
         return this;
     }
 
     public DMPanel setSubjectsModel(ListModel<Subject> subjectsModel) {
+        this.subjectsModel.getObject().clear();
         this.subjectsModel.getObject().addAll(subjectsModel.getObject());
         return this;
     }
 
     public DMPanel setTeachersModel(ListModel<Teacher> teachersModel) {
+        this.teachersModel.getObject().clear();
         this.teachersModel.getObject().addAll(teachersModel.getObject());
         return this;
     }

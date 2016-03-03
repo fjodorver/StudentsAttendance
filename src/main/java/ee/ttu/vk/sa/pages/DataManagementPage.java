@@ -98,16 +98,22 @@ public class DataManagementPage extends AbstractPage {
         add(new FileUploadPanel("uploadPanel") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, List<FileUpload> fileUploads) throws IOException {
+                List<Student> students = Lists.newArrayList();
+                List<Subject> subjects = Lists.newArrayList();
+                List<Teacher> teachers = Lists.newArrayList();
                 for (FileUpload fileUpload : fileUploads) {
                     MediaType mediaType = MediaType.parse(fileUpload.getContentType());
                     if(mediaType.equals(MediaType.MICROSOFT_WORD))
-                        panel.setStudentsModel(new ListModel<>(studentService.parse(fileUpload.getInputStream())));
+                        students = studentService.parse(fileUpload.getInputStream());
                     if(mediaType.equals(MediaType.MICROSOFT_EXCEL)){
-                        panel.setSubjectsModel(new ListModel<>(subjectService.parse(fileUpload.getInputStream())));
-                        panel.setTeachersModel(new ListModel<>(teacherService.parse(fileUpload.getInputStream())));
+                        subjects = subjectService.parse(fileUpload.getInputStream());
+                        teachers = teacherService.parse(fileUpload.getInputStream());
                     }
 
                 }
+                panel.setStudentsModel(new ListModel<>(students));
+                panel.setSubjectsModel(new ListModel<>(subjects));
+                panel.setTeachersModel(new ListModel<>(teachers));
                 panel.appendShowDialogJavaScript(target);
                 target.add(panel);
             }
