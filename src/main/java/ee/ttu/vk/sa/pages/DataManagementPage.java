@@ -103,7 +103,7 @@ public class DataManagementPage extends AbstractPage {
                     if(mediaType.equals(MediaType.MICROSOFT_WORD))
                         panel.setStudentsModel(new ListModel<>(studentService.parse(fileUpload.getInputStream())));
                     if(mediaType.equals(MediaType.MICROSOFT_EXCEL)){
-                        panel.setSubjectsModel(new ListModel<>(subjectService.parseSubjects(fileUpload.getInputStream())));
+                        panel.setSubjectsModel(new ListModel<>(subjectService.parse(fileUpload.getInputStream())));
                         panel.setTeachersModel(new ListModel<>(teacherService.parseTeachers(fileUpload.getInputStream())));
                     }
 

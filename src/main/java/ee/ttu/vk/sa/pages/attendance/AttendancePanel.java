@@ -26,11 +26,11 @@ public abstract class AttendancePanel extends Panel {
     public AttendancePanel(String id) {
         super(id);
         Teacher teacher = CustomAuthenticatedWebSession.getSession().getTeacher();
-        List<Subject> subjects = subjectService.findAllByTeacher(teacher);
+        List<Subject> subjects = subjectService.findAll(teacher);
         List<Group> groups = Lists.newArrayList();
         subjects.forEach(x -> groups.addAll(x.getGroups()));
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(new Attendance()));
-        form.add(new DropDownChoice<>("subject", subjectService.findAllByTeacher(teacher)));
+        form.add(new DropDownChoice<>("subject", subjectService.findAll(teacher)));
         form.add(new DropDownChoice<>("type", Lists.newArrayList(Type.values())));
         form.add(new DropDownChoice<>("group", groups));
         form.add(new DatetimePickerWithIcon("date", new DatetimePickerConfig()));

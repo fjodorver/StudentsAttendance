@@ -14,10 +14,8 @@ import java.util.List;
 public interface StudentService {
     List<Student> parse(InputStream inputStream);
     Iterator<Student> findAll(Subject subject);
-    Iterator<Student> findAll(Pageable pageable);
     Iterator<Student> findAll(Student student, Pageable pageable);
     Iterator<Student> save(List<Student> students);
     Student save(Student student);
-    void delete(Long id);
     long size(Student student);
 }

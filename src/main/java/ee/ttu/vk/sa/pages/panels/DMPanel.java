@@ -15,7 +15,6 @@ import ee.ttu.vk.sa.service.TeacherService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -67,7 +66,7 @@ public class DMPanel extends Modal<Void> {
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
                 studentService.save(studentsModel.getObject());
                 teacherService.addTeachers(teachersModel.getObject());
-                subjectService.saveSubjects(subjectsModel.getObject());
+                subjectService.save(subjectsModel.getObject());
                 appendCloseDialogJavaScript(ajaxRequestTarget);
             }
         }.setLabel(new ResourceModel("upload-panel.buttons.save")).setIconType(FontAwesomeIconType.save));

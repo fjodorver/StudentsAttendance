@@ -6,6 +6,9 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Iterator;
 
@@ -16,6 +19,7 @@ public class SubjectDataProvider extends AbstractDataProvider<Subject, String> {
 
     @SpringBean
     private SubjectService subjectService;
+
     private Subject subject;
 
     public SubjectDataProvider(){
@@ -25,14 +29,13 @@ public class SubjectDataProvider extends AbstractDataProvider<Subject, String> {
 
     @Override
     public Iterator<? extends Subject> iterator(long first, long count) {
-        if(subject.getCode() != null)
-            return subjectService.findAll((int)(first/count), (int)count, subject.getCode()).iterator();
-        return subjectService.findAllSubjects((int)(first/count), (int)count).iterator();
+        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "name");
+        return subjectService.findAll(subject, pageable).iterator();
     }
 
     @Override
     public long size() {
-        return subjectService.getSize();
+        return subjectService.getSize(subject);
     }
 
     @Override

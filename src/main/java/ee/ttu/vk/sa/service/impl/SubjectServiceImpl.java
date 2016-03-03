@@ -39,14 +39,14 @@ public class SubjectServiceImpl implements SubjectService {
 	private TeacherRepository teacherRepository;
 
 	@Override
-	public List<Subject> parseSubjects(InputStream stream) {
+	public List<Subject> parse(InputStream stream) {
 		IParser<Subject> parser = new SubjectXlsParser();
 		parser.parse(stream);
 		return parser.getElements();
 	}
 
 	@Override
-	public List<Subject> saveSubjects(List<Subject> subjects) {
+	public List<Subject> save(List<Subject> subjects) {
 		Map<String, Group> groupByName = Maps.newHashMap();
 		for (Subject subject : subjects) {
 			for (Group group : subject.getGroups()) {
@@ -56,40 +56,31 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 		for (Subject subject : subjects) {
 			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
+			Optional.ofNullable(teacherRepository.findByName(subject.getTeacher().getName())).ifPresent(subject::setTeacher);
 			subject.setGroups(getGroups(subject, groupByName));
-		}
-		for (Subject subject : subjects) {
-			Teacher teacher = teacherRepository.findByName(subject.getTeacher().getName());
-			subject.setTeacher(teacher);
 		}
 		return subjectRepository.save(subjects);
 	}
-    @Override
-    public void deleteSubject(Subject subject) {
-        subjectRepository.delete(subject);
-    }
 
-    @Override
-    public void addSubject(Subject subject) {
-        subjectRepository.save(subject);
-    }
-
-    @Override
-    public List<Subject> findAll() {
-        return subjectRepository.findAll();
-    }
+	@Override
+	public List<Subject> findAll(Subject subject, Pageable pageable) {
+		String code = Optional.ofNullable(subject.getCode()).orElse("");
+		String name = Optional.ofNullable(subject.getName()).orElse("");
+		return subjectRepository.findAll(code, name, pageable).getContent();
+	}
 
 
 	@Override
-	public List<Subject> findAllByTeacher(Teacher teacher) {
-		List<Subject> subjects = subjectRepository.findAllByTeacher(teacher);
-		for (Subject subject : subjects) {
-			for (Group group : subject.getGroups()) {
-				group.getId();
-			}
-		}
-		return subjects;
+	public List<Subject> findAll(Teacher teacher) {
+		return subjectRepository.findAllByTeacher(teacher);
 	}
+
+    @Override
+    public long getSize(Subject subject) {
+		String code = Optional.ofNullable(subject.getCode()).orElse("");
+		String name = Optional.ofNullable(subject.getName()).orElse("");
+        return subjectRepository.count(code, name);
+    }
 
 	private List<Group> getGroups(Subject subject, Map<String, Group> groupByName) {
 		List<Group> dbGroups = Lists.newArrayList();
@@ -99,31 +90,4 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 		return dbGroups;
 	}
-
-    @Override
-    public Page<Subject> findAll(int page, int size, String code) {
-        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "code"));
-        Page<Subject> subjects = subjectRepository.findAllByCode(pageable, code);
-        getAllObjects(subjects);
-        return subjects;
-    }
-
-    @Override
-    public Page<Subject> findAllSubjects(Integer page, Integer size) {
-        Page<Subject> subjects = subjectRepository.findAll(new PageRequest(page, size, new Sort(Sort.Direction.ASC, "code")));
-        getAllObjects(subjects);
-        return subjects;
-    }
-
-    @Override
-    public int getSize() {
-        return (int)subjectRepository.count();
-    }
-
-    private void getAllObjects(Page<Subject> subjectPage){
-        for(Subject subject : subjectPage){
-            if(subject.getTeacher() != null)
-                subject.getTeacher().getId();
-        }
-    }
 }
