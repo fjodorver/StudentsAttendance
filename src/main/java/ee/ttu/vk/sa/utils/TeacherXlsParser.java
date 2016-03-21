@@ -2,15 +2,12 @@ package ee.ttu.vk.sa.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import ee.ttu.vk.sa.domain.Group;
-import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +27,6 @@ public class TeacherXlsParser extends XlsParser<Teacher> {
 
     public TeacherXlsParser(){
         teacherMap = Maps.newHashMap();
-        this.SHEET_NUMBER = 1;
         this.START_ROW_NUMBER = 2;
     }
 
@@ -48,15 +44,15 @@ public class TeacherXlsParser extends XlsParser<Teacher> {
                         int columnIndex = cell.getColumnIndex();
                         switch (columnIndex) {
                             case TEACHER_NAME_CELL:
-                                teacher.setName((String) getCellValue(cell));
+                                teacher.setFullname((String) getCellValue(cell));
                                 break;
                             case TEACHER_EMAIL_CELL:
-                                teacher.setEmail((String) getCellValue(cell));
+                                teacher.setUsername((String) getCellValue(cell));
                                 break;
                         }
                     }
                     teacher.setPassword("PASS");
-                    teacherMap.put(teacher.getEmail(), teacher);
+                    teacherMap.put(teacher.getUsername(), teacher);
                 }
             }
         } catch (IOException e) {

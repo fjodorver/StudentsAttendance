@@ -252,10 +252,9 @@
 				<configuration>
 					<changeLogFile>src/main/resources/db/changelog.xml</changeLogFile>
 					<driver>org.postgresql.Driver</driver>
-					<url>jdbc:postgresql://dev.vk.edu.ee:5432/dbVershinin?Schema=sa</url>
+					<url>jdbc:postgresql://dev.vk.edu.ee:5432/dbAttendance</url>
 					<username>${db.user}</username>
 					<password>${db.password}</password>
-					<defaultSchemaName>sa</defaultSchemaName>
 					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
 				</configuration>
 			</plugin>

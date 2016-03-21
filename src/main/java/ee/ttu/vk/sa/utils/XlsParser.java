@@ -10,7 +10,7 @@ import java.util.List;
  */
 public abstract class XlsParser<T> implements IParser<T> {
 
-    protected int SHEET_NUMBER;
+    protected int SHEET_NUMBER = 0;
     protected int START_ROW_NUMBER;
 
     @Override

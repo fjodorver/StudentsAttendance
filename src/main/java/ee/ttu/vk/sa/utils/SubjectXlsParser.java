@@ -30,7 +30,6 @@ public class SubjectXlsParser extends XlsParser<Subject> {
     public SubjectXlsParser() {
         groupMap = Maps.newHashMap();
         subjectMap = Maps.newHashMap();
-        this.SHEET_NUMBER = 0;
         this.START_ROW_NUMBER = 10;
     }
 
@@ -62,7 +61,7 @@ public class SubjectXlsParser extends XlsParser<Subject> {
                                 group.setLanguage((String) getCellValue(cell));
                                 break;
                             case TEACHER_NAME_CELL:
-                                teacher.setName((String)getCellValue(cell));
+                                teacher.setFullname((String)getCellValue(cell));
                                 break;
                         }
                     }

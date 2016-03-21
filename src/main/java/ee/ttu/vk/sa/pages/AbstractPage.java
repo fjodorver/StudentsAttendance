@@ -62,7 +62,7 @@ public class AbstractPage extends WebPage {
     }
 
     private Component addUserMenu(){
-        String fullname = Optional.ofNullable(CustomAuthenticatedWebSession.getSession().getTeacher()).orElse(new Teacher()).getName();
+        String fullname = Optional.ofNullable(CustomAuthenticatedWebSession.getSession().getTeacher()).orElse(new Teacher()).getFullname();
         return new NavbarDropDownButton(Model.of(fullname)){
 
             @Override

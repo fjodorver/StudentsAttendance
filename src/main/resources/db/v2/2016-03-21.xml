@@ -3,5 +3,11 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-    <include file="v2/changelog.xml" relativeToChangelogFile="true"/>
+<changeSet id="add role to teacher" author="vadim">
+    <addColumn tableName="teacher">
+        <column name="role" type="varchar(10)">
+            <constraints nullable="false"/>
+        </column>
+    </addColumn>
+</changeSet>
 </databaseChangeLog>

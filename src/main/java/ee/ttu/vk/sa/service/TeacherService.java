@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface TeacherService  {
     List<Teacher> findAll(Teacher teacher, Pageable pageable);
-    Teacher find(String email, String password);
+    Teacher find(String username, String password);
     Teacher save(Teacher teacher);
     List<Teacher> save(List<Teacher> teachers);
     List<Teacher> parse(InputStream inputStream);

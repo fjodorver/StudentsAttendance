@@ -1,17 +1,12 @@
 package ee.ttu.vk.sa.service.impl;
 
-import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.domain.Teacher;
-import ee.ttu.vk.sa.repository.SubjectRepository;
 import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.TeacherService;
 import ee.ttu.vk.sa.utils.IParser;
 import ee.ttu.vk.sa.utils.PasswordEncryptor;
 import ee.ttu.vk.sa.utils.TeacherXlsParser;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,14 +30,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> findAll(Teacher teacher, Pageable pageable) {
-        String email = Optional.ofNullable(teacher.getEmail()).orElse("");
-        String name = Optional.ofNullable(teacher.getName()).orElse("");
+        String email = Optional.ofNullable(teacher.getUsername()).orElse("");
+        String name = Optional.ofNullable(teacher.getFullname()).orElse("");
         return teacherRepository.findAll(email, name, pageable).getContent();
     }
 
     @Override
     public Teacher find(String email, String password) {
-        Teacher teacher = teacherRepository.findByEmail(email);
+        Teacher teacher = teacherRepository.findByUsername(email);
         if(teacher != null && encryptor.decryptPassword(teacher.getPassword()).equals(password))
             return teacher;
         return null;
@@ -57,7 +52,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<Teacher> save(List<Teacher> teachers) {
         for (Teacher teacher : teachers) {
-            Optional.ofNullable(teacherRepository.findByEmail(teacher.getEmail())).ifPresent(x -> teacher.setId(x.getId()));
+            Optional.ofNullable(teacherRepository.findByUsername(teacher.getUsername())).ifPresent(x -> teacher.setId(x.getId()));
             teacher.setPassword(encryptor.encryptPassword(teacher.getPassword()));
         }
         return teacherRepository.save(teachers);
@@ -72,8 +67,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public long getSize(Teacher teacher) {
-        String email = Optional.ofNullable(teacher.getEmail()).orElse("");
-        String name = Optional.ofNullable(teacher.getName()).orElse("");
+        String email = Optional.ofNullable(teacher.getUsername()).orElse("");
+        String name = Optional.ofNullable(teacher.getFullname()).orElse("");
         return teacherRepository.count(email, name);
     }
 }

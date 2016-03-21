@@ -10,13 +10,13 @@ import org.springframework.data.jpa.repository.Query;
  * Created by vadimstrukov on 2/13/16.
  */
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
-    Teacher findByEmail(String email);
+    Teacher findByUsername(String username);
 
-    Teacher findByName(String name);
+    Teacher findByFullname(String fullname);
 
-    @Query("select t from Teacher t where t.email like concat('%',?1,'%') and t.name like concat('%',?2,'%')")
-    Page<Teacher> findAll(String email, String name, Pageable pageable);
+    @Query("select t from Teacher t where t.username like concat('%',?1,'%') and t.fullname like concat('%',?2,'%')")
+    Page<Teacher> findAll(String username, String fullname, Pageable pageable);
 
-    @Query("select count(t) from Teacher t where t.email like concat('%',?1,'%') and t.name like concat('%',?2,'%')")
-    long count(String email, String name);
+    @Query("select count(t) from Teacher t where t.username like concat('%',?1,'%') and t.fullname like concat('%',?2,'%')")
+    long count(String username, String fullname);
 }

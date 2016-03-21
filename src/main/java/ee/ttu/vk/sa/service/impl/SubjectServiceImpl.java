@@ -12,10 +12,7 @@ import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.SubjectService;
 import ee.ttu.vk.sa.utils.IParser;
 import ee.ttu.vk.sa.utils.SubjectXlsParser;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +47,7 @@ public class SubjectServiceImpl implements SubjectService {
 		List<Subject> subjectList = Lists.newArrayList();
 		Map<String, Group> groupByName = Maps.newHashMap();
 		for (Subject subject : subjects) {
-			Teacher teacher = teacherRepository.findByName(subject.getTeacher().getName());
+			Teacher teacher = teacherRepository.findByFullname(subject.getTeacher().getFullname());
 			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
 			Optional.ofNullable(teacher).ifPresent(subject::setTeacher);
 			for (Group group : subject.getGroups()) {

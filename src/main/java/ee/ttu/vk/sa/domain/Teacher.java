@@ -13,8 +13,8 @@ public class Teacher implements Serializable{
     @SequenceGenerator(name="teacher_id_seq",sequenceName="teacher_id_seq", allocationSize=1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="teacher_id_seq")
     private Long id;
-    private String name;
-    private String email;
+    private String fullname;
+    private String username;
     private String password;
     private String role = Roles.USER;
 
@@ -27,21 +27,21 @@ public class Teacher implements Serializable{
         return this;
     }
 
-    public String getName() {
-        return name;
+    public String getFullname() {
+        return fullname;
     }
 
-    public Teacher setName(String name) {
-        this.name = name;
+    public Teacher setFullname(String fullname) {
+        this.fullname = fullname;
         return this;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public Teacher setEmail(String email) {
-        this.email = email;
+    public Teacher setUsername(String username) {
+        this.username = username;
         return this;
     }
 
