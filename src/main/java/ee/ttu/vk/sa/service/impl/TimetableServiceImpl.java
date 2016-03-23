@@ -42,7 +42,7 @@ public class TimetableServiceImpl implements TimetableService {
         Map<String, Group> groupMap = timetables.stream().map(Timetable::getGroup).collect(Collectors.toMap(Group::getName, y -> y, (x, y) -> x));
         subjectService.saveAll(Lists.newArrayList(subjectMap.values()));
         teacherService.saveAll(Lists.newArrayList(teacherMap.values()));
-        groupService.saveAll(Lists.newArrayList(groupMap.values()));
+        groupService.save(Lists.newArrayList(groupMap.values()));
         for (Timetable timetable : timetables) {
             timetable.setGroup(Optional.ofNullable(groupMap.get(timetable.getGroup().getName())).orElse(timetable.getGroup()));
             timetable.setTeacher(Optional.ofNullable(teacherMap.get(timetable.getTeacher().getUsername())).orElse(timetable.getTeacher()));

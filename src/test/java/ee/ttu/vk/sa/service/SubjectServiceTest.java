@@ -57,7 +57,7 @@ public class SubjectServiceTest {
         given(subjectRepository.findByCode("3")).willReturn(subjects.get(2).setId(2L));
         given(groupRepository.findByName("RDIR12")).willReturn(newGroup(0L, "RDIR12"));
         given(subjectRepository.save(anyListOf(Subject.class))).will(x -> x.getArguments()[0]);
-        List<Subject> subjectList = subjectService.save(subjects);
+        List<Subject> subjectList = subjectService.saveAll(subjects);
 
         Assert.assertEquals(3, Sets.newHashSet(subjectList).size());
         subjectList.forEach(x -> x.getTimetables().stream().map(Timetable::getGroup).forEach(y -> Assert.assertNotNull(y.getName())));

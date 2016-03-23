@@ -89,8 +89,8 @@ public class DataManagementPage extends AbstractPage {
                     @Override
                     protected List<IColumn<Teacher, String>> getColumnList() {
                         List<IColumn<Teacher, String>> columns = Lists.newArrayList();
-                        columns.add(getFilteredColumn("Email", "email", "filterState.email", "col-lg-4"));
-                        columns.add(getFilteredColumn("Name", "name", "filterState.name", "col-lg-10"));
+                        columns.add(getFilteredColumn("Username", "username", "filterState.username", "col-lg-4"));
+                        columns.add(getFilteredColumn("Name", "fullname", "filterState.fullname", "col-lg-10"));
                         return columns;
                     }
                 };

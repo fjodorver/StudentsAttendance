@@ -5,6 +5,7 @@ import ee.ttu.vk.sa.domain.Teacher;
 import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,27 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private TeacherRepository teacherRepository;
+
+
+    @Override
+    public Teacher save(Teacher teacher) {
+        return null;
+    }
+
+    @Override
+    public Teacher find(String username, String password) {
+        return teacherRepository.findByUsername(username);
+    }
+
+    @Override
+    public long size(Teacher teacher) {
+        return 0;
+    }
+
+    @Override
+    public List<Teacher> findAll(Teacher teacher, Pageable pageable) {
+        return null;
+    }
 
     @Override
     public List<Teacher> findAll() {

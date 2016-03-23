@@ -1,5 +1,7 @@
 package ee.ttu.vk.sa.domain;
 
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -19,6 +21,8 @@ public class Teacher implements Serializable{
     private String username;
 
     private String password;
+
+    private String role = Roles.USER;
 
     @OneToMany(mappedBy = "teacher")
     private List<Timetable> timetables;
@@ -83,6 +87,15 @@ public class Teacher implements Serializable{
 
     public Teacher setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Teacher setRole(String role) {
+        this.role = role;
         return this;
     }
 }

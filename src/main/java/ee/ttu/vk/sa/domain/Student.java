@@ -20,6 +20,10 @@ public class Student implements Serializable {
 
     private String code;
 
+    public String getFullname(){
+        return firstname + " " + lastname;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Group group = new Group();
 
