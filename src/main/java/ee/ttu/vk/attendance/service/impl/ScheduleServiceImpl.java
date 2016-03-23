@@ -88,7 +88,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void update() throws IOException, ParserException {
         List<Timetable> timetables = Lists.newArrayList();
         CalendarBuilder calendarBuilder = new CalendarBuilder();
-        for (Group group : groupService.findAll().stream().filter(x -> x.getName().equals("RDIR61")).collect(Collectors.toList())) {
+        for (Group group : groupService.findAll().stream().filter(x -> x.getName().startsWith("R")).collect(Collectors.toList())) {
             HttpGet httpGet = new HttpGet(MessageFormat.format(SCHEDULE_URL, group.getGroupType().ordinal()+1, group.getScheduleId()));
             try (CloseableHttpResponse response = httpClient.execute(httpGet)){
                 HttpEntity entity = response.getEntity();
