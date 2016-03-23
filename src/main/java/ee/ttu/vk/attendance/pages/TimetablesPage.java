@@ -35,8 +35,8 @@ public class TimetablesPage extends AbstractPage {
             @Override
             protected void populateItem(Item<Timetable> item) {
                 Timetable timetable = item.getModelObject();
-                item.add(new Label("start", Model.of(timetable.getStart().format(DateTimeFormatter.ofPattern("HH:SS")))));
-                item.add(new Label("end", Model.of(timetable.getStart().format(DateTimeFormatter.ofPattern("HH:SS")))));
+                item.add(new Label("start", Model.of(timetable.getStart().format(DateTimeFormatter.ofPattern("HH:mm")))));
+                item.add(new Label("end", Model.of(timetable.getEnd().format(DateTimeFormatter.ofPattern("HH:mm")))));
                 item.add(new Label("subject"));
                 item.add(new Label("group"));
                 item.add(new Label("lessonType"));
