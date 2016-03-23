@@ -1,0 +1,48 @@
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <wicket:message key="data-management.tabs.header">[Data Management]</wicket:message>
+            </h1>
+        </div>
+        <form wicket:id="searchForm" class="form-horizontal">
+            <div class="input-group pull-right col-lg-2">
+                <span class="input-group-addon" id="basic-addon3">Date</span>
+                <input wicket:id="date" type="date" class="form-control" title="">
+            </div>
+        </form>
+        <div class="col-lg-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-lg-2">Start</th>
+                    <th class="col-lg-2">End</th>
+                    <th class="col-lg-3">Subject</th>
+                    <th class="col-lg-2">Group</th>
+                    <th class="col-lg-2">LessonType</th>
+                </tr>
+                </thead>
+                <tbody wicket:id="body">
+                <tr wicket:id="rows">
+                    <td>
+                        <span wicket:id="start">Start</span>
+                    </td>
+                    <td>
+                        <span wicket:id="end">End</span>
+                    </td>
+                    <td>
+                        <span wicket:id="subject">Subject</span>
+                    </td>
+                    <td>
+                        <span wicket:id="group">Start</span>
+                    </td>
+                    <td>
+                        <span wicket:id="lessonType">LessonType</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <ul wicket:id="navigator"></ul>
+        </div>
+    </div>
+</wicket:extend>
