@@ -25,6 +25,11 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
+    <bean  name="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder">
+    </bean>
+
+    <bean id="httpClient" factory-bean="httpClientBuilder" factory-method="build" />
+
     <context:component-scan base-package="ee.ttu.vk.sa"/>
     <jpa:repositories base-package="ee.ttu.vk.sa.repository"/>
     <jee:jndi-lookup id="jndiDataSource" jndi-name="jdbc/dbAttendance"

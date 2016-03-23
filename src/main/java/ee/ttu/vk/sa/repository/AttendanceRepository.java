@@ -22,16 +22,16 @@ import java.util.Date;
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     @EntityGraph(value = "attendance.detail", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("select a from Attendance a where a.subject = ?1 and a.group = ?2 and a.type = ?3 and a.date = ?4")
-    Page<Attendance> findAll(Subject subject, Group group, Type type, @Temporal(TemporalType.DATE) Date date, Pageable pageable);
+    @Query("select a from Attendance a where a.subject = ?1 and a.group = ?2 and a.type = ?3")
+    Page<Attendance> findAll(Subject subject, Group group, Type type, Pageable pageable);
 
-    @Query("select a from Attendance a where a.student = ?1 and a.type = ?2 and a.date = ?3")
-    Attendance findAll(Student student, Type type, @Temporal(TemporalType.DATE) Date date);
+    @Query("select a from Attendance a where a.student = ?1 and a.type = ?2 ")
+    Attendance findAll(Student student, Type type);
 
 
     @Query("select count(a) from Attendance a where a.subject = ?1 and a.group = ?2 and a.student = ?3 and a.status = ?4 group by a.status")
     Integer countByStatus(Subject subject, Group group, Student student, Status status);
 
-    @Query("select count(a) from Attendance a where a.subject = ?1 and a.group = ?2 and a.type = ?3 and a.date = ?4")
-    Long size(Subject subject, Group group, Type type, @Temporal(TemporalType.DATE) Date date);
+    @Query("select count(a) from Attendance a where a.subject = ?1 and a.group = ?2 and a.type = ?3")
+    Long size(Subject subject, Group group, Type type);
 }

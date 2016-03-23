@@ -1,35 +1,31 @@
 package ee.ttu.vk.sa.domain;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.List;
 
 @Entity
 @Table(name = "student")
-@NamedEntityGraph(name = "student.group", attributeNodes = @NamedAttributeNode("group"))
 public class Student implements Serializable {
-
     @Id
-    @SequenceGenerator(name="student_id_seq",sequenceName="student_id_seq", allocationSize=1)
+    @SequenceGenerator(name="student_id_seq",sequenceName="student_id_seq")
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="student_id_seq")
     private Long id;
-
-    private String code;
-
 
     private String firstname;
 
     private String lastname;
+
+    private String code;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Group group = new Group();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
     private List<Attendance> attendances = Lists.newArrayList();
+
 
     public Long getId() {
         return id;
@@ -39,6 +35,7 @@ public class Student implements Serializable {
         this.id = id;
         return this;
     }
+
 
     public String getCode() {
         return code;
@@ -83,22 +80,5 @@ public class Student implements Serializable {
     public Student setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
         return this;
-    }
-
-    public String getFullname(){
-        return MessageFormat.format("{0} {1}", firstname, lastname);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return Objects.equal(id, student.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

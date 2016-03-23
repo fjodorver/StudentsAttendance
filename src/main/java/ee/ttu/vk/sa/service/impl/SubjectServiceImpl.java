@@ -1,91 +1,31 @@
 package ee.ttu.vk.sa.service.impl;
 
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
-import ee.ttu.vk.sa.domain.Teacher;
-import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.SubjectRepository;
-import ee.ttu.vk.sa.repository.TeacherRepository;
 import ee.ttu.vk.sa.service.SubjectService;
-import ee.ttu.vk.sa.utils.IParser;
-import ee.ttu.vk.sa.utils.SubjectXlsParser;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class SubjectServiceImpl implements SubjectService {
 
-	@Inject
-	private SubjectRepository subjectRepository;
-
-	@Inject
-	private GroupRepository groupRepository;
-
-	@Inject
-	private TeacherRepository teacherRepository;
-
-	@Override
-	public List<Subject> parse(InputStream stream) {
-		IParser<Subject> parser = new SubjectXlsParser();
-		parser.parse(stream);
-		return parser.getElements();
-	}
-
-	@Override
-	public List<Subject> save(List<Subject> subjects) {
-		List<Subject> subjectList = Lists.newArrayList();
-		Map<String, Group> groupByName = Maps.newHashMap();
-		for (Subject subject : subjects) {
-			Teacher teacher = teacherRepository.findByFullname(subject.getTeacher().getFullname());
-			Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).ifPresent(x -> subject.setId(x.getId()));
-			Optional.ofNullable(teacher).ifPresent(subject::setTeacher);
-			for (Group group : subject.getGroups()) {
-				Group dbGroup = groupRepository.findByName(group.getName());
-				groupByName.put(group.getName(), Optional.ofNullable(dbGroup).orElse(group));
-			}
-			subject.setGroups(getGroups(subject, groupByName));
-			subjectList.add(subjectRepository.save(subject));
-		}
-		return subjectList;
-	}
-
-	@Override
-	public List<Subject> findAll(Subject subject, Pageable pageable) {
-		String code = Optional.ofNullable(subject.getCode()).orElse("");
-		String name = Optional.ofNullable(subject.getName()).orElse("");
-		return subjectRepository.findAll(code, name, pageable).getContent();
-	}
-
-
-	@Override
-	public List<Subject> findAll(Teacher teacher) {
-		return subjectRepository.findAllByTeacher(teacher);
-	}
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     @Override
-    public long getSize(Subject subject) {
-		String code = Optional.ofNullable(subject.getCode()).orElse("");
-		String name = Optional.ofNullable(subject.getName()).orElse("");
-        return subjectRepository.count(code, name);
+    public List<Subject> saveAll(List<Subject> subjects) {
+        for (Subject subject : subjects) {
+            subject.setId(Optional.ofNullable(subjectRepository.findByCode(subject.getCode())).orElse(subject).getId());
+        }
+        return subjectRepository.save(subjects);
+//        return subjectRepository.save(subjects.stream()
+//                .map(x -> Optional.ofNullable(subjectRepository.findByCode(x.getCode())).orElse(x))
+//                .collect(Collectors.toList()));
     }
-
-	private List<Group> getGroups(Subject subject, Map<String, Group> groupByName) {
-		List<Group> dbGroups = Lists.newArrayList();
-		for (Group group : subject.getGroups()) {
-			Group dbGroup = groupByName.get(group.getName());
-			dbGroups.add(dbGroup);
-		}
-		return dbGroups;
-	}
 }

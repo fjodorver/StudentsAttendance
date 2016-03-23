@@ -17,6 +17,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class AttendancePanel extends Panel {
     @SpringBean
@@ -28,7 +29,8 @@ public abstract class AttendancePanel extends Panel {
         Teacher teacher = CustomAuthenticatedWebSession.getSession().getTeacher();
         List<Subject> subjects = subjectService.findAll(teacher);
         List<Group> groups = Lists.newArrayList();
-        subjects.forEach(x -> groups.addAll(x.getGroups()));
+        subjects.forEach(x ->groups.addAll(x.getTimetables().stream().map(Timetable::getGroup).collect(Collectors.toList())));
+
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(new Attendance()));
         form.add(new DropDownChoice<>("subject", subjectService.findAll(teacher)));
         form.add(new DropDownChoice<>("type", Lists.newArrayList(Type.values())));

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
+import ee.ttu.vk.sa.domain.Timetable;
 import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.StudentRepository;
 import ee.ttu.vk.sa.service.StudentService;
@@ -19,13 +20,14 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class StudentServiceImpl implements StudentService {
 
-	@Inject
-	private StudentRepository studentRepository;
+    @Inject
+    private StudentRepository studentRepository;
 
     @Inject
     private GroupRepository groupRepository;
@@ -39,7 +41,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Iterator<Student> findAll(Subject subject) {
-        return studentRepository.findAllByGroupIn(subject.getGroups()).iterator();
+        List<Group> groups = Lists.newArrayList();
+        groups.addAll(subject.getTimetables().stream().map(Timetable::getGroup).collect(Collectors.toList()));
+        return studentRepository.findAllByGroupIn(groups).iterator();
     }
 
     @Override
@@ -81,5 +85,6 @@ public class StudentServiceImpl implements StudentService {
         String group = Optional.ofNullable(student.getGroup().getName()).orElse("");
         return studentRepository.count(code, firstname, lastname, group);
     }
+
 
 }

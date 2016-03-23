@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Teacher;
+import ee.ttu.vk.sa.domain.Timetable;
 import ee.ttu.vk.sa.repository.GroupRepository;
 import ee.ttu.vk.sa.repository.SubjectRepository;
 import ee.ttu.vk.sa.repository.TeacherRepository;
@@ -44,9 +45,9 @@ public class SubjectServiceTest {
     @Before
     public void setUp(){
         subjects = Lists.newArrayList();
-        subjects.add(newSubject(null, "1", "Subject 1", new Teacher(), Lists.newArrayList(newGroup(null, "RDIR12"), newGroup(null, "RDIR22"))));
-        subjects.add(newSubject(null, "2", "Subject 2", new Teacher(), Lists.newArrayList()));
-        subjects.add(newSubject(null, "3", "Subject 3", new Teacher(), Lists.newArrayList()));
+        subjects.add(newSubject(null, "1", "Subject 1",  Lists.newArrayList()));
+        subjects.add(newSubject(null, "2", "Subject 2",  Lists.newArrayList()));
+        subjects.add(newSubject(null, "3", "Subject 3",  Lists.newArrayList()));
     }
 
     @Test
@@ -57,19 +58,21 @@ public class SubjectServiceTest {
         given(groupRepository.findByName("RDIR12")).willReturn(newGroup(0L, "RDIR12"));
         given(subjectRepository.save(anyListOf(Subject.class))).will(x -> x.getArguments()[0]);
         List<Subject> subjectList = subjectService.save(subjects);
+
         Assert.assertEquals(3, Sets.newHashSet(subjectList).size());
-        subjectList.forEach(x -> x.getGroups().forEach(y -> Assert.assertNotNull(y.getName())));
-        Assert.assertNotNull(subjectList.get(0).getGroups().get(0).getId());
-        Assert.assertNull(subjectList.get(0).getGroups().get(1).getId());
+        subjectList.forEach(x -> x.getTimetables().stream().map(Timetable::getGroup).forEach(y -> Assert.assertNotNull(y.getName())));
+        Assert.assertNotNull(subjectList.get(0).getTimetables().get(0).getGroup().getId());
+        Assert.assertNull(subjectList.get(0).getTimetables().get(1).getGroup().getId());
     }
 
-    private Subject newSubject(Long id, String code, String name, Teacher teacher, List<Group> groups){
+    private Subject newSubject(Long id, String code, String name, List<Timetable> timetables){
         Subject subject = new Subject();
         subject.setCode(code);
         subject.setId(id);
         subject.setName(name);
-        subject.setTeacher(teacher);
-        subject.setGroups(groups);
+        subject.setTimetables(timetables);
+//        subject.setTeacher(teacher);
+//        subject.setGroups(groups);
         return subject;
     }
 
