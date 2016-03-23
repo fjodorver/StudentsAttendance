@@ -21,8 +21,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> findAll(Subject subject, Pageable pageable) {
-        return null;
-    }
+        String code = Optional.ofNullable(subject.getCode()).orElse("");
+        String name = Optional.ofNullable(subject.getName()).orElse("");
+        return subjectRepository.findAll(code, name, pageable).getContent();    }
 
     @Override
     public List<Subject> saveAll(List<Subject> subjects) {
@@ -37,6 +38,8 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public long size(Subject subject) {
-        return 0;
+        String code = Optional.ofNullable(subject.getCode()).orElse("");
+        String name = Optional.ofNullable(subject.getName()).orElse("");
+        return subjectRepository.count(code, name);
     }
 }

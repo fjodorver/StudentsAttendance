@@ -1,6 +1,7 @@
 package ee.ttu.vk.sa.domain;
 
 import com.google.common.collect.Lists;
+import ee.ttu.vk.sa.OffsetDateTimeConverter;
 import ee.ttu.vk.sa.enums.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,14 +16,16 @@ import java.util.Objects;
 @NamedEntityGraph(name = "timetable.detail", attributeNodes = {@NamedAttributeNode("subject"), @NamedAttributeNode("group"), @NamedAttributeNode("teacher")})
 public class Timetable implements Serializable {
     @Id
-    @SequenceGenerator(name="timetable_id_seq",sequenceName="timetable_id_seq")
+    @SequenceGenerator(name="timetable_id_seq",sequenceName="timetable_id_seq", allocationSize = 1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="timetable_id_seq")
     private Long id;
 
     @DateTimeFormat
+    @Convert(converter = OffsetDateTimeConverter.class)
     private ZonedDateTime start;
 
     @DateTimeFormat
+    @Convert(converter = OffsetDateTimeConverter.class)
     @Column(name = "\"end\"")
     private ZonedDateTime end;
 

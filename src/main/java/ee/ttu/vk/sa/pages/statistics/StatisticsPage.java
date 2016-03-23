@@ -72,8 +72,8 @@ public class StatisticsPage extends AbstractPage {
         return new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-//                if(subject != null && group != null && groupService.findAll(Lists.newArrayList(subject)).get(0).equals(group))
-//                    studentListModel.setObject(Lists.newArrayList(studentService.findAll(subject)));
+//                if(subject != null && group != null && groupService.findAllBySubject(Lists.newArrayList(subject)).get(0).equals(group))
+//                    studentListModel.setObject(Lists.newArrayList(studentService.findAllBySubject(subject)));
 //                else
 //                    studentListModel.getObject().clear();
                 chartPanel.modelChanged();

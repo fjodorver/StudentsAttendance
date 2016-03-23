@@ -61,7 +61,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private TimetableService timetableService;
 
     @Override
-//    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "*/30 * * * * *")
     public void updateGroups() throws IOException {
         Map<String, Group> groupMap = Maps.newHashMap();
         Pattern pattern = Pattern.compile("g=(\\w+)");
@@ -84,7 +84,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-//    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "*/30 * * * * *")
     public void update() throws IOException, ParserException {
         List<Timetable> timetables = Lists.newArrayList();
         CalendarBuilder calendarBuilder = new CalendarBuilder();
