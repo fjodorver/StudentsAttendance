@@ -32,7 +32,6 @@ import java.util.List;
  */
 @AuthorizeInstantiation(Roles.USER)
 public class AttendancePage extends AbstractPage {
-
     @SpringBean
     private AttendanceService attendanceService;
 
@@ -56,11 +55,11 @@ public class AttendancePage extends AbstractPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
                 Component component = (Component) ajaxForm.findSubmittingButton();
                 Attendance attendance = (Attendance) ajaxForm.getModelObject();
-                attendance.setStatus(Status.INACTIVE);
+                attendance.setAttendanceType(Status.INACTIVE);
                 switch (component.getId()){
                     case "generate":
                         List<Attendance> attendances = Lists.newArrayList();
-                        studentService.findAll(attendance.getSubject())
+                        studentService.findAll(attendance.getTimetable().getSubject())
                                 .forEachRemaining(x -> attendances.add(SerializationUtils.clone(attendance).setStudent(x)));
                         attendanceService.save(attendances);
                         break;

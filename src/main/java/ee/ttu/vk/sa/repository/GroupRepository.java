@@ -1,15 +1,11 @@
 package ee.ttu.vk.sa.repository;
 
 import ee.ttu.vk.sa.domain.Group;
-import ee.ttu.vk.sa.domain.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-/**
- * Created by fjodor on 6.02.16.
- */
+@Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
+
     Group findByName(String name);
-    List<Group> findAllBySubjects(List<Subject> subjects);
 }

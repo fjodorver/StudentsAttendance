@@ -6,6 +6,7 @@ import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
+import ee.ttu.vk.sa.domain.Timetable;
 import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
 import ee.ttu.vk.sa.service.AttendanceService;
@@ -21,6 +22,7 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by fjodor on 2.03.16.
@@ -62,7 +64,7 @@ public class StatisticsPage extends AbstractPage {
     private BootstrapForm<Void> getSearchForm() {
         List<Subject> subjects = subjectService.findAll(CustomAuthenticatedWebSession.getSession().getTeacher());
         List<Group> groups = Lists.newArrayList();
-        subjects.forEach(x -> groups.addAll(x.getGroups()));
+        subjects.forEach(x -> groups.addAll(x.getTimetables().stream().map(Timetable::getGroup).collect(Collectors.toList())));
         BootstrapForm<Void> form = new BootstrapForm<>("searchForm");
         form.add(new DropDownChoice<>("subject", new PropertyModel<>(this, "subject"), subjects).add(getOnUpdate()));
         form.add(new DropDownChoice<>("group", new PropertyModel<>(this, "group"), groups).add(getOnUpdate()));

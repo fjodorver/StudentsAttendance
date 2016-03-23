@@ -32,6 +32,7 @@ import java.util.List;
  */
 public class DataManagementPage extends AbstractPage {
 
+
     @SpringBean
     private TeacherService teacherService;
 
@@ -105,10 +106,6 @@ public class DataManagementPage extends AbstractPage {
                     MediaType mediaType = MediaType.parse(fileUpload.getContentType());
                     if(mediaType.equals(MediaType.MICROSOFT_WORD))
                         students = studentService.parse(fileUpload.getInputStream());
-                    if(mediaType.equals(MediaType.MICROSOFT_EXCEL)){
-                        teachers = teacherService.parse(fileUpload.getInputStream());
-                        subjects = subjectService.parse(fileUpload.getInputStream());
-                    }
 
                 }
                 panel.setStudentsModel(new ListModel<>(students));

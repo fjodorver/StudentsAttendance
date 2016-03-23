@@ -5,7 +5,6 @@ import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.enums.Status;
-import ee.ttu.vk.sa.enums.Type;
 import ee.ttu.vk.sa.repository.AttendanceRepository;
 import ee.ttu.vk.sa.service.AttendanceService;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +27,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public List<Attendance> findAll(Attendance attendance, Pageable pageable) {
-        return attendanceRepository.findAll(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate(), pageable).getContent();
+        return attendanceRepository.findAll(attendance.getTimetable().getSubject(), attendance.getTimetable().getGroup(), attendance.getTimetable().getLessonType(),  pageable).getContent();
     }
 
     @Override
@@ -40,14 +38,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public List<Attendance> save(List<Attendance> attendances) {
         attendances = attendances.stream()
-                .map(x -> Optional.ofNullable(attendanceRepository.findAll(x.getStudent(), x.getType(), x.getDate())).orElse(x))
+                .map(x -> Optional.ofNullable(attendanceRepository.findAll(x.getStudent(), x.getTimetable().getLessonType())).orElse(x))
                 .collect(Collectors.toList());
         return attendanceRepository.save(attendances);
     }
 
     @Override
     public long size(Attendance attendance) {
-        return attendanceRepository.size(attendance.getSubject(), attendance.getGroup(), attendance.getType(), attendance.getDate());
+        return attendanceRepository.size(attendance.getTimetable().getSubject(), attendance.getTimetable().getGroup(), attendance.getTimetable().getLessonType());
     }
 
     @Override

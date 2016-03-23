@@ -1,33 +1,56 @@
 package ee.ttu.vk.sa.domain;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import ee.ttu.vk.sa.enums.GroupType;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 @Entity
 @Table(name = "group")
 public class Group implements Serializable {
 
     @Id
-    @SequenceGenerator(name="group_id_seq",sequenceName="group_id_seq", allocationSize=1)
+    @SequenceGenerator(name="group_id_seq",sequenceName="group_id_seq")
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="group_id_seq")
     private Long id;
+
     private String name;
+
     private String language;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
-    @Fetch(FetchMode.SUBSELECT)
-    private Set<Subject> subjects = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private GroupType groupType;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Student> students = Lists.newArrayList();
+    @Column(name = "url_id")
+    private Long ScheduleId;
+
+
+    @OneToMany
+    private List<Student> students;
+
+    @OneToMany
+    private List<Timetable> timetables;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return Objects.equals(id, group.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 
     public Long getId() {
         return id;
@@ -47,21 +70,38 @@ public class Group implements Serializable {
         return this;
     }
 
-    public String getLanguage() {
+    public String getLanguage(){
         return language;
     }
-
-    public Group setLanguage(String language) {
+    public Group setLanguage(String language){
         this.language = language;
         return this;
     }
 
-    public Set<Subject> getSubjects() {
-        return subjects;
+    public GroupType getGroupType() {
+        return groupType;
     }
 
-    public Group setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
+    public Group setGroupType(GroupType groupType) {
+        this.groupType = groupType;
+        return this;
+    }
+
+    public Long getScheduleId() {
+        return ScheduleId;
+    }
+
+    public Group setScheduleId(Long scheduleId) {
+        ScheduleId = scheduleId;
+        return this;
+    }
+
+    public List<Timetable> getTimetables() {
+        return timetables;
+    }
+
+    public Group setTimetables(List<Timetable> timetables) {
+        this.timetables = timetables;
         return this;
     }
 
@@ -72,23 +112,5 @@ public class Group implements Serializable {
     public Group setStudents(List<Student> students) {
         this.students = students;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return Objects.equal(id, group.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 }
