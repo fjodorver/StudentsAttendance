@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,11 +63,16 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Iterator<Student> save(List<Student> students) {
         List<Student> studentList = Lists.newArrayList();
+        Map<String, Group> groupMap = groupRepository.findAll().stream().collect(Collectors.toMap(Group::getName, x -> x));
+
         for (Student student : students) {
-            Optional.ofNullable(groupRepository.findByName(student.getGroup().getName())).ifPresent(student::setGroup);
-            Optional.ofNullable(studentRepository.findByCode(student.getCode())).ifPresent(x -> student.setId(x.getId()));
-            studentList.add(studentRepository.save(student));
+                Optional.ofNullable(groupMap.get(student.getGroup().getName())).ifPresent(student::setGroup);
+                Optional.ofNullable(studentRepository.findByCode(student.getCode())).ifPresent(x -> student.setId(x.getId()));
+            if(student.getGroup().getId()!=null) {
+                studentList.add(studentRepository.save(student));
+            }
         }
+        studentList.stream().filter(x->x.getGroup().getId()!=null).collect(Collectors.toList());
         return studentList.iterator();
     }
 

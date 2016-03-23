@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@NamedEntityGraph(name = "student.group", attributeNodes = {@NamedAttributeNode("group")})
 @Table(name = "student")
 public class Student implements Serializable {
     @Id

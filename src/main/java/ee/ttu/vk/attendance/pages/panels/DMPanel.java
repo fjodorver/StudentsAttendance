@@ -36,8 +36,6 @@ public class DMPanel extends Modal<Void> {
     private TeacherService teacherService;
 
     private ListModel<Student> studentsModel = new ListModel<>(Lists.newArrayList());
-    private ListModel<Subject> subjectsModel = new ListModel<>(Lists.newArrayList());;
-    private ListModel<Teacher> teachersModel = new ListModel<>(Lists.newArrayList());;
 
     public DMPanel(String markupId) {
         super(markupId);
@@ -47,18 +45,6 @@ public class DMPanel extends Modal<Void> {
             @Override
             public WebMarkupContainer getPanel(String s) {
                 return new StudentsPanel(s, studentsModel);
-            }
-        });
-        tabs.add(new AbstractTab(new ResourceModel("data-management.tabs.subjects")) {
-            @Override
-            public WebMarkupContainer getPanel(String s) {
-                return new SubjectsPanel(s, subjectsModel);
-            }
-        });
-        tabs.add(new AbstractTab(new ResourceModel("data-management.tabs.teachers")) {
-            @Override
-            public WebMarkupContainer getPanel(String s) {
-                return new TeachersPanel(s, teachersModel);
             }
         });
         addButton(new BootstrapIndicatingAjaxLink<Void>("button", Buttons.Type.Primary) {
@@ -83,15 +69,4 @@ public class DMPanel extends Modal<Void> {
         return this;
     }
 
-    public DMPanel setSubjectsModel(ListModel<Subject> subjectsModel) {
-        this.subjectsModel.getObject().clear();
-        this.subjectsModel.getObject().addAll(subjectsModel.getObject());
-        return this;
-    }
-
-    public DMPanel setTeachersModel(ListModel<Teacher> teachersModel) {
-        this.teachersModel.getObject().clear();
-        this.teachersModel.getObject().addAll(teachersModel.getObject());
-        return this;
-    }
 }
