@@ -26,14 +26,12 @@ public abstract class FileUploadPanel extends Panel {
         super(id);
         BootstrapForm<?> form = new BootstrapForm<Void>("form");
         BootstrapFileInputField docUploadField = getFileInputField("docField");
-        BootstrapFileInputField xlsUploadField = getFileInputField("xlsField");
-        form.add(docUploadField, xlsUploadField);
+        form.add(docUploadField);
         form.add(new AjaxSubmitLink("upload", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 List<FileUpload> fileUploads = Lists.newArrayList();
                 Optional.ofNullable(docUploadField.getFileUpload()).ifPresent(fileUploads::add);
-                Optional.ofNullable(xlsUploadField.getFileUpload()).ifPresent(fileUploads::add);
                 try {
                     FileUploadPanel.this.onSubmit(target, fileUploads);
                 } catch (IOException e) {

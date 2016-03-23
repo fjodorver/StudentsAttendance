@@ -2,14 +2,12 @@ package ee.ttu.vk.sa.pages.statistics;
 
 import com.google.common.collect.Lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import ee.ttu.vk.sa.CustomAuthenticatedWebSession;
 import ee.ttu.vk.sa.domain.Group;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
 import ee.ttu.vk.sa.domain.Timetable;
 import ee.ttu.vk.sa.pages.AbstractPage;
 import ee.ttu.vk.sa.pages.providers.StudentDataProvider;
-import ee.ttu.vk.sa.service.AttendanceService;
 import ee.ttu.vk.sa.service.GroupService;
 import ee.ttu.vk.sa.service.StudentService;
 import ee.ttu.vk.sa.service.SubjectService;
@@ -28,8 +26,7 @@ import java.util.stream.Collectors;
  * Created by fjodor on 2.03.16.
  */
 public class StatisticsPage extends AbstractPage {
-    @SpringBean
-    private AttendanceService attendanceService;
+
 
     @SpringBean
     private SubjectService subjectService;
@@ -62,7 +59,7 @@ public class StatisticsPage extends AbstractPage {
     }
 
     private BootstrapForm<Void> getSearchForm() {
-        List<Subject> subjects = subjectService.findAll(CustomAuthenticatedWebSession.getSession().getTeacher());
+        List<Subject> subjects = null;
         List<Group> groups = Lists.newArrayList();
         subjects.forEach(x -> groups.addAll(x.getTimetables().stream().map(Timetable::getGroup).collect(Collectors.toList())));
         BootstrapForm<Void> form = new BootstrapForm<>("searchForm");
@@ -75,10 +72,10 @@ public class StatisticsPage extends AbstractPage {
         return new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                if(subject != null && group != null && groupService.findAll(Lists.newArrayList(subject)).get(0).equals(group))
-                    studentListModel.setObject(Lists.newArrayList(studentService.findAll(subject)));
-                else
-                    studentListModel.getObject().clear();
+//                if(subject != null && group != null && groupService.findAll(Lists.newArrayList(subject)).get(0).equals(group))
+//                    studentListModel.setObject(Lists.newArrayList(studentService.findAll(subject)));
+//                else
+//                    studentListModel.getObject().clear();
                 chartPanel.modelChanged();
                 ajaxRequestTarget.add(chartPanel);
             }

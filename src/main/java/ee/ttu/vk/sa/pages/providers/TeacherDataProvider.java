@@ -37,7 +37,7 @@ public class TeacherDataProvider extends AbstractDataProvider<Teacher, String> {
 
     @Override
     public long size() {
-        return teacherService.getSize(teacher);
+        return teacherService.size(teacher);
     }
 
     @Override
