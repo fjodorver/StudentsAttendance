@@ -1,18 +1,10 @@
 package ee.ttu.vk.sa.pages.statistics;
 
 import com.googlecode.wickedcharts.highcharts.options.*;
-import com.googlecode.wickedcharts.highcharts.options.color.ColorReference;
-import com.googlecode.wickedcharts.highcharts.options.color.SimpleColor;
-import com.googlecode.wickedcharts.highcharts.options.heatmap.ColorAxis;
 import com.googlecode.wickedcharts.highcharts.options.series.SimpleSeries;
-import com.googlecode.wickedcharts.highcharts.theme.DarkBlueTheme;
-import com.googlecode.wickedcharts.highcharts.theme.GrayTheme;
-import com.googlecode.wickedcharts.highcharts.theme.GridTheme;
-import com.googlecode.wickedcharts.highcharts.theme.Theme;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import ee.ttu.vk.sa.domain.Student;
 import ee.ttu.vk.sa.domain.Subject;
-import ee.ttu.vk.sa.service.AttendanceService;
 import ee.ttu.vk.sa.service.GroupService;
 import ee.ttu.vk.sa.service.SubjectService;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -29,8 +21,6 @@ import java.util.stream.Collectors;
  */
 public class ChartPanel extends Panel {
 
-    @SpringBean
-    private AttendanceService attendanceService;
 
     @SpringBean
     private SubjectService subjectService;
@@ -62,13 +52,13 @@ public class ChartPanel extends Panel {
 
     @Override
     protected void onModelChanged() {
-        List<Number> presents = listModel.getObject().stream().map(x -> attendanceService.getPresentsNumber(subjectModel.getObject(), x.getGroup(), x)).collect(Collectors.toList());
-        List<Number> absents = listModel.getObject().stream().map(x -> attendanceService.getAbsentsNumber(subjectModel.getObject(), x.getGroup(), x)).collect(Collectors.toList());
-        List<String> xCategories = listModel.getObject().stream().map(Student::getFullname).collect(Collectors.toList());
-        Options options = new Options();
-        options.setxAxis(new Axis().setCategories(xCategories));
-        options.addSeries(new SimpleSeries().setName("Presents").setData(presents));
-        options.addSeries(new SimpleSeries().setName("Absents").setData(absents));
-        chart.setOptions(getOptions(options));
+//        List<Number> presents = listModel.getObject().stream().map(x -> attendanceService.getPresentsNumber(subjectModel.getObject(), x.getGroup(), x)).collect(Collectors.toList());
+//        List<Number> absents = listModel.getObject().stream().map(x -> attendanceService.getAbsentsNumber(subjectModel.getObject(), x.getGroup(), x)).collect(Collectors.toList());
+//        List<String> xCategories = listModel.getObject().stream().map(Student::getFullname).collect(Collectors.toList());
+//        Options options = new Options();
+//        options.setxAxis(new Axis().setCategories(xCategories));
+//        options.addSeries(new SimpleSeries().setName("Presents").setData(presents));
+//        options.addSeries(new SimpleSeries().setName("Absents").setData(absents));
+//        chart.setOptions(getOptions(options));
     }
 }

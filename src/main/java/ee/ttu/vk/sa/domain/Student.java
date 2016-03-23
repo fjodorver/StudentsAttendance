@@ -10,7 +10,7 @@ import java.util.List;
 @Table(name = "student")
 public class Student implements Serializable {
     @Id
-    @SequenceGenerator(name="student_id_seq",sequenceName="student_id_seq")
+    @SequenceGenerator(name="student_id_seq",sequenceName="student_id_seq", allocationSize = 1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="student_id_seq")
     private Long id;
 
@@ -19,6 +19,10 @@ public class Student implements Serializable {
     private String lastname;
 
     private String code;
+
+    public String getFullname(){
+        return firstname + " " + lastname;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Group group = new Group();

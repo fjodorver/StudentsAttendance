@@ -30,8 +30,8 @@ public class TeachersPanel extends Panel {
         return new DataView<Teacher>("rows", getDataProvider(listModel)) {
             @Override
             protected void populateItem(Item<Teacher> item) {
-                item.add(new Label("email"));
-                item.add(new Label("name"));
+                item.add(new Label("username"));
+                item.add(new Label("fullname"));
             }
         };
     }

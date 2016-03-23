@@ -31,13 +31,13 @@ public class TeacherDataProvider extends AbstractDataProvider<Teacher, String> {
 
     @Override
     public Iterator<? extends Teacher> iterator(long first, long count) {
-        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "name");
+        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "fullname");
         return teacherService.findAll(teacher, pageable).iterator();
     }
 
     @Override
     public long size() {
-        return teacherService.getSize(teacher);
+        return teacherService.size(teacher);
     }
 
     @Override

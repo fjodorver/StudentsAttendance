@@ -35,7 +35,7 @@ public class SubjectDataProvider extends AbstractDataProvider<Subject, String> {
 
     @Override
     public long size() {
-        return subjectService.getSize(subject);
+        return subjectService.size(subject);
     }
 
     @Override

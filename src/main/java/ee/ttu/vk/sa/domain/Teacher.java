@@ -1,5 +1,7 @@
 package ee.ttu.vk.sa.domain;
 
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.Objects;
 public class Teacher implements Serializable{
 
     @Id
-    @SequenceGenerator(name="teacher_id_seq",sequenceName="teacher_id_seq")
+    @SequenceGenerator(name="teacher_id_seq",sequenceName="teacher_id_seq", allocationSize = 1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="teacher_id_seq")
     private Long id;
 
@@ -19,6 +21,8 @@ public class Teacher implements Serializable{
     private String username;
 
     private String password;
+
+    private String role = Roles.USER;
 
     @OneToMany(mappedBy = "teacher")
     private List<Timetable> timetables;
@@ -83,6 +87,15 @@ public class Teacher implements Serializable{
 
     public Teacher setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Teacher setRole(String role) {
+        this.role = role;
         return this;
     }
 }

@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "group")
+@Table(name = "\"group\"")
 public class Group implements Serializable {
 
     @Id
-    @SequenceGenerator(name="group_id_seq",sequenceName="group_id_seq")
+    @SequenceGenerator(name="group_id_seq",sequenceName="group_id_seq", allocationSize = 1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="group_id_seq")
     private Long id;
 
@@ -28,11 +28,11 @@ public class Group implements Serializable {
     private Long ScheduleId;
 
 
-    @OneToMany
-    private List<Student> students;
-
-    @OneToMany
-    private List<Timetable> timetables;
+//    @OneToMany
+//    private List<Student> students;
+//
+//    @OneToMany
+//    private List<Timetable> timetables;
 
     @Override
     public boolean equals(Object o) {
@@ -96,21 +96,21 @@ public class Group implements Serializable {
         return this;
     }
 
-    public List<Timetable> getTimetables() {
-        return timetables;
-    }
-
-    public Group setTimetables(List<Timetable> timetables) {
-        this.timetables = timetables;
-        return this;
-    }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public Group setStudents(List<Student> students) {
-        this.students = students;
-        return this;
-    }
+//    public List<Timetable> getTimetables() {
+//        return timetables;
+//    }
+//
+//    public Group setTimetables(List<Timetable> timetables) {
+//        this.timetables = timetables;
+//        return this;
+//    }
+//
+//    public List<Student> getStudents() {
+//        return students;
+//    }
+//
+//    public Group setStudents(List<Student> students) {
+//        this.students = students;
+//        return this;
+//    }
 }

@@ -13,7 +13,7 @@ public class LoginPanel extends SignInPanel {
 
     public LoginPanel(String id) {
         super(id);
-        getForm().get("username").replaceWith(new EmailTextField("username").setRequired(true));
+        getForm().get("username").replaceWith(new TextField("username").setRequired(true));
         getForm().get("password").replaceWith(new PasswordTextField("password").setRequired(true));
         get("feedback").replaceWith(new NotificationPanel("feedback"));
     }
