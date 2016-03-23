@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Table(name = "attendance")
 public class Attendance implements Serializable{
     @Id
-    @SequenceGenerator(name="attendance_id_seq",sequenceName="attendance_id_seq")
+    @SequenceGenerator(name="attendance_id_seq",sequenceName="attendance_id_seq", allocationSize = 1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="attendance_id_seq")
     private Long id;
 

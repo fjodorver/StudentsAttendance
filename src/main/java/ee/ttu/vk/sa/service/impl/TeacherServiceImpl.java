@@ -37,13 +37,17 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public long size(Teacher teacher) {
-        return 0;
+        String username = Optional.ofNullable(teacher.getUsername()).orElse("");
+        String fullname = Optional.ofNullable(teacher.getFullname()).orElse("");
+        return teacherRepository.count(username, fullname);
     }
 
     @Override
     public List<Teacher> findAll(Teacher teacher, Pageable pageable) {
-        return null;
-    }
+        String username = Optional.ofNullable(teacher.getUsername()).orElse("");
+        String fullname = Optional.ofNullable(teacher.getFullname()).orElse("");
+        return teacherRepository.findAll(username, fullname, pageable).getContent();
+}
 
     @Override
     public List<Teacher> findAll() {
