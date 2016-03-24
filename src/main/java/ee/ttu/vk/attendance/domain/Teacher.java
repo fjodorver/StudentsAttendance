@@ -12,8 +12,7 @@ import java.util.Objects;
 public class Teacher implements Serializable{
 
     @Id
-    @SequenceGenerator(name="teacher_id_seq",sequenceName="teacher_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="teacher_id_seq")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String fullname;

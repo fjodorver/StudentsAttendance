@@ -11,8 +11,7 @@ import java.util.List;
 @Table(name = "student")
 public class Student implements Serializable {
     @Id
-    @SequenceGenerator(name="student_id_seq",sequenceName="student_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="student_id_seq")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String firstname;

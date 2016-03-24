@@ -16,8 +16,7 @@ import java.util.Objects;
 @NamedEntityGraph(name = "timetable.detail", attributeNodes = {@NamedAttributeNode("subject"), @NamedAttributeNode("group"), @NamedAttributeNode("teacher")})
 public class Timetable implements Serializable {
     @Id
-    @SequenceGenerator(name="timetable_id_seq",sequenceName="timetable_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="timetable_id_seq")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @DateTimeFormat
