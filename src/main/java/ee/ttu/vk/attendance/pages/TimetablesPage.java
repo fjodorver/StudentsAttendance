@@ -4,12 +4,15 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.pages.filters.TimetableFilter;
 import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
 import ee.ttu.vk.attendance.pages.providers.TimetableDataProvider;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -40,6 +43,12 @@ public class TimetablesPage extends AbstractPage {
                 item.add(new Label("subject"));
                 item.add(new Label("group"));
                 item.add(new Label("lessonType"));
+                item.add(new AjaxLink<Timetable>("add") {
+                    @Override
+                    public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+
+                    }
+                });
             }
         };
         searchForm.add(new DateTextField("date", new DateTextFieldConfig().showTodayButton(DateTextFieldConfig.TodayButton.TRUE))
