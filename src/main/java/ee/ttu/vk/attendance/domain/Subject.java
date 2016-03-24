@@ -10,8 +10,7 @@ import java.util.Objects;
 public class Subject implements Serializable {
 
     @Id
-    @SequenceGenerator(name="subject_id_seq",sequenceName="subject_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="subject_id_seq")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String code;

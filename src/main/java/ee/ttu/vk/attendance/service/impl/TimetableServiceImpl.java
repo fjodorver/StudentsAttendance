@@ -41,6 +41,7 @@ public class TimetableServiceImpl implements TimetableService {
 
     @Override
     public void save(List<Timetable> timetables) {
+        List<Timetable> test = timetableRepository.findAll();
         Map<String, Subject> subjectMap = timetables.stream().map(Timetable::getSubject).collect(Collectors.toMap(Subject::getCode, y -> y, (x, y) -> x));
         Map<String, Teacher> teacherMap = timetables.stream().map(Timetable::getTeacher).collect(Collectors.toMap(Teacher::getUsername, y -> y, (x, y) -> x));
         Map<String, Group> groupMap = timetables.stream().map(Timetable::getGroup).collect(Collectors.toMap(Group::getName, y -> y, (x, y) -> x));
@@ -51,10 +52,11 @@ public class TimetableServiceImpl implements TimetableService {
             timetable.setGroup(Optional.ofNullable(groupMap.get(timetable.getGroup().getName())).orElse(timetable.getGroup()));
             timetable.setTeacher(Optional.ofNullable(teacherMap.get(timetable.getTeacher().getUsername())).orElse(timetable.getTeacher()));
             timetable.setSubject(Optional.ofNullable(subjectMap.get(timetable.getSubject().getCode())).orElse(timetable.getSubject()));
-            Timetable temp = timetableRepository.find(timetable.getGroup(), timetable.getSubject(), timetable.getTeacher(), timetable.getStart(), timetable.getEnd());
-            timetable.setId(Optional.ofNullable(temp).orElse(timetable).getId());
+            test.stream()
+                    .filter(x -> x.getTeacher().getFullname().equals(timetable.getTeacher().getFullname()) && x.getStart().equals(timetable.getStart()))
+                    .findAny().ifPresent(x -> timetable.setId(x.getId()));
         }
-        timetableRepository.save(timetables);
+        timetables.forEach(x -> timetableRepository.saveAndFlush(x));
     }
 
     @Override

@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.*;
@@ -110,6 +111,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
         timetableService.save(timetables);
+
     }
 
     private Subject getSubject(String summary) {
@@ -136,11 +138,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     private Teacher getTeacher(String description){
-        Matcher fullname = Pattern.compile("  (.*?)\\n").matcher(description);
+        Matcher fullname = Pattern.compile("(?<=:|;)(.*)(?=)(?<=unnitasuline|ektor|otsent|taja|eadur|nsener|rofessor|jõud)(.*?)(?=\\n|,|;)").matcher(description);
         Teacher teacher = new Teacher();
         if(fullname.find()){
-            teacher = new Teacher().setFullname(fullname.group(1));
-            teacher.setUsername(String.format("%1$s.%2$s", (Object[]) teacher.getFullname().split(" ")));
+            teacher = new Teacher().setFullname(fullname.group(2));
+            teacher.setFullname(teacher.getFullname().trim());
+            teacher.setUsername(teacher.getFullname().replace(' ', '.').replace("..", "."));
             teacher.setPassword("PASS");
         }
         return teacher;

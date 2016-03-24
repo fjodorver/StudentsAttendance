@@ -11,8 +11,7 @@ import java.util.Objects;
 public class Group implements Serializable {
 
     @Id
-    @SequenceGenerator(name="group_id_seq",sequenceName="group_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="group_id_seq")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String name;
