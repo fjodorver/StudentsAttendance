@@ -7,6 +7,9 @@ import ee.ttu.vk.attendance.domain.Student;
 import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.enums.Status;
 import ee.ttu.vk.attendance.repository.AttendanceRepository;
+import ee.ttu.vk.attendance.repository.GroupRepository;
+import ee.ttu.vk.attendance.repository.StudentRepository;
+import ee.ttu.vk.attendance.repository.TimetableRepository;
 import ee.ttu.vk.attendance.service.AttendanceService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,19 +30,28 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Inject
     private AttendanceRepository attendanceRepository;
 
+    @Inject
+    private StudentRepository studentRepository;
+
+    @Inject
+    private GroupRepository groupRepository;
+
+    @Inject
+    private TimetableRepository timetableRepository;
+
     @Override
     public void generateAttendance(Group group, List<Timetable> timetables) {
         List<Attendance> attendanceList = Lists.newArrayList();
 
-        for (Student student : group.getStudents()) {
-            attendanceList.addAll(timetables.stream().map(timetable -> new Attendance().setStudent(student).setTimetable(timetable)).collect(Collectors.toList()));
+        for (Student student : studentRepository.findByGroup(group)) {
+            attendanceList.addAll(timetableRepository.findByGroup(group).stream().map(timetable -> new Attendance().setStudent(student).setTimetable(timetable).setStatus(Status.INACTIVE)).collect(Collectors.toList()));
         }
         attendanceRepository.save(attendanceList);
     }
 
     @Override
     public List<Attendance> findAll(Attendance attendance, Pageable pageable) {
-        return attendanceRepository.findAll();
+        return attendanceRepository.findByTimetable(attendance.getTimetable());
     }
 
     @Override

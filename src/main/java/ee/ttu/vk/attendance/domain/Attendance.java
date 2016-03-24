@@ -24,7 +24,7 @@ public class Attendance implements Serializable{
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status attendanceType;
+    private Status status;
 
     public Long getId() {
         return id;
@@ -53,12 +53,12 @@ public class Attendance implements Serializable{
         return this;
     }
 
-    public Status getAttendanceType() {
-        return attendanceType;
+    public Status getStatus() {
+        return status;
     }
 
-    public Attendance setAttendanceType(Status attendanceType) {
-        this.attendanceType = attendanceType;
+    public Attendance setStatus(Status attendanceType) {
+        this.status = attendanceType;
         return this;
     }
 }

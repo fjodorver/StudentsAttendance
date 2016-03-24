@@ -29,6 +29,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Page<Student> findAll(String code, String firstname, String lastname, String group, Pageable pageable);
 
+    List<Student> findByGroup(Group group);
+
     Student findByCode(String code);
 
     @Query("select count(s) from Student s where s.code like concat('%',?1,'%') and s.firstname like concat('%',?2,'%') " +
