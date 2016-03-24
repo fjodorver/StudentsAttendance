@@ -14,8 +14,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     @EntityGraph(value = "attendance.detail", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("select a from Attendance a where a.timetable = ?1 and a.timetable.subject =?2 and a.timetable.group =?3")
-    Page<Attendance> findAll(Timetable timetable, Subject subject, Group group, Pageable pageable);
+    @Query("select a from Attendance a where a.timetable = ?1")
+    Page<Attendance> findAll(Timetable timetable, Pageable pageable);
 
     @Query("select count(a) from Attendance a where a.timetable =?1")
     Attendance find(Timetable timetable);
@@ -23,6 +23,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("select count(a) from Attendance a where a.student =?1 and a.attendanceType = ?2  group by a.attendanceType")
     Integer countByStatus(Student student, Status status);
 
-    @Query("select count(a) from Attendance a where a.timetable = ?1 and a.timetable.group =?2 and a.timetable.subject =?3")
-    Long size(Timetable timetable, Group group, Subject subject);
+    @Query("select count(a) from Attendance a where a.timetable = ?1")
+    Long size(Timetable timetable);
 }
