@@ -85,4 +85,9 @@ public class Student implements Serializable {
         this.attendances = attendances;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return getFullname();
+    }
 }

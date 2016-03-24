@@ -13,6 +13,7 @@ import java.util.List;
  * Created by fjodor on 6.02.16.
  */
 public interface StudentService {
+
     List<Student> parse(InputStream inputStream);
     Iterator<Student> findAll(Subject subject);
     Iterator<Student> findAll(List<Group> groups, Pageable pageable);
