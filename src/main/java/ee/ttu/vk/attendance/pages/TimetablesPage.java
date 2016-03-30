@@ -7,12 +7,15 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerWithIcon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import ee.ttu.vk.attendance.CustomAuthenticatedWebSession;
 import ee.ttu.vk.attendance.domain.Attendance;
+import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.pages.filters.TimetableFilter;
 import ee.ttu.vk.attendance.pages.panels.AttendancePanel;
 import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
 import ee.ttu.vk.attendance.pages.providers.TimetableDataProvider;
+import ee.ttu.vk.attendance.service.TimetableService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -24,10 +27,13 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class TimetablesPage extends AbstractPage {
+
     private WebMarkupContainer body;
     private DataView<Timetable> rows;
     private AbstractDataProvider<Timetable, TimetableFilter> dataProvider;
@@ -39,7 +45,7 @@ public class TimetablesPage extends AbstractPage {
         dataProvider = new TimetableDataProvider();
         body = new WebMarkupContainer("body");
         body.setOutputMarkupId(true);
-        searchForm = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new TimetableFilter()));
+        searchForm = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new TimetableFilter().setTeacher(CustomAuthenticatedWebSession.getSession().getTeacher())));
         rows = new DataView<Timetable>("rows", dataProvider) {
             @Override
             protected void populateItem(Item<Timetable> item) {

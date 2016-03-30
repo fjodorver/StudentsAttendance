@@ -24,8 +24,8 @@ public interface TimetableRepository extends JpaRepository<Timetable, Long> {
     List<Timetable> findByGroup(Group group);
 
     @EntityGraph(value = "timetable.detail", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("select t from Timetable t where t.start between ?1 and ?2")
-    List<Timetable> find(ZonedDateTime start, ZonedDateTime end, Pageable pageable);
+    @Query("select t from Timetable t where t.start between ?1 and ?2 and t.teacher=?3")
+    List<Timetable> find(ZonedDateTime start, ZonedDateTime end, Teacher teacher, Pageable pageable);
 
     @Query("select count(t.id) from Timetable t where t.start between ?1 and ?2")
     Long count(ZonedDateTime start, ZonedDateTime end);
