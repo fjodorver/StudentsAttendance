@@ -18,8 +18,10 @@ import ee.ttu.vk.attendance.pages.providers.TimetableDataProvider;
 import ee.ttu.vk.attendance.service.TimetableService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -43,9 +45,10 @@ public class TimetablesPage extends AbstractPage {
     public TimetablesPage() {
         panel = new AttendancePanel("panel");
         dataProvider = new TimetableDataProvider();
+        dataProvider.getFilterState().setTeacher(CustomAuthenticatedWebSession.getSession().getTeacher());
         body = new WebMarkupContainer("body");
         body.setOutputMarkupId(true);
-        searchForm = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new TimetableFilter().setTeacher(CustomAuthenticatedWebSession.getSession().getTeacher())));
+        searchForm = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new TimetableFilter()));
         rows = new DataView<Timetable>("rows", dataProvider) {
             @Override
             protected void populateItem(Item<Timetable> item) {
@@ -66,15 +69,15 @@ public class TimetablesPage extends AbstractPage {
             }
         };
 
-        searchForm.add(new DateTextField("date", new DateTextFieldConfig().showTodayButton(DateTextFieldConfig.TodayButton.TRUE))
-                .add(new AjaxFormComponentUpdatingBehavior("change") {
-                    @Override
-                    protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                        TimetableFilter filter = searchForm.getModelObject();
-                        dataProvider.setFilterState(filter);
-                        ajaxRequestTarget.add(body);
-                    }
-                }));
+        searchForm.add(new DatetimePickerWithIcon("date", new DatetimePickerConfig().setShowToday(Boolean.TRUE)));
+        searchForm.add(new AjaxSubmitLink("search", searchForm) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                TimetableFilter filter = searchForm.getModelObject();
+                dataProvider.getFilterState().setDate(filter.getDate());
+                target.add(body);
+            }
+        });
         body.add(rows);
         add(new BootstrapAjaxPagingNavigator("navigator", rows), body, searchForm, panel);
     }
