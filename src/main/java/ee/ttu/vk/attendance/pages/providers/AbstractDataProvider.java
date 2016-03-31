@@ -24,6 +24,6 @@ public abstract class AbstractDataProvider<T, F> extends SortableDataProvider<T,
 
     @Override
     public IModel<T> model(T t) {
-        return new CompoundPropertyModel<T>(t);
+        return new CompoundPropertyModel<>(t);
     }
 }

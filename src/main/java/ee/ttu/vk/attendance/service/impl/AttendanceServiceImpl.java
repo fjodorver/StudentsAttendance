@@ -48,7 +48,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     public List<Attendance> findAll(Attendance filter, Pageable pageable) {
-        return attendanceRepository.findByTimetable(filter.getTimetable());
+        return attendanceRepository.findByTimetable(filter.getTimetable(), pageable);
     }
 
     @Override
@@ -74,15 +74,5 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public int getAbsentsNumber(Student student) {
         return Optional.ofNullable(attendanceRepository.countByStatus(student, Status.ABSENT)).orElse(0);
-    }
-
-    @Override
-    public List<Attendance> findAll() {
-        return attendanceRepository.findAll();
-    }
-
-    @Override
-    public List<Attendance> findAll(Pageable pageable) {
-        return attendanceRepository.findAll(pageable).getContent();
     }
 }

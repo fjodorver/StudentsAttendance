@@ -26,7 +26,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("select count(a) from Attendance a where a.student =?1 and a.status = ?2  group by a.status")
     Integer countByStatus(Student student, Status status);
 
-    List<Attendance> findByTimetable(Timetable timetable);
+    List<Attendance> findByTimetable(Timetable timetable, Pageable pageable);
 
     @Query("select count(a) from Attendance a where a.timetable = ?1")
     Long size(Timetable timetable);

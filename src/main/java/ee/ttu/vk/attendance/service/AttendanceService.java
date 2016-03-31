@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by strukov on 3/24/16.
  */
-public interface AttendanceService extends IReadService<Attendance>, ISaveService<Attendance>, IProviderService<Attendance, Attendance> {
+public interface AttendanceService extends ISaveService<Attendance>, IProviderService<Attendance, Attendance> {
     void GenerateAndSaveAttendances(Group group);
     int getPresentsNumber(Student student);
     int getAbsentsNumber(Student student);
