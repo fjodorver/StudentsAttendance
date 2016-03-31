@@ -12,13 +12,8 @@ import java.util.List;
 /**
  * Created by fjodor on 6.02.16.
  */
-public interface StudentService {
-
+public interface StudentService extends IReadService<Student>, ISaveService<Student>, IProviderService<Student, Student> {
     List<Student> parse(InputStream inputStream);
-    Iterator<Student> findAll(Subject subject);
-    Iterator<Student> findAll(List<Group> groups, Pageable pageable);
-    Iterator<Student> findAll(Student student, Pageable pageable);
-    Iterator<Student> save(List<Student> students);
-    Student save(Student student);
-    long size(Student student);
+    List<Student> findAll(Subject subject);
+    List<Student> findAll(List<Group> groups, Pageable pageable);
 }

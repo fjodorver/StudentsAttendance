@@ -27,12 +27,24 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher save(Teacher teacher) {
-        return null;
+        return teacherRepository.save(teacher);
     }
 
     @Override
+    public List<Teacher> save(List<Teacher> teachers) {
+        Map<String, Teacher> teacherMap = teacherRepository.findAll().stream().collect(Collectors.toMap(Teacher::getUsername, x -> x, (x, y) -> x));
+        teachers.stream().forEach(x -> x.setId(Optional.ofNullable(teacherMap.get(x.getUsername())).orElse(x).getId()));
+        return teacherRepository.save(teachers);
+    }
+
     public Teacher find(String username, String password) {
         return teacherRepository.findByUsername(username);
+    }
+
+    public List<Teacher> findAll(Teacher filter, Pageable pageable) {
+        String username = Optional.ofNullable(filter.getUsername()).orElse("");
+        String fullname = Optional.ofNullable(filter.getFullname()).orElse("");
+        return teacherRepository.findAll(username, fullname, pageable).getContent();
     }
 
     @Override
@@ -43,26 +55,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> findAll(Teacher teacher, Pageable pageable) {
-        String username = Optional.ofNullable(teacher.getUsername()).orElse("");
-        String fullname = Optional.ofNullable(teacher.getFullname()).orElse("");
-        return teacherRepository.findAll(username, fullname, pageable).getContent();
-}
-
-    @Override
     public List<Teacher> findAll() {
         return teacherRepository.findAll();
     }
 
     @Override
-    public Teacher findByFullname(String fullname) {
-        return null;
-    }
-
-    @Override
-    public List<Teacher> saveAll(List<Teacher> teachers) {
-        Map<String, Teacher> teacherMap = teacherRepository.findAll().stream().collect(Collectors.toMap(Teacher::getUsername, x -> x, (x, y) -> x));
-        teachers.stream().forEach(x -> x.setId(Optional.ofNullable(teacherMap.get(x.getUsername())).orElse(x).getId()));
-        return teacherRepository.save(teachers);
+    public List<Teacher> findAll(Pageable pageable) {
+        return teacherRepository.findAll(pageable).getContent();
     }
 }

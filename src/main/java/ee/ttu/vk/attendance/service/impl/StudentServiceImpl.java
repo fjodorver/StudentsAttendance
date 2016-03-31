@@ -40,46 +40,44 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Iterator<Student> findAll(Subject subject) {
+    public List<Student> findAll(Subject subject) {
         List<Group> groups = Lists.newArrayList();
         groups.addAll(subject.getTimetables().stream().map(Timetable::getGroup).collect(Collectors.toList()));
-        return studentRepository.findAllByGroupIn(groups).iterator();
+        return studentRepository.findAllByGroupIn(groups);
     }
 
     @Override
-    public Iterator<Student> findAll(List<Group> groups, Pageable pageable) {
-        return studentRepository.findAllByGroupIn(groups).iterator();
+    public List<Student> findAll(List<Group> groups, Pageable pageable) {
+        return studentRepository.findAllByGroupIn(groups);
     }
 
-    @Override
-    public Iterator<Student> findAll(Student student, Pageable pageable) {
+    public List<Student> findAll(Student student, Pageable pageable) {
         String code = Optional.ofNullable(student.getCode()).orElse("");
         String firstname = Optional.ofNullable(student.getFirstname()).orElse("");
         String lastname = Optional.ofNullable(student.getLastname()).orElse("");
         String group = Optional.ofNullable(student.getGroup().getName()).orElse("");
-        return studentRepository.findAll(code, firstname, lastname, group, pageable).iterator();
+        return studentRepository.findAll(code, firstname, lastname, group, pageable).getContent();
     }
 
     @Override
-    public Iterator<Student> save(List<Student> students) {
+    public List<Student> save(List<Student> students) {
         List<Student> studentList = Lists.newArrayList();
         Map<String, Group> groupMap = groupRepository.findAll().stream().collect(Collectors.toMap(Group::getName, x -> x));
-
         for (Student student : students) {
-                Optional.ofNullable(groupMap.get(student.getGroup().getName())).ifPresent(student::setGroup);
-                Optional.ofNullable(studentRepository.findByCode(student.getCode())).ifPresent(x -> student.setId(x.getId()));
+            Optional.ofNullable(groupMap.get(student.getGroup().getName())).ifPresent(student::setGroup);
+            Optional.ofNullable(studentRepository.findByCode(student.getCode())).ifPresent(x -> student.setId(x.getId()));
             if(student.getGroup().getId()!=null) {
                 studentList.add(studentRepository.save(student));
             }
         }
         studentList.stream().filter(x->x.getGroup().getId()!=null).collect(Collectors.toList());
-        return studentList.iterator();
+        return studentList;
     }
 
 
     @Override
     public Student save(Student student) {
-        return save(Lists.newArrayList(student)).next();
+        return studentRepository.save(student);
     }
 
     @Override
@@ -92,4 +90,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
 
+    @Override
+    public List<Student> findAll() {
+        return studentRepository.findAll();
+    }
+
+    @Override
+    public List<Student> findAll(Pageable pageable) {
+        return studentRepository.findAll(pageable).getContent();
+    }
 }

@@ -34,34 +34,11 @@ public class AttendanceServiceImpl implements AttendanceService {
     private StudentRepository studentRepository;
 
     @Inject
-    private GroupRepository groupRepository;
-
-    @Inject
     private TimetableRepository timetableRepository;
 
-    @Override
-    public void generateAttendance(Group group, List<Timetable> timetables) {
-        List<Attendance> attendanceList = Lists.newArrayList();
-
-        for (Student student : studentRepository.findByGroup(group)) {
-            attendanceList.addAll(timetableRepository.findByGroup(group).stream().map(timetable -> new Attendance().setStudent(student).setTimetable(timetable).setStatus(Status.INACTIVE)).collect(Collectors.toList()));
-        }
-        attendanceRepository.save(attendanceList);
-    }
-
-    @Override
-    public List<Attendance> findAll(Attendance attendance, Pageable pageable) {
-        return attendanceRepository.findByTimetable(attendance.getTimetable());
-    }
-
-    @Override
-    public Attendance findByTimetable(Timetable timetable) {
-        return attendanceRepository.find(timetable);
-    }
 
     @Override
     public Attendance save(Attendance attendance) {
-
         return attendanceRepository.save(attendance);
     }
 
@@ -70,10 +47,23 @@ public class AttendanceServiceImpl implements AttendanceService {
         return null;
     }
 
+    public List<Attendance> findAll(Attendance filter, Pageable pageable) {
+        return attendanceRepository.findByTimetable(filter.getTimetable());
+    }
+
     @Override
     public long size(Attendance attendance) {
-        Long size = attendanceRepository.size(attendance.getTimetable());
-        return Optional.ofNullable(size).orElse(0L);
+        return Optional.ofNullable(attendanceRepository.size(attendance.getTimetable())).orElse(0L);
+    }
+
+    @Override
+    public void GenerateAndSaveAttendances(Group group) {
+        List<Attendance> attendanceList = Lists.newArrayList();
+        studentRepository.findByGroup(group)
+                .forEach(x -> attendanceList.addAll(timetableRepository.findByGroup(group).stream()
+                        .map(y -> new Attendance().setStudent(x).setTimetable(y))
+                        .collect(Collectors.toList())));
+        attendanceRepository.save(attendanceList);
     }
 
     @Override
@@ -84,5 +74,15 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public int getAbsentsNumber(Student student) {
         return Optional.ofNullable(attendanceRepository.countByStatus(student, Status.ABSENT)).orElse(0);
+    }
+
+    @Override
+    public List<Attendance> findAll() {
+        return attendanceRepository.findAll();
+    }
+
+    @Override
+    public List<Attendance> findAll(Pageable pageable) {
+        return attendanceRepository.findAll(pageable).getContent();
     }
 }

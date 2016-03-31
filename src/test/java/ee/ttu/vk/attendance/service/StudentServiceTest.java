@@ -64,7 +64,7 @@ public class StudentServiceTest {
         given(studentRepository.findByCode("131002")).willReturn(students.get(2));
         given(groupRepository.findByName("RDIR61")).willReturn(new Group().setId(0L).setName("RDIR61"));
         given(studentRepository.save(any(Student.class))).will(x -> x.getArguments()[0]);
-        Student[] studentArray = Iterators.toArray(studentService.save(studentList), Student.class);
+        Student[] studentArray = Iterators.toArray(studentService.save(studentList).iterator(), Student.class);
         Assert.assertArrayEquals(Iterables.toArray(studentList, Student.class), studentArray);
         Assert.assertNotNull(studentArray[1].getId());
         Assert.assertNull(studentArray[3].getId());

@@ -34,12 +34,6 @@ public class DMPanel extends Modal<Void> {
     @SpringBean
     private AttendanceService attendanceService;
 
-    @SpringBean
-    private SubjectService subjectService;
-
-    @SpringBean
-    private TeacherService teacherService;
-
     private ListModel<Student> studentsModel = new ListModel<>(Lists.newArrayList());
 
     public DMPanel(String markupId) {
@@ -56,7 +50,7 @@ public class DMPanel extends Modal<Void> {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
                 studentService.save(studentsModel.getObject());
-                groupService.findAll().forEach(x->attendanceService.generateAttendance(x, x.getTimetables()));
+                groupService.findAll().forEach(x->attendanceService.GenerateAndSaveAttendances(x));
                 appendCloseDialogJavaScript(ajaxRequestTarget);
             }
         }.setLabel(new ResourceModel("upload-panel.buttons.save")).setIconType(FontAwesomeIconType.save));

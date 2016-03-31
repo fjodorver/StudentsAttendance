@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class TimetableServiceImpl implements TimetableService {
-
     @Autowired
     private TimetableRepository timetableRepository;
 
@@ -40,13 +39,18 @@ public class TimetableServiceImpl implements TimetableService {
     private GroupService groupService;
 
     @Override
-    public void save(List<Timetable> timetables) {
+    public Timetable save(Timetable timetable) {
+        return null;
+    }
+
+    @Override
+    public List<Timetable> save(List<Timetable> timetables) {
         List<Timetable> test = timetableRepository.findAll();
         Map<String, Subject> subjectMap = timetables.stream().map(Timetable::getSubject).collect(Collectors.toMap(Subject::getCode, y -> y, (x, y) -> x));
         Map<String, Teacher> teacherMap = timetables.stream().map(Timetable::getTeacher).collect(Collectors.toMap(Teacher::getUsername, y -> y, (x, y) -> x));
         Map<String, Group> groupMap = timetables.stream().map(Timetable::getGroup).collect(Collectors.toMap(Group::getName, y -> y, (x, y) -> x));
-        subjectService.saveAll(Lists.newArrayList(subjectMap.values()));
-        teacherService.saveAll(Lists.newArrayList(teacherMap.values()));
+        subjectService.save(Lists.newArrayList(subjectMap.values()));
+        teacherService.save(Lists.newArrayList(teacherMap.values()));
         groupService.save(Lists.newArrayList(groupMap.values()));
         for (Timetable timetable : timetables) {
             timetable.setGroup(Optional.ofNullable(groupMap.get(timetable.getGroup().getName())).orElse(timetable.getGroup()));
@@ -56,12 +60,11 @@ public class TimetableServiceImpl implements TimetableService {
                     .filter(x -> x.getTeacher().getFullname().equals(timetable.getTeacher().getFullname()) && x.getStart().equals(timetable.getStart()))
                     .findAny().ifPresent(x -> timetable.setId(x.getId()));
         }
-        timetables.forEach(x -> timetableRepository.saveAndFlush(x));
+        return timetableRepository.save(timetables);
     }
 
-
     @Override
-    public List<Timetable> find(TimetableFilter filter, Pageable pageable) {
+    public List<Timetable> findAll(TimetableFilter filter, Pageable pageable) {
         ZonedDateTime dateTime = ZonedDateTime.ofInstant(filter.getDate().toInstant(), ZoneId.systemDefault());
         return timetableRepository.find(dateTime.withHour(0), dateTime.withHour(23), filter.getTeacher(), pageable);
     }

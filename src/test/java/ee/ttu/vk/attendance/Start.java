@@ -1,10 +1,13 @@
 package ee.ttu.vk.attendance;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
 
 import javax.management.MBeanServer;
 
 import org.eclipse.jetty.jmx.MBeanContainer;
+import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
@@ -13,7 +16,10 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.webapp.WebInfConfiguration;
+import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
@@ -93,6 +99,14 @@ public class Start
 		MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
 		server.addEventListener(mBeanContainer);
 		server.addBean(mBeanContainer);
+
+		EnvConfiguration envCfg = new EnvConfiguration();
+		try {
+			envCfg.setJettyEnvXml(new File("src/test/jetty/jetty-env.xml").toURL());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		bb.setConfigurations(new Configuration[]{new WebInfConfiguration(), envCfg, new WebXmlConfiguration()});
 
 		try
 		{

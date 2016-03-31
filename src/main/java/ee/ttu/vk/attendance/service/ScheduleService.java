@@ -11,3 +11,4 @@ public interface ScheduleService {
     void updateGroups() throws IOException;
     void update() throws IOException, ParserException;
 }
+

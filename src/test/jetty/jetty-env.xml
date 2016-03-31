@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+    <New id="DbAttendance" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>jdbc/dbAttendance</Arg>
+        <Arg>
+            <New class="org.postgresql.ds.PGSimpleDataSource">
+                <Set name="User">t131106</Set>
+                <Set name="Password">******</Set>
+                <Set name="DatabaseName">dbAttendance</Set>
+                <Set name="ServerName">dev.vk.edu.ee</Set>
+                <Set name="PortNumber">5432</Set>
+            </New>
+        </Arg>
+    </New>
+</Configure>

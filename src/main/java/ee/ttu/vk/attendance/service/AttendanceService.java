@@ -11,13 +11,8 @@ import java.util.List;
 /**
  * Created by strukov on 3/24/16.
  */
-public interface AttendanceService {
-    void generateAttendance(Group group, List<Timetable> timetables);
-    List<Attendance> findAll(Attendance attendance, Pageable pageable);
-    Attendance findByTimetable(Timetable timetable);
-    Attendance save(Attendance attendance);
-    List<Attendance> save(List<Attendance> attendances);
-    long size(Attendance attendance);
+public interface AttendanceService extends IReadService<Attendance>, ISaveService<Attendance>, IProviderService<Attendance, Attendance> {
+    void GenerateAndSaveAttendances(Group group);
     int getPresentsNumber(Student student);
     int getAbsentsNumber(Student student);
 }

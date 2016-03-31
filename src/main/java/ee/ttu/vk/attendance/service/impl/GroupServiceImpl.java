@@ -5,6 +5,7 @@ import ee.ttu.vk.attendance.domain.Group;
 import ee.ttu.vk.attendance.repository.GroupRepository;
 import ee.ttu.vk.attendance.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,11 @@ public class GroupServiceImpl implements GroupService {
     private GroupRepository groupRepository;
 
     @Override
+    public Group save(Group group) {
+        return groupRepository.save(group);
+    }
+
+    @Override
     public List<Group> save(List<Group> groups) {
         Map<String, Group> groupMap = groupRepository.findAll().stream().collect(Collectors.toMap(Group::getName, x -> x));
         return groupRepository.save(groups.stream().map(x -> Optional.ofNullable(groupMap.get(x.getName())).orElse(x)).collect(Collectors.toList()));
@@ -29,5 +35,10 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<Group> findAll() {
         return groupRepository.findAll();
+    }
+
+    @Override
+    public List<Group> findAll(Pageable pageable) {
+        return groupRepository.findAll(pageable).getContent();
     }
 }

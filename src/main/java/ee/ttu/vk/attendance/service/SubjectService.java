@@ -9,9 +9,7 @@ import java.util.List;
 /**
  * Created by fjodor on 4.03.16.
  */
-public interface SubjectService {
+public interface SubjectService extends IReadService<Subject>, ISaveService<Subject>, IProviderService<Subject, Subject> {
 
-    List<Subject> findAll(Subject subject, Pageable pageable);
-    List<Subject> saveAll(List<Subject> subjects);
-    long size(Subject subject);
 }
+
