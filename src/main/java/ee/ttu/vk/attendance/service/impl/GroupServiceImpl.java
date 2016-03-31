@@ -29,7 +29,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<Group> save(List<Group> groups) {
         Map<String, Group> groupMap = groupRepository.findAll().stream().collect(Collectors.toMap(Group::getName, x -> x));
-        return groupRepository.save(groups.stream().map(x -> Optional.ofNullable(groupMap.get(x.getName())).orElse(x)).collect(Collectors.toList()));
+        List<Group> z = groups.stream().map(x -> Optional.ofNullable(groupMap.get(x.getName())).orElse(x)).collect(Collectors.toList());
+        return groupRepository.save(z);
     }
 
     @Override

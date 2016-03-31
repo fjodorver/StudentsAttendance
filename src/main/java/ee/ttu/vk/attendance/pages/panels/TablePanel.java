@@ -1,5 +1,6 @@
 package ee.ttu.vk.attendance.pages.panels;
 
+import com.google.common.collect.Lists;
 import ee.ttu.vk.attendance.pages.components.BootstrapAjaxNavigationToolbar;
 import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
 import org.apache.wicket.Component;
@@ -8,6 +9,7 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFal
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilteredPropertyColumn;
@@ -21,15 +23,16 @@ import java.util.List;
 /**
  * Created by fjodor on 25.02.16.
  */
-public abstract class AbstractTablePanel<T, F> extends Panel {
+public class TablePanel<T, F> extends Panel {
 
     private AbstractDataProvider<T, F> dataProvider;
+    private List<IColumn<T, String>> columnList = Lists.newArrayList();
 
-    public AbstractTablePanel(String id, AbstractDataProvider<T, F> dataProvider) {
+    public TablePanel(String id, AbstractDataProvider<T, F> dataProvider) {
         super(id);
         this.dataProvider = dataProvider;
         FilterForm<F> filterForm = new FilterForm<>("form", dataProvider);
-        DataTable<T, String> dataTable = new DataTable<>("table", getColumnList(), dataProvider, 10);
+        DataTable<T, String> dataTable = new DataTable<>("table", columnList, dataProvider, 10);
         FilterToolbar filterToolbar = new FilterToolbar(dataTable, filterForm);
         dataTable.setOutputMarkupId(true);
         dataTable.setVersioned(false);
@@ -41,13 +44,15 @@ public abstract class AbstractTablePanel<T, F> extends Panel {
         add(filterForm);
     }
 
-    protected abstract List<IColumn<T, String>> getColumnList();
+    public void addColumn(String name, String propertyExpression, String cssClass){
+        columnList.add(new PropertyColumn<>(Model.of(name), propertyExpression));
+    }
 
-    protected IColumn<T, String> getFilteredColumn(String name, String stringExpression, String stringFilter, String cssClass) {
-        return new FilteredPropertyColumn<T, String>(Model.of(name), stringExpression) {
+    public void addFilteredColumn(String name, String propertyExpression, String propertyFilter, String cssClass){
+        columnList.add(new FilteredPropertyColumn<T, String>(Model.of(name), propertyExpression) {
             @Override
             public Component getFilter(String s, FilterForm<?> filterForm) {
-                TextFilter<T> textFilter = new TextFilter<>(s, new PropertyModel<>(dataProvider, stringFilter), filterForm);
+                TextFilter<T> textFilter = new TextFilter<>(s, PropertyModel.of(dataProvider, propertyFilter), filterForm);
                 textFilter.getFilter().add(new AttributeAppender("class", " form-control"));
                 return textFilter;
             }
@@ -56,6 +61,6 @@ public abstract class AbstractTablePanel<T, F> extends Panel {
             public String getCssClass() {
                 return cssClass;
             }
-        };
+        });
     }
 }

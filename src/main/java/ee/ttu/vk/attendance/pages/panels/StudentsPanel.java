@@ -1,49 +1,53 @@
 package ee.ttu.vk.attendance.pages.panels;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.attendance.domain.Student;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.model.CompoundPropertyModel;
+import ee.ttu.vk.attendance.pages.components.BootstrapIndicatingAjaxLink;
+import ee.ttu.vk.attendance.pages.providers.StudentDataProvider;
+import ee.ttu.vk.attendance.service.StudentService;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by fjodor on 27.02.16.
  */
-public class StudentsPanel extends Panel {
+public class StudentsPanel extends Modal<List<Student>> {
+    @SpringBean
+    private StudentService studentService;
 
-    private WebMarkupContainer container = new WebMarkupContainer("body");
-    private DataView<Student> dataView;
+    public StudentsPanel(String id, IModel<List<Student>> model) {
+        super(id, model);
+        TablePanel<Student, Student> studentsPanel = new TablePanel<>("students", new StudentDataProvider(){
+            @Override
+            public Iterator<? extends Student> iterator(long first, long count) {
+                return model.getObject().subList((int)(first/count), (int)count).iterator();
+            }
 
-    public StudentsPanel(String id, ListModel<Student> listModel) {
-        super(id, listModel);
-        dataView = getDataView(listModel);
-        container.add(dataView);
-        add(container);
+            @Override
+            public long size() {
+                return model.getObject().size();
+            }
+        });
+        studentsPanel.addColumn("Code", "code", "col-lg-2");
+        studentsPanel.addColumn("Firstname", "firstname", "col-lg-4");
+        studentsPanel.addColumn("Lastname", "lastname", "col-lg-4");
+        studentsPanel.addColumn("Group", "group", "col-lg-2");
+        add(studentsPanel);
+        addButton(new BootstrapIndicatingAjaxLink<>("button", Buttons.Type.Primary, (x) -> {
+            studentService.save(model.getObject());
+            close(x);
+        }).setIconType(FontAwesomeIconType.save));
     }
 
-    private DataView<Student> getDataView(ListModel<Student> listModel) {
-        return new DataView<Student>("rows", getDataProvider(listModel)) {
-            @Override
-            protected void populateItem(Item<Student> item) {
-                item.add(new Label("code"));
-                item.add(new Label("firstname"));
-                item.add(new Label("lastname"));
-                item.add(new Label("group"));
-            }
-        };
-    }
-
-    private ListDataProvider<Student> getDataProvider(ListModel<Student> listModel) {
-        return new ListDataProvider<Student>(listModel.getObject()){
-            @Override
-            public IModel<Student> model(Student student) {
-                return new CompoundPropertyModel<>(student);
-            }
-        };
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        header(new ResourceModel("upload-panel.header"));
     }
 }

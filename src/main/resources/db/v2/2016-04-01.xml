@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="change table name group to t_group" author="vadim">
+        <renameTable oldTableName="group" newTableName="t_group"></renameTable>
+    </changeSet>
+    <changeSet id="rename sequence group_id_seq to t_group_id_seq" author="fjodor">
+        <sql>
+            ALTER SEQUENCE group_id_seq RENAME TO t_group_id_seq;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
