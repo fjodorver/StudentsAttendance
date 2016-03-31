@@ -59,15 +59,16 @@ public class TimetableServiceImpl implements TimetableService {
         timetables.forEach(x -> timetableRepository.saveAndFlush(x));
     }
 
+
     @Override
     public List<Timetable> find(TimetableFilter filter, Pageable pageable) {
         ZonedDateTime dateTime = ZonedDateTime.ofInstant(filter.getDate().toInstant(), ZoneId.systemDefault());
-        return timetableRepository.find(dateTime.withHour(0), dateTime.withHour(23), pageable);
+        return timetableRepository.find(dateTime.withHour(0), dateTime.withHour(23), filter.getTeacher(), pageable);
     }
 
     @Override
     public long size(TimetableFilter filter) {
         ZonedDateTime dateTime = ZonedDateTime.ofInstant(filter.getDate().toInstant(), ZoneId.systemDefault());
-        return timetableRepository.count(dateTime.withHour(0), dateTime.withHour(23));
+        return timetableRepository.count(dateTime.withHour(0), dateTime.withHour(23), filter.getTeacher());
     }
 }

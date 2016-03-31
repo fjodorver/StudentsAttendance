@@ -7,16 +7,21 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerWithIcon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import ee.ttu.vk.attendance.CustomAuthenticatedWebSession;
 import ee.ttu.vk.attendance.domain.Attendance;
+import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.pages.filters.TimetableFilter;
 import ee.ttu.vk.attendance.pages.panels.AttendancePanel;
 import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
 import ee.ttu.vk.attendance.pages.providers.TimetableDataProvider;
+import ee.ttu.vk.attendance.service.TimetableService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -24,10 +29,13 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class TimetablesPage extends AbstractPage {
+
     private WebMarkupContainer body;
     private DataView<Timetable> rows;
     private AbstractDataProvider<Timetable, TimetableFilter> dataProvider;
@@ -37,6 +45,7 @@ public class TimetablesPage extends AbstractPage {
     public TimetablesPage() {
         panel = new AttendancePanel("panel");
         dataProvider = new TimetableDataProvider();
+        dataProvider.getFilterState().setTeacher(CustomAuthenticatedWebSession.getSession().getTeacher());
         body = new WebMarkupContainer("body");
         body.setOutputMarkupId(true);
         searchForm = new BootstrapForm<>("searchForm", new CompoundPropertyModel<>(new TimetableFilter()));
@@ -60,15 +69,15 @@ public class TimetablesPage extends AbstractPage {
             }
         };
 
-        searchForm.add(new DateTextField("date", new DateTextFieldConfig().showTodayButton(DateTextFieldConfig.TodayButton.TRUE))
-                .add(new AjaxFormComponentUpdatingBehavior("change") {
-                    @Override
-                    protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                        TimetableFilter filter = searchForm.getModelObject();
-                        dataProvider.setFilterState(filter);
-                        ajaxRequestTarget.add(body);
-                    }
-                }));
+        searchForm.add(new DatetimePickerWithIcon("date", new DatetimePickerConfig().setShowToday(Boolean.TRUE)));
+        searchForm.add(new AjaxSubmitLink("search", searchForm) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                TimetableFilter filter = searchForm.getModelObject();
+                dataProvider.getFilterState().setDate(filter.getDate());
+                target.add(body);
+            }
+        });
         body.add(rows);
         add(new BootstrapAjaxPagingNavigator("navigator", rows), body, searchForm, panel);
     }
