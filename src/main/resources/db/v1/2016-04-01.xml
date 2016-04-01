@@ -147,4 +147,17 @@
                                  referencedTableName="timetable"
                                  referencedColumnNames="id"/>
     </changeSet>
+    <changeSet id="added ADMIN to teacher table" author="vadim">
+        <insert tableName="Teacher">
+            <column name="fullname">Abdul Al Hazred</column>
+            <column name="username">Admin</column>
+            <column name="password">ueZl0I0JAGFM0iaqXstIvQ==</column>
+            <column name="role">ADMIN</column>
+        </insert>
+    </changeSet>
+    <changeSet id="create view with timetable count" author="vadim">
+        <createView viewName="TimetableCount">
+            SELECT DISTINCT(rownum) FROM TIMETABLE GROUP BY SUBJECT_ID, PROGRAMME_ID;
+        </createView>
+    </changeSet>
 </databaseChangeLog>
