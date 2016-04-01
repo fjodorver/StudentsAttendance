@@ -2,12 +2,10 @@ package ee.ttu.vk.attendance.service.impl;
 
 import com.google.common.collect.Lists;
 import ee.ttu.vk.attendance.domain.Attendance;
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Student;
-import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.enums.Status;
 import ee.ttu.vk.attendance.repository.AttendanceRepository;
-import ee.ttu.vk.attendance.repository.GroupRepository;
 import ee.ttu.vk.attendance.repository.StudentRepository;
 import ee.ttu.vk.attendance.repository.TimetableRepository;
 import ee.ttu.vk.attendance.service.AttendanceService;
@@ -17,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -57,14 +56,16 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public void GenerateAndSaveAttendances(Group group) {
+    public void GenerateAndSaveAttendances(Programme programme) {
         List<Attendance> attendanceList = Lists.newArrayList();
-        studentRepository.findByGroup(group)
-                .forEach(x -> attendanceList.addAll(timetableRepository.findByGroup(group).stream()
-                        .map(y -> new Attendance().setStudent(x).setTimetable(y))
-                        .collect(Collectors.toList())));
-        attendanceRepository.save(attendanceList);
-    }
+        Map<String, List<Student>> studentListMap = studentRepository.findAll().stream().collect(Collectors.groupingBy(x -> x.getProgramme().getName()));
+        for (Student student : Optional.ofNullable(studentListMap.get(programme.getName())).orElse(Lists.newArrayList())) {
+            attendanceList.addAll(timetableRepository.findByProgramme(programme).stream()
+                    .map(x -> new Attendance().setStudent(student).setTimetable(x))
+                    .collect(Collectors.toList()));
+        }
+    attendanceRepository.save(attendanceList);
+}
 
     @Override
     public int getPresentsNumber(Student student) {

@@ -1,11 +1,11 @@
 package ee.ttu.vk.attendance.service.impl;
 
 import com.google.common.collect.Lists;
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Student;
 import ee.ttu.vk.attendance.domain.Subject;
 import ee.ttu.vk.attendance.domain.Timetable;
-import ee.ttu.vk.attendance.repository.GroupRepository;
+import ee.ttu.vk.attendance.repository.ProgrammeRepository;
 import ee.ttu.vk.attendance.repository.StudentRepository;
 import ee.ttu.vk.attendance.service.StudentService;
 import ee.ttu.vk.attendance.utils.DocParser;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +29,7 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     @Inject
-    private GroupRepository groupRepository;
+    private ProgrammeRepository programmeRepository;
 
     @Override
     public List<Student> parse(InputStream inputStream) {
@@ -41,37 +40,32 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAll(Subject subject) {
-        List<Group> groups = Lists.newArrayList();
-        groups.addAll(subject.getTimetables().stream().map(Timetable::getGroup).collect(Collectors.toList()));
-        return studentRepository.findAllByGroupIn(groups);
+        List<Programme> programmes = Lists.newArrayList();
+        programmes.addAll(subject.getTimetables().stream().map(Timetable::getProgramme).collect(Collectors.toList()));
+        return studentRepository.findAllByProgrammeIn(programmes);
     }
 
     @Override
-    public List<Student> findAll(List<Group> groups, Pageable pageable) {
-        return studentRepository.findAllByGroupIn(groups);
+    public List<Student> findAll(List<Programme> programmes, Pageable pageable) {
+        return studentRepository.findAllByProgrammeIn(programmes);
     }
 
     public List<Student> findAll(Student student, Pageable pageable) {
         String code = Optional.ofNullable(student.getCode()).orElse("");
-        String firstname = Optional.ofNullable(student.getFirstname()).orElse("");
-        String lastname = Optional.ofNullable(student.getLastname()).orElse("");
-        String group = Optional.ofNullable(student.getGroup().getName()).orElse("");
-        return studentRepository.findAll(code, firstname, lastname, group, pageable).getContent();
+        String fullname = Optional.ofNullable(student.getFullname()).orElse("");
+        String program = Optional.ofNullable(student.getProgramme().getName()).orElse("");
+        return studentRepository.findAll(code, fullname, program, pageable).getContent();
     }
 
     @Override
     public List<Student> save(List<Student> students) {
-        List<Student> studentList = Lists.newArrayList();
-        Map<String, Group> groupMap = groupRepository.findAll().stream().collect(Collectors.toMap(Group::getName, x -> x));
+        Map<String, Student> studentMap = studentRepository.findAll().stream().collect(Collectors.toMap(Student::getCode, x -> x));
+        Map<String, Programme> groupMap = programmeRepository.findAll().stream().collect(Collectors.toMap(Programme::getName, x -> x));
         for (Student student : students) {
-            Optional.ofNullable(groupMap.get(student.getGroup().getName())).ifPresent(student::setGroup);
-            Optional.ofNullable(studentRepository.findByCode(student.getCode())).ifPresent(x -> student.setId(x.getId()));
-            if(student.getGroup().getId()!=null) {
-                studentList.add(studentRepository.save(student));
-            }
+            Optional.ofNullable(groupMap.get(student.getProgramme().getName())).ifPresent(student::setProgramme);
+            Optional.ofNullable(studentMap.get(student.getCode())).ifPresent(x -> student.setId(x.getId()));
         }
-        studentList.stream().filter(x->x.getGroup().getId()!=null).collect(Collectors.toList());
-        return studentList;
+        return studentRepository.save(students.stream().filter(x->x.getProgramme().getId()!=null).collect(Collectors.toList()));
     }
 
 
@@ -83,10 +77,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public long size(Student student) {
         String code = Optional.ofNullable(student.getCode()).orElse("");
-        String firstname = Optional.ofNullable(student.getFirstname()).orElse("");
-        String lastname = Optional.ofNullable(student.getLastname()).orElse("");
-        String group = Optional.ofNullable(student.getGroup().getName()).orElse("");
-        return studentRepository.count(code, firstname, lastname, group);
+        String fullname = Optional.ofNullable(student.getFullname()).orElse("");
+        String program = Optional.ofNullable(student.getProgramme().getName()).orElse("");
+        return studentRepository.count(code, fullname, program);
     }
 
 

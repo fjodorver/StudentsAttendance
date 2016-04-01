@@ -4,12 +4,9 @@
     <New id="DbAttendance" class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg>jdbc/dbAttendance</Arg>
         <Arg>
-            <New class="org.postgresql.ds.PGSimpleDataSource">
-                <Set name="User">t131106</Set>
-                <Set name="Password">******</Set>
-                <Set name="DatabaseName">dbAttendance</Set>
-                <Set name="ServerName">dev.vk.edu.ee</Set>
-                <Set name="PortNumber">5432</Set>
+            <New class="org.apache.commons.dbcp.BasicDataSource">
+                <Set name="driverClassName">org.h2.Driver</Set>
+                <Set name="url">jdbc:h2:~/liquibase</Set>
             </New>
         </Arg>
     </New>

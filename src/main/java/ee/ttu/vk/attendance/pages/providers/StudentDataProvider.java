@@ -27,7 +27,7 @@ public class StudentDataProvider extends AbstractDataProvider<Student, Student> 
 
     @Override
     public Iterator<? extends Student> iterator(long first, long count) {
-        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "lastname");
+        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "fullname");
         return studentService.findAll(filter, pageable).iterator();
     }
 

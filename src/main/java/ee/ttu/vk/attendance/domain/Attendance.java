@@ -24,7 +24,7 @@ public class Attendance implements Serializable{
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private Status status = Status.INACTIVE;
 
     public Long getId() {
         return id;

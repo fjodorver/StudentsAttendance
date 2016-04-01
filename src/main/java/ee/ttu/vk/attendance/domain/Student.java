@@ -7,25 +7,19 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@NamedEntityGraph(name = "student.group", attributeNodes = {@NamedAttributeNode("group")})
+@NamedEntityGraph(name = "student.all", attributeNodes = {@NamedAttributeNode("programme")})
 @Table(name = "student")
 public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    private String firstname;
-
-    private String lastname;
+    private String fullname;
 
     private String code;
 
-    public String getFullname(){
-        return firstname + " " + lastname;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Group group = new Group();
+    private Programme programme = new Programme();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
     private List<Attendance> attendances = Lists.newArrayList();
@@ -50,30 +44,20 @@ public class Student implements Serializable {
         return this;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFullname() {
+        return fullname;
     }
 
-    public Student setFirstname(String firstname) {
-        this.firstname = firstname;
-        return this;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public String getLastname() {
-        return lastname;
+    public Programme getProgramme() {
+        return programme;
     }
 
-    public Student setLastname(String lastname) {
-        this.lastname = lastname;
-        return this;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public Student setGroup(Group group) {
-        this.group = group;
+    public Student setProgramme(Programme programme) {
+        this.programme = programme;
         return this;
     }
 
@@ -88,6 +72,6 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
-        return getFullname();
+        return fullname;
     }
 }

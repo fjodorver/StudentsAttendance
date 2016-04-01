@@ -1,7 +1,7 @@
 package ee.ttu.vk.attendance.repository;
 
 
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Subject;
 import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.domain.Timetable;
@@ -18,10 +18,10 @@ import java.util.List;
 public interface TimetableRepository extends JpaRepository<Timetable, Long> {
 
     @EntityGraph(value = "timetable.detail", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("select t from Timetable t where t.group = ?1 and t.subject = ?2 and t.teacher = ?3 and t.start = ?4 and t.end = ?5")
-    Timetable find(Group group, Subject subject, Teacher teacher, ZonedDateTime start, ZonedDateTime end);
+    @Query("select t from Timetable t where t.programme = ?1 and t.subject = ?2 and t.teacher = ?3 and t.start = ?4 and t.end = ?5")
+    Timetable find(Programme programme, Subject subject, Teacher teacher, ZonedDateTime start, ZonedDateTime end);
 
-    List<Timetable> findByGroup(Group group);
+    List<Timetable> findByProgramme(Programme programme);
 
     @EntityGraph(value = "timetable.detail", type = EntityGraph.EntityGraphType.LOAD)
     @Query("select t from Timetable t where t.start between ?1 and ?2 and t.teacher=?3")

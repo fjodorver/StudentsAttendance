@@ -6,6 +6,8 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import ee.ttu.vk.attendance.domain.Student;
 import ee.ttu.vk.attendance.pages.components.BootstrapIndicatingAjaxLink;
 import ee.ttu.vk.attendance.pages.providers.StudentDataProvider;
+import ee.ttu.vk.attendance.service.AttendanceService;
+import ee.ttu.vk.attendance.service.GroupService;
 import ee.ttu.vk.attendance.service.StudentService;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -21,6 +23,12 @@ public class StudentsPanel extends Modal<List<Student>> {
     @SpringBean
     private StudentService studentService;
 
+    @SpringBean
+    private GroupService groupService;
+
+    @SpringBean
+    private AttendanceService attendanceService;
+
     public StudentsPanel(String id, IModel<List<Student>> model) {
         super(id, model);
         TablePanel<Student, Student> studentsPanel = new TablePanel<>("students", new StudentDataProvider(){
@@ -35,12 +43,12 @@ public class StudentsPanel extends Modal<List<Student>> {
             }
         });
         studentsPanel.addColumn("Code", "code", "col-lg-2");
-        studentsPanel.addColumn("Firstname", "firstname", "col-lg-4");
-        studentsPanel.addColumn("Lastname", "lastname", "col-lg-4");
-        studentsPanel.addColumn("Group", "group", "col-lg-2");
+        studentsPanel.addColumn("Fullname", "fullname", "col-lg-8");
+        studentsPanel.addColumn("Programme", "programme", "col-lg-2");
         add(studentsPanel);
         addButton(new BootstrapIndicatingAjaxLink<>("button", Buttons.Type.Primary, (x) -> {
             studentService.save(model.getObject());
+            groupService.findAll().forEach(y->attendanceService.GenerateAndSaveAttendances(y));
             close(x);
         }).setIconType(FontAwesomeIconType.save));
     }

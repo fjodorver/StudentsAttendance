@@ -1,6 +1,8 @@
 package ee.ttu.vk.attendance.domain;
 
 import ee.ttu.vk.attendance.enums.GroupType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,8 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_group")
-public class Group implements Serializable {
+@Table(name = "programme")
+public class Programme implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -28,17 +30,19 @@ public class Group implements Serializable {
 
 
     @OneToMany
+    @Fetch(FetchMode.SUBSELECT)
     private List<Student> students;
 
     @OneToMany
+    @Fetch(FetchMode.SUBSELECT)
     private List<Timetable> timetables;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return Objects.equals(id, group.id);
+        Programme programme = (Programme) o;
+        return Objects.equals(id, programme.id);
     }
 
     @Override
@@ -55,7 +59,7 @@ public class Group implements Serializable {
         return id;
     }
 
-    public Group setId(Long id) {
+    public Programme setId(Long id) {
         this.id = id;
         return this;
     }
@@ -64,7 +68,7 @@ public class Group implements Serializable {
         return name;
     }
 
-    public Group setName(String name) {
+    public Programme setName(String name) {
         this.name = name;
         return this;
     }
@@ -72,7 +76,7 @@ public class Group implements Serializable {
     public String getLanguage(){
         return language;
     }
-    public Group setLanguage(String language){
+    public Programme setLanguage(String language){
         this.language = language;
         return this;
     }
@@ -81,7 +85,7 @@ public class Group implements Serializable {
         return groupType;
     }
 
-    public Group setGroupType(GroupType groupType) {
+    public Programme setGroupType(GroupType groupType) {
         this.groupType = groupType;
         return this;
     }
@@ -90,7 +94,7 @@ public class Group implements Serializable {
         return ScheduleId;
     }
 
-    public Group setScheduleId(Long scheduleId) {
+    public Programme setScheduleId(Long scheduleId) {
         ScheduleId = scheduleId;
         return this;
     }
@@ -99,7 +103,7 @@ public class Group implements Serializable {
         return timetables;
     }
 
-    public Group setTimetables(List<Timetable> timetables) {
+    public Programme setTimetables(List<Timetable> timetables) {
         this.timetables = timetables;
         return this;
     }
@@ -108,7 +112,7 @@ public class Group implements Serializable {
         return students;
     }
 
-    public Group setStudents(List<Student> students) {
+    public Programme setStudents(List<Student> students) {
         this.students = students;
         return this;
     }

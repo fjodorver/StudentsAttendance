@@ -31,12 +31,15 @@
             <column name="password" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="role" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
 
-    <changeSet id="added table Group" author="fjodor and vadim">
-        <createTable tableName="group">
+    <changeSet id="added table Programme" author="fjodor and vadim">
+        <createTable tableName="programme">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
@@ -45,6 +48,9 @@
             </column>
             <column name="language" type="varchar(15)">
                 <constraints nullable="true"/>
+            </column>
+            <column name="type" type="varchar(10)">
+                <constraints nullable="false" />
             </column>
             <column name="url_id" type="int">
                 <constraints nullable="false" unique="true"/>
@@ -57,18 +63,16 @@
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="group_id" type="int">
+            <column name="code" type="char(6)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="programme_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="firstname" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="lastname" type="varchar(30)">
-                <constraints nullable="false"/>
+            <column name="fullname" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="student" baseColumnNames="group_id" constraintName="fk_student_group" referencedTableName="group"
-                                 referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="added table Timetable" author="fjodor and vadim">
@@ -79,32 +83,20 @@
             <column name="subject_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="group_id" type="int">
+            <column name="programme_id" type="int">
                 <constraints nullable="false"/>
             </column>
             <column name="teacher_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="start" type="timestamp with timezone">
+            <column name="_begin" type="timestamp">
                 <constraints nullable="false"/>
             </column>
-            <column name="end" type="timestamp with timezone">
+            <column name="_end" type="timestamp">
                 <constraints nullable="false"/>
             </column>
             <column name="type" type="varchar(10)" defaultValue="LECTURE"/>
         </createTable>
-        <addForeignKeyConstraint baseTableName="timetable" baseColumnNames="subject_id"
-                                 constraintName="fk_timetable_subject"
-                                 referencedTableName="subject"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="timetable" baseColumnNames="group_id"
-                                 constraintName="fk_timetable_group"
-                                 referencedTableName="group"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="timetable" baseColumnNames="teacher_id"
-                                 constraintName="fk_timetable_teacher"
-                                 referencedTableName="teacher"
-                                 referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="added table Attendance" author="vadim">
@@ -122,20 +114,37 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
+
+    </changeSet>
+    <changeSet id="added Foreign Keys" author="fjodor">
+        <addForeignKeyConstraint baseTableName="student" baseColumnNames="programme_id"
+                                 constraintName="fk_student_programme"
+                                 referencedTableName="programme"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="timetable" baseColumnNames="subject_id"
+                                 constraintName="fk_timetable_subject"
+                                 referencedTableName="subject"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="timetable" baseColumnNames="programme_id"
+                                 constraintName="fk_timetable_programme"
+                                 referencedTableName="programme"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="timetable" baseColumnNames="teacher_id"
+                                 constraintName="fk_timetable_teacher"
+                                 referencedTableName="teacher"
+                                 referencedColumnNames="id"/>
+
         <addForeignKeyConstraint baseTableName="attendance" baseColumnNames="student_id"
                                  constraintName="fk_attendance_student"
                                  referencedTableName="student"
                                  referencedColumnNames="id"/>
+
         <addForeignKeyConstraint baseTableName="attendance" baseColumnNames="timetable_id"
                                  constraintName="fk_attendance_timetable"
                                  referencedTableName="timetable"
                                  referencedColumnNames="id"/>
-    </changeSet>
-    <changeSet id="added type to Group table" author="fjodor">
-        <addColumn tableName="group">
-            <column name="type" type="varchar(10)">
-                <constraints nullable="false" />
-            </column>
-        </addColumn>
     </changeSet>
 </databaseChangeLog>

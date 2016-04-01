@@ -1,8 +1,8 @@
 package ee.ttu.vk.attendance.service.impl;
 
 
-import ee.ttu.vk.attendance.domain.Group;
-import ee.ttu.vk.attendance.repository.GroupRepository;
+import ee.ttu.vk.attendance.domain.Programme;
+import ee.ttu.vk.attendance.repository.ProgrammeRepository;
 import ee.ttu.vk.attendance.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,27 +19,27 @@ import java.util.stream.Collectors;
 public class GroupServiceImpl implements GroupService {
 
     @Autowired
-    private GroupRepository groupRepository;
+    private ProgrammeRepository programmeRepository;
 
     @Override
-    public Group save(Group group) {
-        return groupRepository.save(group);
+    public Programme save(Programme programme) {
+        return programmeRepository.save(programme);
     }
 
     @Override
-    public List<Group> save(List<Group> groups) {
-        Map<String, Group> groupMap = groupRepository.findAll().stream().collect(Collectors.toMap(Group::getName, x -> x));
-        List<Group> z = groups.stream().map(x -> Optional.ofNullable(groupMap.get(x.getName())).orElse(x)).collect(Collectors.toList());
-        return groupRepository.save(z);
+    public List<Programme> save(List<Programme> programmes) {
+        Map<String, Programme> groupMap = programmeRepository.findAll().stream().collect(Collectors.toMap(Programme::getName, x -> x));
+        List<Programme> z = programmes.stream().map(x -> Optional.ofNullable(groupMap.get(x.getName())).orElse(x)).collect(Collectors.toList());
+        return programmeRepository.save(z);
     }
 
     @Override
-    public List<Group> findAll() {
-        return groupRepository.findAll();
+    public List<Programme> findAll() {
+        return programmeRepository.findAll();
     }
 
     @Override
-    public List<Group> findAll(Pageable pageable) {
-        return groupRepository.findAll(pageable).getContent();
+    public List<Programme> findAll(Pageable pageable) {
+        return programmeRepository.findAll(pageable).getContent();
     }
 }

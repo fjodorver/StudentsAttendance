@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "timetable")
-@NamedEntityGraph(name = "timetable.detail", attributeNodes = {@NamedAttributeNode("subject"), @NamedAttributeNode("group"), @NamedAttributeNode("teacher")})
+@NamedEntityGraph(name = "timetable.detail", attributeNodes = {@NamedAttributeNode("subject"), @NamedAttributeNode("programme"), @NamedAttributeNode("teacher")})
 public class Timetable implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -21,11 +21,12 @@ public class Timetable implements Serializable {
 
     @DateTimeFormat
     @Convert(converter = OffsetDateTimeConverter.class)
+    @Column(name = "_begin")
     private ZonedDateTime start;
 
     @DateTimeFormat
     @Convert(converter = OffsetDateTimeConverter.class)
-    @Column(name = "\"end\"")
+    @Column(name = "_end")
     private ZonedDateTime end;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "timetable")
@@ -39,7 +40,7 @@ public class Timetable implements Serializable {
     private Subject subject;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Group group;
+    private Programme programme;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Teacher teacher;
@@ -102,12 +103,12 @@ public class Timetable implements Serializable {
         return this;
     }
 
-    public Group getGroup() {
-        return group;
+    public Programme getProgramme() {
+        return programme;
     }
 
-    public Timetable setGroup(Group group) {
-        this.group = group;
+    public Timetable setProgramme(Programme programme) {
+        this.programme = programme;
         return this;
     }
 

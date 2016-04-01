@@ -40,9 +40,8 @@ public class DataManagementPage extends AbstractPage {
             public WebMarkupContainer getPanel(String s) {
                 TablePanel<Student, Student> subjectsPanel = new TablePanel<>(s, new StudentDataProvider());
                 subjectsPanel.addFilteredColumn("Code", "code", "filterState.code", "col-lg-2");
-                subjectsPanel.addFilteredColumn("Firstname", "firstname", "filterState.firstname", "col-lg-4");
-                subjectsPanel.addFilteredColumn("Lastname", "lastname", "filterState.lastname", "col-lg-4");
-                subjectsPanel.addFilteredColumn("Group", "group", "filterState.group.name", "col-lg-2");
+                subjectsPanel.addFilteredColumn("Fullname", "fullname", "filterState.fullname", "col-lg-8");
+                subjectsPanel.addFilteredColumn("Programme", "programme", "filterState.programme.name", "col-lg-2");
                 return subjectsPanel;
             }
         });

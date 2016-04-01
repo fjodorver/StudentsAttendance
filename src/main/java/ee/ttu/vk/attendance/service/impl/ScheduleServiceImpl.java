@@ -2,7 +2,7 @@ package ee.ttu.vk.attendance.service.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Subject;
 import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.domain.Timetable;
@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.*;
@@ -64,7 +63,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
 //    @Scheduled(cron = "*/300 * * * * *")
     public void updateGroups() throws IOException {
-        Map<String, Group> groupMap = Maps.newHashMap();
+        Map<String, Programme> groupMap = Maps.newHashMap();
         Pattern pattern = Pattern.compile("g=(\\w+)");
         for (int i = 1; i <= 2; i++) {
             HttpGet httpGet = new HttpGet(MessageFormat.format(GROUPS_URL, i));
@@ -74,8 +73,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 for (Element span : doc.select("span").select("span:has(a)")) {
                     Matcher matcher = pattern.matcher(span.attr("onclick"));
                     if (matcher.find() && span.select("a").html().length() == 6) {
-                        Group group = new Group().setName(span.select("a").html()).setGroupType(GroupType.values()[i-1]).setScheduleId(Long.valueOf(matcher.group(1)));
-                        groupMap.put(group.getName(), group);
+                        Programme programme = new Programme().setName(span.select("a").html()).setGroupType(GroupType.values()[i-1]).setScheduleId(Long.valueOf(matcher.group(1)));
+                        groupMap.put(programme.getName(), programme);
                     }
                 }
                 EntityUtils.consume(entity);
@@ -89,8 +88,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void update() throws IOException, ParserException {
         List<Timetable> timetables = Lists.newArrayList();
         CalendarBuilder calendarBuilder = new CalendarBuilder();
-        for (Group group : groupService.findAll().stream().filter(x -> x.getName().startsWith("R")).collect(Collectors.toList())) {
-            HttpGet httpGet = new HttpGet(MessageFormat.format(SCHEDULE_URL, group.getGroupType().ordinal()+1, group.getScheduleId()));
+        for (Programme programme : groupService.findAll().stream().filter(x -> x.getName().startsWith("R")).collect(Collectors.toList())) {
+            HttpGet httpGet = new HttpGet(MessageFormat.format(SCHEDULE_URL, programme.getGroupType().ordinal()+1, programme.getScheduleId()));
             try (CloseableHttpResponse response = httpClient.execute(httpGet)){
                 HttpEntity entity = response.getEntity();
                 Calendar calendar = calendarBuilder.build(entity.getContent());
@@ -101,7 +100,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     Timetable timetable = new Timetable();
                     timetable.setStart(getDateTime(component.getProperty(Property.DTSTART).getValue()));
                     timetable.setEnd(getDateTime(component.getProperty(Property.DTEND).getValue()));
-                    timetable.setGroup(group);
+                    timetable.setProgramme(programme);
                     timetable.setTeacher(getTeacher(description));
                     timetable.setSubject(getSubject(summary));
                     timetable.setLessonType(getLessonType(summary));

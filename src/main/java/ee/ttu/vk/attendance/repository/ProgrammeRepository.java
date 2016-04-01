@@ -1,11 +1,10 @@
 package ee.ttu.vk.attendance.repository;
 
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GroupRepository extends JpaRepository<Group, Long> {
-
-    Group findByName(String name);
+public interface ProgrammeRepository extends JpaRepository<Programme, Long> {
+    Programme findByName(String name);
 }

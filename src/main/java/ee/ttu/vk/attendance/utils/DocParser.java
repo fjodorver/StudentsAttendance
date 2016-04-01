@@ -1,6 +1,6 @@
 package ee.ttu.vk.attendance.utils;
 
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Student;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
@@ -34,12 +34,11 @@ public class DocParser implements IParser<Student> {
                 else if(line.charAt(0) == '\t'){
                     String userLine = line.replaceAll("OK", "").replaceAll("REV", "").replaceAll("TREV", "").replaceAll("\\*", "").trim();
                     String[] userParts = Arrays.stream(userLine.split("\\t")).map(x -> x = x.trim()).toArray(String[]::new);
-                    Group group = new Group().setName(group_name);
+                    Programme programme = new Programme().setName(group_name);
                     Student student = new Student();
                     student.setCode(userParts[2]);
-                    student.setFirstname(userParts[0]);
-                    student.setLastname(userParts[1]);
-                    student.setGroup(group);
+                    student.setFullname(String.format("%1$s %2$s", userParts[0], userParts[1]));
+                    student.setProgramme(programme);
                     students.add(student);
                 }
             }

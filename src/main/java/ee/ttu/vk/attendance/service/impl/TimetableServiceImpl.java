@@ -1,7 +1,7 @@
 package ee.ttu.vk.attendance.service.impl;
 
 import com.google.common.collect.Lists;
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Subject;
 import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.domain.Timetable;
@@ -48,12 +48,12 @@ public class TimetableServiceImpl implements TimetableService {
         List<Timetable> test = timetableRepository.findAll();
         Map<String, Subject> subjectMap = timetables.stream().map(Timetable::getSubject).collect(Collectors.toMap(Subject::getCode, y -> y, (x, y) -> x));
         Map<String, Teacher> teacherMap = timetables.stream().map(Timetable::getTeacher).collect(Collectors.toMap(Teacher::getUsername, y -> y, (x, y) -> x));
-        Map<String, Group> groupMap = timetables.stream().map(Timetable::getGroup).collect(Collectors.toMap(Group::getName, y -> y, (x, y) -> x));
+        Map<String, Programme> groupMap = timetables.stream().map(Timetable::getProgramme).collect(Collectors.toMap(Programme::getName, y -> y, (x, y) -> x));
         subjectService.save(Lists.newArrayList(subjectMap.values()));
         teacherService.save(Lists.newArrayList(teacherMap.values()));
         groupService.save(Lists.newArrayList(groupMap.values()));
         for (Timetable timetable : timetables) {
-            timetable.setGroup(Optional.ofNullable(groupMap.get(timetable.getGroup().getName())).orElse(timetable.getGroup()));
+            timetable.setProgramme(Optional.ofNullable(groupMap.get(timetable.getProgramme().getName())).orElse(timetable.getProgramme()));
             timetable.setTeacher(Optional.ofNullable(teacherMap.get(timetable.getTeacher().getUsername())).orElse(timetable.getTeacher()));
             timetable.setSubject(Optional.ofNullable(subjectMap.get(timetable.getSubject().getCode())).orElse(timetable.getSubject()));
             test.stream()

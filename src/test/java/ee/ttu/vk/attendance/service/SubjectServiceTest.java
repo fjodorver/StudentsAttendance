@@ -2,10 +2,10 @@ package ee.ttu.vk.attendance.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import ee.ttu.vk.attendance.domain.Group;
+import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Subject;
 import ee.ttu.vk.attendance.domain.Timetable;
-import ee.ttu.vk.attendance.repository.GroupRepository;
+import ee.ttu.vk.attendance.repository.ProgrammeRepository;
 import ee.ttu.vk.attendance.repository.SubjectRepository;
 import ee.ttu.vk.attendance.repository.TeacherRepository;
 import ee.ttu.vk.attendance.service.impl.SubjectServiceImpl;
@@ -33,7 +33,7 @@ public class SubjectServiceTest {
     private SubjectRepository subjectRepository;
 
     @Mock
-    private GroupRepository groupRepository;
+    private ProgrammeRepository programmeRepository;
 
     @Mock
     private TeacherRepository teacherRepository;
@@ -54,14 +54,14 @@ public class SubjectServiceTest {
         given(subjectRepository.findByCode("1")).willReturn(subjects.get(0).setId(0L));
         given(subjectRepository.findByCode("2")).willReturn(subjects.get(1).setId(1L));
         given(subjectRepository.findByCode("3")).willReturn(subjects.get(2).setId(2L));
-        given(groupRepository.findByName("RDIR12")).willReturn(newGroup(0L, "RDIR12"));
+        given(programmeRepository.findByName("RDIR12")).willReturn(newGroup(0L, "RDIR12"));
         given(subjectRepository.save(anyListOf(Subject.class))).will(x -> x.getArguments()[0]);
         List<Subject> subjectList = subjectService.save(subjects);
 
         Assert.assertEquals(3, Sets.newHashSet(subjectList).size());
-        subjectList.forEach(x -> x.getTimetables().stream().map(Timetable::getGroup).forEach(y -> Assert.assertNotNull(y.getName())));
-        Assert.assertNotNull(subjectList.get(0).getTimetables().get(0).getGroup().getId());
-        Assert.assertNull(subjectList.get(0).getTimetables().get(1).getGroup().getId());
+        subjectList.forEach(x -> x.getTimetables().stream().map(Timetable::getProgramme).forEach(y -> Assert.assertNotNull(y.getName())));
+        Assert.assertNotNull(subjectList.get(0).getTimetables().get(0).getProgramme().getId());
+        Assert.assertNull(subjectList.get(0).getTimetables().get(1).getProgramme().getId());
     }
 
     private Subject newSubject(Long id, String code, String name, List<Timetable> timetables){
@@ -75,7 +75,7 @@ public class SubjectServiceTest {
         return subject;
     }
 
-    private Group newGroup(Long id, String name){
-        return new Group().setId(id).setName(name);
+    private Programme newGroup(Long id, String name){
+        return new Programme().setId(id).setName(name);
     }
 }

@@ -49,8 +49,8 @@ public class ChartPanel extends Panel {
 
     @Override
     protected void onModelChanged() {
-//        List<Number> presents = listModel.getObject().stream().map(x -> attendanceService.getPresentsNumber(subjectModel.getObject(), x.getGroup(), x)).collect(Collectors.toList());
-//        List<Number> absents = listModel.getObject().stream().map(x -> attendanceService.getAbsentsNumber(subjectModel.getObject(), x.getGroup(), x)).collect(Collectors.toList());
+//        List<Number> presents = listModel.getObject().stream().map(x -> attendanceService.getPresentsNumber(subjectModel.getObject(), x.getProgramme(), x)).collect(Collectors.toList());
+//        List<Number> absents = listModel.getObject().stream().map(x -> attendanceService.getAbsentsNumber(subjectModel.getObject(), x.getProgramme(), x)).collect(Collectors.toList());
 //        List<String> xCategories = listModel.getObject().stream().map(Student::getFullname).collect(Collectors.toList());
 //        Options options = new Options();
 //        options.setxAxis(new Axis().setCategories(xCategories));
