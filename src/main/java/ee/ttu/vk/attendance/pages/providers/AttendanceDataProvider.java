@@ -33,7 +33,7 @@ public class AttendanceDataProvider extends AbstractDataProvider<Attendance, Att
 
     @Override
     public Iterator<? extends Attendance> iterator(long first, long count) {
-        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "student.lastname");
+        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "student.fullname");
         if(filter.getId() == null){
             attendanceMap.clear();
             attendanceService.findAll(filter, pageable).forEach(x -> attendanceMap.put(x.getId(), x));
