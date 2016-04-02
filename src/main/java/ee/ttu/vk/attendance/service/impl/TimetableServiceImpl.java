@@ -45,7 +45,7 @@ public class TimetableServiceImpl implements TimetableService {
 
     @Override
     public List<Timetable> save(List<Timetable> timetables) {
-        List<Timetable> test = timetableRepository.findAll();
+        List<Timetable> tmpTimetable = timetableRepository.findAll();
         Map<String, Subject> subjectMap = timetables.stream().map(Timetable::getSubject).collect(Collectors.toMap(Subject::getCode, y -> y, (x, y) -> x));
         Map<String, Teacher> teacherMap = timetables.stream().map(Timetable::getTeacher).collect(Collectors.toMap(Teacher::getUsername, y -> y, (x, y) -> x));
         Map<String, Programme> groupMap = timetables.stream().map(Timetable::getProgramme).collect(Collectors.toMap(Programme::getName, y -> y, (x, y) -> x));
@@ -56,9 +56,7 @@ public class TimetableServiceImpl implements TimetableService {
             timetable.setProgramme(Optional.ofNullable(groupMap.get(timetable.getProgramme().getName())).orElse(timetable.getProgramme()));
             timetable.setTeacher(Optional.ofNullable(teacherMap.get(timetable.getTeacher().getUsername())).orElse(timetable.getTeacher()));
             timetable.setSubject(Optional.ofNullable(subjectMap.get(timetable.getSubject().getCode())).orElse(timetable.getSubject()));
-            test.stream()
-                    .filter(x -> x.getTeacher().getFullname().equals(timetable.getTeacher().getFullname()) && x.getStart().equals(timetable.getStart()))
-                    .findAny().ifPresent(x -> timetable.setId(x.getId()));
+            tmpTimetable.stream().filter(x -> compareTimetable(x, timetable)).findAny().ifPresent(x -> timetable.setId(x.getId()));
         }
         return timetableRepository.save(timetables);
     }
@@ -75,5 +73,12 @@ public class TimetableServiceImpl implements TimetableService {
         if(filter.getDate() == null) return timetableRepository.findAll(filter.getTeacher()).size();
         ZonedDateTime dateTime = ZonedDateTime.ofInstant(filter.getDate().toInstant(), ZoneId.systemDefault());
         return timetableRepository.count(dateTime.withHour(0), dateTime.withHour(23), filter.getTeacher());
+    }
+    private boolean compareTimetable(Timetable obj1, Timetable obj2){
+        boolean teacher = obj1.getTeacher().getFullname().equals(obj2.getTeacher().getFullname());
+        boolean start = obj1.getStart().toString().equals(obj2.getStart().toString());
+        boolean end = obj1.getEnd().toString().equals(obj2.getEnd().toString());
+        boolean programme = obj1.getProgramme().getName().equals(obj2.getProgramme().getName());
+        return !(teacher && start && end && programme);
     }
 }

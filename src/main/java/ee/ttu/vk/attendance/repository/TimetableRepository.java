@@ -36,4 +36,7 @@ public interface TimetableRepository extends JpaRepository<Timetable, Long> {
     //Todo Write count correctly
     @Query("select 1 from Timetable")
     Long count(Teacher teacher);
+
+    @Query("select count(t.id) from Timetable t where t=?1")
+    Long count(Timetable timetable);
 }
