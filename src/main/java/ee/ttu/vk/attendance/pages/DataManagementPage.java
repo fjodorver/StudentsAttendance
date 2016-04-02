@@ -18,6 +18,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -65,7 +66,11 @@ public class DataManagementPage extends AbstractPage {
         });
         add(new FileUploadPanel("uploadPanel", (target, model) -> {
             studentModel.getObject().clear();
-            studentModel.getObject().addAll(studentService.parse(model.getObject().getInputStream()));
+            try {
+                studentModel.getObject().addAll(studentService.parse(model.getObject().getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             panel.appendShowDialogJavaScript(target);
             target.add(panel);
         }));

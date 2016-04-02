@@ -14,5 +14,6 @@ import java.util.List;
 public interface StudentService extends IReadService<Student>, ISaveService<Student>, IProviderService<Student, Student> {
     List<Student> parse(InputStream inputStream);
     List<Student> findAll(Subject subject);
+    List<Student> findAll(Programme programme);
     List<Student> findAll(List<Programme> programmes, Pageable pageable);
 }

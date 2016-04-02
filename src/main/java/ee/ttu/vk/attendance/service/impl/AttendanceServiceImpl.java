@@ -64,16 +64,11 @@ public class AttendanceServiceImpl implements AttendanceService {
                     .map(x -> new Attendance().setStudent(student).setTimetable(x))
                     .collect(Collectors.toList()));
         }
-    attendanceRepository.save(attendanceList);
-}
-
-    @Override
-    public int getPresentsNumber(Student student) {
-        return Optional.ofNullable(attendanceRepository.countByStatus(student,  Status.PRESENT)).orElse(0);
+        attendanceRepository.save(attendanceList);
     }
 
     @Override
-    public int getAbsentsNumber(Student student) {
-        return Optional.ofNullable(attendanceRepository.countByStatus(student, Status.ABSENT)).orElse(0);
+    public List<Attendance> findAll(Attendance attendance) {
+        return attendanceRepository.findByStudent(Optional.ofNullable(attendance.getStudent()).orElse(new Student()));
     }
 }

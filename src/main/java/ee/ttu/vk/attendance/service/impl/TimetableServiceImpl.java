@@ -65,12 +65,14 @@ public class TimetableServiceImpl implements TimetableService {
 
     @Override
     public List<Timetable> findAll(TimetableFilter filter, Pageable pageable) {
+        if(filter.getDate() == null) return timetableRepository.findAll(filter.getTeacher());
         ZonedDateTime dateTime = ZonedDateTime.ofInstant(filter.getDate().toInstant(), ZoneId.systemDefault());
         return timetableRepository.find(dateTime.withHour(0), dateTime.withHour(23), filter.getTeacher(), pageable);
     }
 
     @Override
     public long size(TimetableFilter filter) {
+        if(filter.getDate() == null) return timetableRepository.findAll(filter.getTeacher()).size();
         ZonedDateTime dateTime = ZonedDateTime.ofInstant(filter.getDate().toInstant(), ZoneId.systemDefault());
         return timetableRepository.count(dateTime.withHour(0), dateTime.withHour(23), filter.getTeacher());
     }

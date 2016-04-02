@@ -25,13 +25,7 @@ public class FileUploadPanel extends Panel {
         form.add(new AjaxSubmitLink("upload", form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                Optional.ofNullable(docUploadField.getFileUpload()).ifPresent(x -> {
-                    try {
-                        action.onSubmit(target, new Model<>(x));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+                Optional.ofNullable(docUploadField.getFileUpload()).ifPresent(x ->action.onSubmit(target, new Model<>(x)));
             }
         });
         add(form, new Label("header", new ResourceModel("upload-panel.header")));

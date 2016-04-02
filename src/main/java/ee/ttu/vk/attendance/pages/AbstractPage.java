@@ -13,7 +13,7 @@ import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.pages.login.LogOut;
 import ee.ttu.vk.attendance.pages.menu.VerticalMenu;
 import ee.ttu.vk.attendance.pages.settings.Settings;
-import ee.ttu.vk.attendance.pages.statistics.test.StatisticsPage;
+import ee.ttu.vk.attendance.pages.statistics.StatisticsPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;

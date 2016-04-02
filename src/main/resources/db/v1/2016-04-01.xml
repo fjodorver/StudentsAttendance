@@ -114,7 +114,6 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
-
     </changeSet>
     <changeSet id="added Foreign Keys" author="fjodor">
         <addForeignKeyConstraint baseTableName="student" baseColumnNames="programme_id"
@@ -154,10 +153,5 @@
             <column name="password">ueZl0I0JAGFM0iaqXstIvQ==</column>
             <column name="role">ADMIN</column>
         </insert>
-    </changeSet>
-    <changeSet id="create view with timetable count" author="vadim">
-        <createView viewName="TimetableCount">
-            SELECT DISTINCT(rownum) FROM TIMETABLE GROUP BY SUBJECT_ID, PROGRAMME_ID;
-        </createView>
     </changeSet>
 </databaseChangeLog>

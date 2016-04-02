@@ -1,10 +1,7 @@
 package ee.ttu.vk.attendance.service.impl;
 
 import com.google.common.collect.Lists;
-import ee.ttu.vk.attendance.domain.Programme;
-import ee.ttu.vk.attendance.domain.Student;
-import ee.ttu.vk.attendance.domain.Subject;
-import ee.ttu.vk.attendance.domain.Timetable;
+import ee.ttu.vk.attendance.domain.*;
 import ee.ttu.vk.attendance.repository.ProgrammeRepository;
 import ee.ttu.vk.attendance.repository.StudentRepository;
 import ee.ttu.vk.attendance.service.StudentService;
@@ -43,6 +40,11 @@ public class StudentServiceImpl implements StudentService {
         List<Programme> programmes = Lists.newArrayList();
         programmes.addAll(subject.getTimetables().stream().map(Timetable::getProgramme).collect(Collectors.toList()));
         return studentRepository.findAllByProgrammeIn(programmes);
+    }
+
+    @Override
+    public List<Student> findAll(Programme programme) {
+        return studentRepository.findAllByProgramme(programme);
     }
 
     @Override

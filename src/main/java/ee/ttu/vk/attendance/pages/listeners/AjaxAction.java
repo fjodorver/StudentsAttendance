@@ -8,5 +8,5 @@ import java.io.Serializable;
 
 @FunctionalInterface
 public interface AjaxAction<T> extends Serializable {
-    void onSubmit(AjaxRequestTarget target, IModel<T> model) throws IOException;
+    void onSubmit(AjaxRequestTarget target, IModel<T> model);
 }

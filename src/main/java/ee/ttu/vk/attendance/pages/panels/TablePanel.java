@@ -2,10 +2,14 @@ package ee.ttu.vk.attendance.pages.panels;
 
 import com.google.common.collect.Lists;
 import ee.ttu.vk.attendance.pages.components.BootstrapAjaxNavigationToolbar;
+import ee.ttu.vk.attendance.pages.components.CustomLink;
+import ee.ttu.vk.attendance.pages.listeners.AjaxAction;
+import ee.ttu.vk.attendance.pages.listeners.AjaxOnClick;
 import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
@@ -15,6 +19,8 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.Filte
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilteredPropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.TextFilter;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -42,6 +48,15 @@ public class TablePanel<T, F> extends Panel {
         dataTable.addBottomToolbar(new NoRecordsToolbar(dataTable));
         filterForm.add(dataTable);
         add(filterForm);
+    }
+
+    public void addLink(String name, String propertyExpression, AjaxAction<T> ajaxAction){
+        columnList.add(new PropertyColumn<T, String>(Model.of(name), propertyExpression){
+            @Override
+            public void populateItem(Item<ICellPopulator<T>> item, String componentId, IModel<T> rowModel) {
+                item.add(new CustomLink<>(componentId, new PropertyModel<>(rowModel, propertyExpression), target -> ajaxAction.onSubmit(target, rowModel)));
+            }
+        });
     }
 
     public void addColumn(String name, String propertyExpression, String cssClass){

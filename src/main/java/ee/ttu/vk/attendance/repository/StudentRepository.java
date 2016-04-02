@@ -29,6 +29,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @EntityGraph(value = "student.all", type = EntityGraph.EntityGraphType.LOAD)
     Page<Student> findAll(String code, String fullname, String programme, Pageable pageable);
 
+    List<Student> findAllByProgramme(Programme programme);
+
     Student findByCode(String code);
 
     @Query("select count(s) from Student s where s.code like concat('%',?1,'%') and s.fullname like concat('%',?2,'%') and s.programme.name like concat('%',?3,'%')")

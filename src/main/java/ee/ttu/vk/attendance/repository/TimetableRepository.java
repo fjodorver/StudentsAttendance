@@ -23,10 +23,17 @@ public interface TimetableRepository extends JpaRepository<Timetable, Long> {
 
     List<Timetable> findByProgramme(Programme programme);
 
+    @Query("select new Timetable (t.subject, t.programme) from Timetable t where t.teacher = ?1 group by t.subject, t.programme")
+    List<Timetable> findAll(Teacher teacher);
+
     @EntityGraph(value = "timetable.detail", type = EntityGraph.EntityGraphType.LOAD)
     @Query("select t from Timetable t where t.start between ?1 and ?2 and t.teacher=?3")
     List<Timetable> find(ZonedDateTime start, ZonedDateTime end, Teacher teacher, Pageable pageable);
 
     @Query("select count(t.id) from Timetable t where t.start between ?1 and ?2 and t.teacher=?3")
     Long count(ZonedDateTime start, ZonedDateTime end, Teacher teacher);
+
+    //Todo Write count correctly
+    @Query("select 1 from Timetable")
+    Long count(Teacher teacher);
 }

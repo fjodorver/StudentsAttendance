@@ -15,6 +15,15 @@ import java.util.Objects;
 @Table(name = "timetable")
 @NamedEntityGraph(name = "timetable.detail", attributeNodes = {@NamedAttributeNode("subject"), @NamedAttributeNode("programme"), @NamedAttributeNode("teacher")})
 public class Timetable implements Serializable {
+
+    public Timetable() {
+    }
+
+    public Timetable(Subject subject, Programme programme) {
+        this.subject = subject;
+        this.programme = programme;
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
