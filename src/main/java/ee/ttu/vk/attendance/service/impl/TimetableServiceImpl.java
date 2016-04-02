@@ -81,4 +81,9 @@ public class TimetableServiceImpl implements TimetableService {
         boolean programme = obj1.getProgramme().getName().equals(obj2.getProgramme().getName());
         return !(teacher && start && end && programme);
     }
+
+    @Override
+    public void clearAll() {
+        timetableRepository.findAll().forEach(x->timetableRepository.delete(x));
+    }
 }
