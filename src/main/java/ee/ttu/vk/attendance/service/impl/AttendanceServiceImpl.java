@@ -58,7 +58,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public void GenerateAndSaveAttendances(Programme programme) {
+    public void generateAndSaveAttendances(Programme programme) {
         List<Student> students = studentRepository.findAllByProgramme(programme);
         Map<Student, List<Attendance>> map = students.stream().map(x -> attendanceRepository.findByStudent(x).stream().collect(Collectors.toList())).flatMap(Collection::stream).collect(Collectors.groupingBy(Attendance::getStudent));
         for (Student student : students) {
@@ -72,12 +72,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public List<Attendance> findAll(Attendance attendance) {
-        return attendanceRepository.findByStudent(Optional.ofNullable(attendance.getStudent()).orElse(new Student()));
-    }
-
-    private boolean attendanceCompare(Attendance obj1, Attendance obj2){
-        boolean timetable = obj1.getTimetable().equals(obj2.getTimetable());
-        boolean student = obj1.getStudent().equals(obj2.getStudent());
-        return timetable && student;
+        return attendanceRepository.findAll(attendance.getStudent(), attendance.getTimetable().getSubject());
     }
 }

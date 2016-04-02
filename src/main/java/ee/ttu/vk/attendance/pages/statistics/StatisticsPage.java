@@ -46,7 +46,7 @@ public class StatisticsPage extends AbstractPage {
         tablePanel.addLink("Subject", "subject", (target, model) -> {
             Timetable timetable = model.getObject();
             Set<Attendance> attendances = Sets.newHashSet();
-            studentService.findAll(timetable.getProgramme()).forEach(x -> attendances.addAll(attendanceService.findAll(new Attendance().setStudent(x))));
+            studentService.findAll(timetable.getProgramme()).forEach(x -> attendances.addAll(attendanceService.findAll(new Attendance().setStudent(x).setTimetable(timetable))));
             map.clear();
             map.putAll(attendances.stream().collect(Collectors.groupingBy(Attendance::getStudent)));
             chartPanel.onModelChanged();;

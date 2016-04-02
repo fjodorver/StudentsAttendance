@@ -10,5 +10,5 @@ import java.util.List;
  * Created by strukov on 3/24/16.
  */
 public interface AttendanceService extends ISaveService<Attendance>, IProviderService<Attendance, Attendance>, IFilterService<Attendance, Attendance> {
-    void GenerateAndSaveAttendances(Programme programme);
+    void generateAndSaveAttendances(Programme programme);
 }
