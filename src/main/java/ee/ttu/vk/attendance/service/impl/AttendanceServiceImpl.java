@@ -56,7 +56,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public void GenerateAndSaveAttendances(Programme programme) {
+    public void generateAndSaveAttendances(Programme programme) {
         List<Attendance> attendanceList = Lists.newArrayList();
         Map<String, List<Student>> studentListMap = studentRepository.findAll().stream().collect(Collectors.groupingBy(x -> x.getProgramme().getName()));
         for (Student student : Optional.ofNullable(studentListMap.get(programme.getName())).orElse(Lists.newArrayList())) {
@@ -65,6 +65,12 @@ public class AttendanceServiceImpl implements AttendanceService {
                     .collect(Collectors.toList()));
         }
         attendanceRepository.save(attendanceList);
+    }
+
+    @Override
+    public void clearAll() {
+        attendanceRepository.findAll().forEach(x->attendanceRepository.delete(x));
+
     }
 
     @Override

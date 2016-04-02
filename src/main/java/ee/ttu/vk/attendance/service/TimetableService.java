@@ -10,5 +10,5 @@ import java.util.List;
  * Created by fjodor on 5.03.16.
  */
 public interface TimetableService extends IProviderService<Timetable, TimetableFilter>, ISaveService<Timetable> {
-
+    void clearAll();
 }

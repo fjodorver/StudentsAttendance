@@ -76,4 +76,9 @@ public class TimetableServiceImpl implements TimetableService {
         ZonedDateTime dateTime = ZonedDateTime.ofInstant(filter.getDate().toInstant(), ZoneId.systemDefault());
         return timetableRepository.count(dateTime.withHour(0), dateTime.withHour(23), filter.getTeacher());
     }
+
+    @Override
+    public void clearAll() {
+        timetableRepository.findAll().forEach(x->timetableRepository.delete(x));
+    }
 }
