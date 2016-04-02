@@ -7,6 +7,7 @@
             <New class="org.apache.commons.dbcp.BasicDataSource">
                 <Set name="driverClassName">org.h2.Driver</Set>
                 <Set name="url">jdbc:h2:~/liquibase</Set>
+                <Set name="maxActive">50</Set>
             </New>
         </Arg>
     </New>

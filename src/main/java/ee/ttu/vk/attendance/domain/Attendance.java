@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "attendance")
+@NamedEntityGraph(name = "attendance.all", attributeNodes = {@NamedAttributeNode("student"), @NamedAttributeNode("timetable")})
 public class Attendance implements Serializable{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

@@ -21,6 +21,7 @@ public interface TimetableRepository extends JpaRepository<Timetable, Long> {
     @Query("select t from Timetable t where t.programme = ?1 and t.subject = ?2 and t.teacher = ?3 and t.start = ?4 and t.end = ?5")
     Timetable find(Programme programme, Subject subject, Teacher teacher, ZonedDateTime start, ZonedDateTime end);
 
+    @EntityGraph(value = "timetable.detail", type = EntityGraph.EntityGraphType.LOAD)
     List<Timetable> findByProgramme(Programme programme);
 
     @Query("select new Timetable (t.subject, t.programme) from Timetable t where t.teacher = ?1 group by t.subject, t.programme")

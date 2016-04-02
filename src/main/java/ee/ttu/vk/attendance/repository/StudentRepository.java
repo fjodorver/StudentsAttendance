@@ -29,6 +29,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @EntityGraph(value = "student.all", type = EntityGraph.EntityGraphType.LOAD)
     Page<Student> findAll(String code, String fullname, String programme, Pageable pageable);
 
+    @EntityGraph(value = "student.all", type = EntityGraph.EntityGraphType.LOAD)
     List<Student> findAllByProgramme(Programme programme);
 
     Student findByCode(String code);

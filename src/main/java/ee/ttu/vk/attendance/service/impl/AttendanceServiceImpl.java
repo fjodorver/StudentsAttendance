@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import ee.ttu.vk.attendance.domain.Attendance;
 import ee.ttu.vk.attendance.domain.Programme;
 import ee.ttu.vk.attendance.domain.Student;
+import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.enums.Status;
 import ee.ttu.vk.attendance.repository.AttendanceRepository;
 import ee.ttu.vk.attendance.repository.StudentRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,18 +59,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public void GenerateAndSaveAttendances(Programme programme) {
-        List<Attendance> attendanceList = Lists.newArrayList();
-        Map<String, List<Student>> studentListMap = studentRepository.findAll().stream().collect(Collectors.groupingBy(x -> x.getProgramme().getName()));
-        for (Student student : Optional.ofNullable(studentListMap.get(programme.getName())).orElse(Lists.newArrayList())) {
-            attendanceList.addAll(timetableRepository.findByProgramme(programme).stream()
-                    .map(x -> new Attendance().setStudent(student).setTimetable(x))
-                    .collect(Collectors.toList()));
+        List<Student> students = studentRepository.findAllByProgramme(programme);
+        Map<Student, List<Attendance>> map = students.stream().map(x -> attendanceRepository.findByStudent(x).stream().collect(Collectors.toList())).flatMap(Collection::stream).collect(Collectors.groupingBy(Attendance::getStudent));
+        for (Student student : students) {
+            if(!map.containsKey(student)){
+                map.put(student, timetableRepository.findByProgramme(programme).stream().map(x -> new Attendance().setStudent(student).setTimetable(x)).collect(Collectors.toList()));
+            }
+            else map.remove(student);
         }
-        attendanceRepository.save(attendanceList);
+        attendanceRepository.save(map.values().stream().flatMap(Collection::stream).collect(Collectors.toList()));
     }
 
     @Override
     public List<Attendance> findAll(Attendance attendance) {
         return attendanceRepository.findByStudent(Optional.ofNullable(attendance.getStudent()).orElse(new Student()));
+    }
+
+    private boolean attendanceCompare(Attendance obj1, Attendance obj2){
+        boolean timetable = obj1.getTimetable().equals(obj2.getTimetable());
+        boolean student = obj1.getStudent().equals(obj2.getStudent());
+        return timetable && student;
     }
 }

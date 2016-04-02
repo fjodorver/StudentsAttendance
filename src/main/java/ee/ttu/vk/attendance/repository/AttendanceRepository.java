@@ -16,12 +16,13 @@ import java.util.List;
  */
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
-    @EntityGraph(value = "attendance.detail", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = "attendance.all", type = EntityGraph.EntityGraphType.LOAD)
     @Query("select a from Attendance a where a.timetable = ?1")
     Page<Attendance> findAll(Timetable timetable, Pageable pageable);
 
     List<Attendance> findByTimetable(Timetable timetable, Pageable pageable);
 
+    @EntityGraph(value = "attendance.all", type = EntityGraph.EntityGraphType.LOAD)
     List<Attendance> findByStudent(Student student);
 
     @Query("select count(a) from Attendance a where a.timetable = ?1")
