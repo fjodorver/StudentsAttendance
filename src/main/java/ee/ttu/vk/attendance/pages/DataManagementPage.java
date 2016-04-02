@@ -1,17 +1,24 @@
 package ee.ttu.vk.attendance.pages;
 
 import com.google.common.collect.Lists;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbedPanel;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.attendance.domain.Student;
 import ee.ttu.vk.attendance.domain.Subject;
 import ee.ttu.vk.attendance.domain.Teacher;
+import ee.ttu.vk.attendance.pages.components.BootstrapIndicatingAjaxLink;
 import ee.ttu.vk.attendance.pages.panels.FileUploadPanel;
 import ee.ttu.vk.attendance.pages.panels.StudentsPanel;
 import ee.ttu.vk.attendance.pages.panels.TablePanel;
 import ee.ttu.vk.attendance.pages.providers.StudentDataProvider;
 import ee.ttu.vk.attendance.pages.providers.SubjectDataProvider;
 import ee.ttu.vk.attendance.pages.providers.TeacherDataProvider;
+import ee.ttu.vk.attendance.service.AttendanceService;
+import ee.ttu.vk.attendance.service.ScheduleService;
 import ee.ttu.vk.attendance.service.StudentService;
+import ee.ttu.vk.attendance.service.TimetableService;
+import net.fortuna.ical4j.data.ParserException;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.ResourceModel;
@@ -27,6 +34,12 @@ import java.util.List;
 public class DataManagementPage extends AbstractPage {
     @SpringBean
     private StudentService studentService;
+    @SpringBean
+    private AttendanceService attendanceService;
+    @SpringBean
+    private TimetableService timetableService;
+    @SpringBean
+    private ScheduleService scheduleService;
 
     private StudentsPanel panel;
     private AjaxBootstrapTabbedPanel<AbstractTab> tabbedPanel;
@@ -64,6 +77,19 @@ public class DataManagementPage extends AbstractPage {
                 return teachersPanel;
             }
         });
+        add(new BootstrapIndicatingAjaxLink<>("clear", Buttons.Type.Danger, (x)->{
+            attendanceService.clearAll();
+            timetableService.clearAll();
+        }).setIconType(FontAwesomeIconType.trash));
+        add(new BootstrapIndicatingAjaxLink<>("sync", Buttons.Type.Primary, (x)->{
+            try {
+                scheduleService.updateGroups();
+                scheduleService.update();
+            } catch (IOException | ParserException e) {
+                e.printStackTrace();
+            }
+        }).setIconType(FontAwesomeIconType.refresh));
+
         add(new FileUploadPanel("uploadPanel", (target, model) -> {
             studentModel.getObject().clear();
             try {
