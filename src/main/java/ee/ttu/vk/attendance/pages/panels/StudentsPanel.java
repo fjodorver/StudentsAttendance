@@ -34,7 +34,7 @@ public class StudentsPanel extends Modal<List<Student>> {
         TablePanel<Student, Student> studentsPanel = new TablePanel<>("students", new StudentDataProvider(){
             @Override
             public Iterator<? extends Student> iterator(long first, long count) {
-                return model.getObject().subList((int)(first/count), (int)count).iterator();
+                return model.getObject().subList((int) first, (int)(first + count)).iterator();
             }
 
             @Override
