@@ -40,8 +40,7 @@ public class AbstractPage extends WebPage {
 
         Roles roles = CustomAuthenticatedWebSession.getSession().getRoles();
 
-        addMenuItem(TimetablesPage.class, "navbar.menu.dashboard", FontAwesomeIconType.table, CustomAuthenticatedWebSession.get().isSignedIn());
-        addMenuItem(DashboardPage.class, "navbar.menu.dashboard", FontAwesomeIconType.dashboard, CustomAuthenticatedWebSession.get().isSignedIn());
+        addMenuItem(TimetablesPage.class, "navbar.menu.timetables", FontAwesomeIconType.table, roles.hasRole(Roles.USER));
         addMenuItem(StatisticsPage.class, "navbar.menu.statistics", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
         addMenuItem(DataManagementPage.class, "navbar.menu.data-management", FontAwesomeIconType.database, roles.hasRole(Roles.ADMIN));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
