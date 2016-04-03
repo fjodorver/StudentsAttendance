@@ -72,8 +72,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public void clearAll() {
-        attendanceRepository.findAll().forEach(x->attendanceRepository.delete(x));
-
+        attendanceRepository.deleteAllInBatch();
     }
 
     @Override

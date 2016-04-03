@@ -84,6 +84,6 @@ public class TimetableServiceImpl implements TimetableService {
 
     @Override
     public void clearAll() {
-        timetableRepository.findAll().forEach(x->timetableRepository.delete(x));
+        timetableRepository.deleteAllInBatch();
     }
 }
