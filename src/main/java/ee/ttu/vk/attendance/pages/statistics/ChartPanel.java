@@ -1,15 +1,25 @@
 package ee.ttu.vk.attendance.pages.statistics;
 
+import com.google.common.collect.Lists;
 import com.googlecode.wickedcharts.highcharts.options.*;
+import com.googlecode.wickedcharts.highcharts.options.Cursor;
+import com.googlecode.wickedcharts.highcharts.options.color.HexColor;
+import com.googlecode.wickedcharts.highcharts.options.color.HighchartsColor;
+import com.googlecode.wickedcharts.highcharts.options.drilldown.DrilldownPoint;
+import com.googlecode.wickedcharts.highcharts.options.series.PointSeries;
 import com.googlecode.wickedcharts.highcharts.options.series.SimpleSeries;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import ee.ttu.vk.attendance.domain.Attendance;
 import ee.ttu.vk.attendance.domain.Student;
+import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.enums.Status;
+import ee.ttu.vk.attendance.pages.statistics.options.BaseOptions;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.util.MapModel;
 
 import java.awt.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,6 +30,7 @@ import java.util.stream.Collectors;
 public class ChartPanel extends Panel {
 
     private Chart chart;
+    private BaseOptions baseOptions = new BaseOptions();
 
     private MapModel<Student, List<Attendance>> mapModel;
 
@@ -27,35 +38,56 @@ public class ChartPanel extends Panel {
         super(id);
         this.mapModel = mapModel;
         setOutputMarkupId(true);
-        add(chart = new Chart("chart", getOptions(new Options())));
+        add(chart = new Chart("chart", baseOptions));
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         chart.getOptions().setTitle(new Title().setText(title));
-    }
-
-    private Options getOptions(Options options) {
-        options.setChartOptions(new ChartOptions().setType(SeriesType.BAR));
-        options.getChartOptions().setHeight(600);
-        options.getChartOptions().setBorderWidth(2);
-        options.getChartOptions().setBorderColor(Color.gray);
-        options.setExporting(new ExportingOptions().setEnabled(false));
-        options.setPlotOptions(new PlotOptionsChoice().setSeries(new PlotOptions().setStacking(Stacking.PERCENT)));
-        if(mapModel.getObject().size() == 0) options.setTitle(new Title().setText("Please select Subject"));
-        return options;
     }
 
     @Override
     protected void onModelChanged() {
-        Options options = new Options();
+        baseOptions = new BaseOptions();
         Map<Student, List<Attendance>> map = mapModel.getObject();
-        options.setxAxis(new Axis().setCategories(map.keySet().stream().map(Student::getFullname).collect(Collectors.toList())));
-        options.addSeries(new SimpleSeries().setName("Inactive").setData(map.entrySet().stream().map(x -> calcResult(x.getValue(), Status.INACTIVE)).collect(Collectors.toList())));
-        options.addSeries(new SimpleSeries().setName("Absents").setData(map.entrySet().stream().map(x -> calcResult(x.getValue(), Status.ABSENT)).collect(Collectors.toList())));
-        options.addSeries(new SimpleSeries().setName("Presents").setData(map.entrySet().stream().map(x -> calcResult(x.getValue(), Status.PRESENT)).collect(Collectors.toList())));
-        chart.setOptions(getOptions(options));
+        PointSeries absents = new PointSeries();
+        PointSeries presents = new PointSeries();
+        PointSeries inactive = new PointSeries();
+        for (Student student : map.keySet()) {
+            Map<Timetable, Status> statusMap = map.get(student).stream().collect(Collectors.toMap(Attendance::getTimetable, Attendance::getStatus));
+            inactive.addPoint(new DrilldownPoint(baseOptions, new StudentDrillDownOptions(statusMap))
+                    .setY(map.get(student).stream().filter(x -> x.getStatus() == Status.INACTIVE).count()));
+            absents.addPoint(new DrilldownPoint(baseOptions, new StudentDrillDownOptions(statusMap))
+                    .setY(map.get(student).stream().filter(x -> x.getStatus() == Status.ABSENT).count()));
+            presents.addPoint(new DrilldownPoint(baseOptions, new StudentDrillDownOptions(statusMap))
+                    .setY(map.get(student).stream().filter(x -> x.getStatus() == Status.PRESENT).count()));
+        }
+        baseOptions.setPlotOptions(new PlotOptionsChoice().setSeries(new PlotOptions().setStacking(Stacking.PERCENT)).setColumn(new PlotOptions().setCursor(Cursor.POINTER)));
+        baseOptions.setxAxis(new Axis().setCategories(map.keySet().stream().map(Student::getFullname).collect(Collectors.toList())));
+        baseOptions.addSeries(inactive);
+        baseOptions.addSeries(absents);
+        baseOptions.addSeries(presents);
+        chart.setOptions(baseOptions);
     }
-    private Number calcResult(List<Attendance> attendances, Status status){
-        return (double)attendances.stream().filter(x -> x.getStatus() == status).count();
+
+    private class StudentDrillDownOptions extends Options {
+        StudentDrillDownOptions(Map<Timetable, Status> map) {
+            copyFrom(baseOptions);
+            PointSeries pointSeries = new PointSeries();
+            map.values().forEach(x -> {
+                switch (x){
+                    case PRESENT:
+                        pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY((100)));
+                        break;
+                    case ABSENT:
+                        pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY((0)));
+                        break;
+                    case INACTIVE:
+                        pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY((50)));
+                        break;
+                }
+            });
+            setxAxis(new Axis().setCategories(map.keySet().stream().map(x -> x.getStart().format(DateTimeFormatter.ISO_DATE)).collect(Collectors.toList())));
+            addSeries(pointSeries);
+        }
     }
 }
