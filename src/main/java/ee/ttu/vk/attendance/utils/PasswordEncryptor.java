@@ -14,7 +14,7 @@ private BasicTextEncryptor passwordEncryptor;
         passwordEncryptor.setPassword("jasypt");
     }
 
-    public  String encryptPassword(String password){
+    public String encryptPassword(String password){
         return passwordEncryptor.encrypt(password);
     }
 
