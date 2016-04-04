@@ -48,6 +48,7 @@ public class StudentsPanel extends Modal<List<Student>> {
         add(studentsPanel);
         addButton(new BootstrapIndicatingAjaxLink<>("button", Buttons.Type.Primary, (x) -> {
             studentService.save(model.getObject());
+            studentService.findAll().forEach(y->attendanceService.generateAndSaveAttendances(y.getProgramme()));
             close(x);
         }).setIconType(FontAwesomeIconType.save));
     }
