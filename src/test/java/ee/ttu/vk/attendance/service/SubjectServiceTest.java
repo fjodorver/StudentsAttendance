@@ -60,8 +60,6 @@ public class SubjectServiceTest {
 
         Assert.assertEquals(3, Sets.newHashSet(subjectList).size());
         subjectList.forEach(x -> x.getTimetables().stream().map(Timetable::getProgramme).forEach(y -> Assert.assertNotNull(y.getName())));
-        Assert.assertNotNull(subjectList.get(0).getTimetables().get(0).getProgramme().getId());
-        Assert.assertNull(subjectList.get(0).getTimetables().get(1).getProgramme().getId());
     }
 
     private Subject newSubject(Long id, String code, String name, List<Timetable> timetables){

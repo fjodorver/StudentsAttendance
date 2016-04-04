@@ -14,12 +14,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyListOf;
 
 /**
  * Created by fjodor on 1.03.16.
@@ -55,21 +59,19 @@ public class StudentServiceTest {
     @Test
     public void testSave() throws Exception {
         List<Student> studentList = Lists.newArrayList();
+        List<Programme> programmes = Lists.newArrayList(new Programme().setId(0L).setName("RDIR61"), new Programme().setId(0L).setName("RDIR12"));
         studentList.add(newStudent(null, "131000", "Abdul", "Al Hazred", new Programme().setName("RDIR61")));
         studentList.add(newStudent(null, "131001", "Vadim", "Strukov", new Programme().setName("RDIR61")));
         studentList.add(newStudent(null, "131002", "Iron", "Man", new Programme().setName("RDIR12")));
         studentList.add(newStudent(null, "131003", "Kino", "Man", new Programme().setName("RDIR12")));
-        given(studentRepository.findByCode("131000")).willReturn(students.get(0));
-        given(studentRepository.findByCode("131001")).willReturn(students.get(1));
-        given(studentRepository.findByCode("131002")).willReturn(students.get(2));
-        given(programmeRepository.findByName("RDIR61")).willReturn(new Programme().setId(0L).setName("RDIR61"));
-        given(studentRepository.save(any(Student.class))).will(x -> x.getArguments()[0]);
+        given(studentRepository.findAll()).willReturn(students);
+        given(programmeRepository.findAll()).willReturn(programmes);
+        given(studentRepository.save(anyListOf(Student.class))).will(x -> x.getArguments()[0]);
         Student[] studentArray = Iterators.toArray(studentService.save(studentList).iterator(), Student.class);
         Assert.assertArrayEquals(Iterables.toArray(studentList, Student.class), studentArray);
         Assert.assertNotNull(studentArray[1].getId());
         Assert.assertNull(studentArray[3].getId());
         Assert.assertNotNull(studentArray[1].getProgramme().getId());
-        Assert.assertNull(studentArray[3].getProgramme().getId());
     }
 
     private Student newStudent(Long id, String code, String firstname, String lastname, Programme programme){
