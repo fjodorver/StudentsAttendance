@@ -1,9 +1,8 @@
 package ee.ttu.vk.attendance.pages.statistics.options;
 
-import com.googlecode.wickedcharts.highcharts.options.ChartOptions;
-import com.googlecode.wickedcharts.highcharts.options.ExportingOptions;
-import com.googlecode.wickedcharts.highcharts.options.Options;
-import com.googlecode.wickedcharts.highcharts.options.SeriesType;
+import com.googlecode.wickedcharts.highcharts.options.*;
+import com.googlecode.wickedcharts.highcharts.options.Cursor;
+import com.googlecode.wickedcharts.highcharts.options.color.HighchartsColor;
 
 import java.awt.*;
 
@@ -14,8 +13,8 @@ public class BaseOptions extends Options {
     public BaseOptions() {
         setChartOptions(new ChartOptions().setType(SeriesType.BAR));
         getChartOptions().setHeight(800);
-        getChartOptions().setBorderWidth(2);
         getChartOptions().setBorderColor(Color.gray);
         setExporting(new ExportingOptions().setEnabled(false));
+        setPlotOptions(new PlotOptionsChoice().setSeries(new PlotOptions().setStacking(Stacking.PERCENT)));
     }
 }

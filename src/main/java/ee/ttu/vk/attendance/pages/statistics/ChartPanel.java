@@ -6,8 +6,8 @@ import com.googlecode.wickedcharts.highcharts.options.Cursor;
 import com.googlecode.wickedcharts.highcharts.options.color.HexColor;
 import com.googlecode.wickedcharts.highcharts.options.color.HighchartsColor;
 import com.googlecode.wickedcharts.highcharts.options.drilldown.DrilldownPoint;
-import com.googlecode.wickedcharts.highcharts.options.series.PointSeries;
-import com.googlecode.wickedcharts.highcharts.options.series.SimpleSeries;
+import com.googlecode.wickedcharts.highcharts.options.series.*;
+import com.googlecode.wickedcharts.highcharts.options.series.Point;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import ee.ttu.vk.attendance.domain.Attendance;
 import ee.ttu.vk.attendance.domain.Student;
@@ -22,7 +22,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by fjodor on 3.03.16.
@@ -53,41 +55,36 @@ public class ChartPanel extends Panel {
         PointSeries presents = new PointSeries();
         PointSeries inactive = new PointSeries();
         for (Student student : map.keySet()) {
-            Map<Timetable, Status> statusMap = map.get(student).stream().collect(Collectors.toMap(Attendance::getTimetable, Attendance::getStatus));
-            inactive.addPoint(new DrilldownPoint(baseOptions, new StudentDrillDownOptions(statusMap))
-                    .setY(map.get(student).stream().filter(x -> x.getStatus() == Status.INACTIVE).count()));
-            absents.addPoint(new DrilldownPoint(baseOptions, new StudentDrillDownOptions(statusMap))
-                    .setY(map.get(student).stream().filter(x -> x.getStatus() == Status.ABSENT).count()));
-            presents.addPoint(new DrilldownPoint(baseOptions, new StudentDrillDownOptions(statusMap))
-                    .setY(map.get(student).stream().filter(x -> x.getStatus() == Status.PRESENT).count()));
+            Map<Status, List<Attendance>> statusMap = map.get(student).stream().collect(Collectors.groupingBy(Attendance::getStatus));
+            inactive.addPoint(getPoint(String.format("%1$s[%2$s]:", "Inactive", student), statusMap, Status.INACTIVE));
+            absents.addPoint(getPoint(String.format("%1$s[%2$s]:", "Absents", student), statusMap, Status.ABSENT));
+            presents.addPoint(getPoint(String.format("%1$s[%2$s]:", "Presents", student), statusMap, Status.PRESENT));
         }
-        baseOptions.setPlotOptions(new PlotOptionsChoice().setSeries(new PlotOptions().setStacking(Stacking.PERCENT)).setColumn(new PlotOptions().setCursor(Cursor.POINTER)));
         baseOptions.setxAxis(new Axis().setCategories(map.keySet().stream().map(Student::getFullname).collect(Collectors.toList())));
-        baseOptions.addSeries(inactive);
-        baseOptions.addSeries(absents);
-        baseOptions.addSeries(presents);
+        baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
+        baseOptions.addSeries(inactive.setName("Inactive"));
+        baseOptions.addSeries(absents.setName("Absents"));
+        baseOptions.addSeries(presents.setName("Presents"));
         chart.setOptions(baseOptions);
     }
 
+    private Point getPoint(String title, Map<Status, List<Attendance>> map, Status status){
+        List<Attendance> attendances = Optional.ofNullable(map.get(status)).orElse(Lists.newArrayList());
+        return new DrilldownPoint(baseOptions, new StudentDrillDownOptions(attendances).setTitle(new Title(title))).setY(attendances.size());
+    }
+
     private class StudentDrillDownOptions extends Options {
-        StudentDrillDownOptions(Map<Timetable, Status> map) {
+        StudentDrillDownOptions(List<Attendance> attendances) {
             copyFrom(baseOptions);
+            setTooltip(new Tooltip().setFormatter(new Function("return this.x;")));
             PointSeries pointSeries = new PointSeries();
-            map.values().forEach(x -> {
-                switch (x){
-                    case PRESENT:
-                        pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY((100)));
-                        break;
-                    case ABSENT:
-                        pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY((0)));
-                        break;
-                    case INACTIVE:
-                        pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY((50)));
-                        break;
-                }
-            });
-            setxAxis(new Axis().setCategories(map.keySet().stream().map(x -> x.getStart().format(DateTimeFormatter.ISO_DATE)).collect(Collectors.toList())));
-            addSeries(pointSeries);
+            setxAxis(new Axis().setCategories(attendances .stream()
+                    .sorted((x, y) -> x.getTimetable().getStart().compareTo(y.getTimetable().getStart()))
+                    .map(x -> x.getTimetable().getStart().format(DateTimeFormatter.ofPattern("dd.MM")))
+                    .collect(Collectors.toList())));
+            IntStream.range(0, attendances.size()).forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY(1)));
+            baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
+            addSeries(pointSeries.setShowInLegend(false));
         }
     }
 }
