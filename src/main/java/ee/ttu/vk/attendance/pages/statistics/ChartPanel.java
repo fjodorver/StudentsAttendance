@@ -81,7 +81,6 @@ public class ChartPanel extends Panel {
 
     private class StudentDrillDownOptions extends Options {
         StudentDrillDownOptions(List<Attendance> attendances) {
-            int status = attendances.stream().distinct().findFirst().orElse(new Attendance()).getStatus().ordinal();
             copyFrom(baseOptions);
             setTooltip(new Tooltip().setFormatter(new Function("return this.x;")));
             PointSeries pointSeries = new PointSeries();
