@@ -1,5 +1,6 @@
 package ee.ttu.vk.attendance.pages.settings;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationMessage;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import ee.ttu.vk.attendance.CustomAuthenticatedWebSession;
@@ -41,6 +42,7 @@ public  class UserSettingsPanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> ajaxForm) {
                 teacherService.save((Teacher) ajaxForm.getModelObject());
+                success(new NotificationMessage(Model.of(new ResourceModel("settings.success"))));
                 target.add(notificationPanel);
             }
 
@@ -48,6 +50,7 @@ public  class UserSettingsPanel extends Panel {
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(notificationPanel);
             }
+
         });
         add(notificationPanel);
         add(form);
