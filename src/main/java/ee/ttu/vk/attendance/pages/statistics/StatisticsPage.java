@@ -49,7 +49,7 @@ public class StatisticsPage extends AbstractPage {
             studentService.findAll(timetable.getProgramme()).forEach(x -> attendances.addAll(attendanceService.findAll(new Attendance().setStudent(x).setTimetable(timetable))));
             map.clear();
             map.putAll(attendances.stream().collect(Collectors.groupingBy(Attendance::getStudent)));
-            chartPanel.onModelChanged();;
+            chartPanel.onModelChanged();
             chartPanel.setTitle(String.format("%1$s - %2$s", timetable.getSubject(), timetable.getProgramme()));
             target.add(chartPanel);
         });
