@@ -18,11 +18,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.util.MapModel;
 
 import java.awt.*;
+import java.text.MessageFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -45,6 +44,7 @@ public class ChartPanel extends Panel {
         this.mapModel = mapModel;
         setOutputMarkupId(true);
         add(chart = new Chart("chart", baseOptions));
+        setTitle("Empty");
     }
 
     public void setTitle(String title) {
@@ -60,15 +60,15 @@ public class ChartPanel extends Panel {
         PointSeries inactive = new PointSeries();
         for (Student student : map.keySet()) {
             Map<Status, List<Attendance>> statusMap = map.get(student).stream().collect(Collectors.groupingBy(Attendance::getStatus));
-            inactive.addPoint(getPoint(String.format("%1$s[%2$s]:", INACTIVE, student), statusMap, Status.INACTIVE)).setColor(new HighchartsColor(10));
-            absents.addPoint(getPoint(String.format("%1$s[%2$s]:", ABSENTS, student), statusMap, Status.ABSENT)).setColor(new HighchartsColor(1));;
-            presents.addPoint(getPoint(String.format("%1$s[%2$s]:", PRESENTS, student), statusMap, Status.PRESENT)).setColor(new HighchartsColor(2));;
+            inactive.addPoint(getPoint(String.format("%1$s[%2$s]:", INACTIVE, student), statusMap, Status.INACTIVE));
+            absents.addPoint(getPoint(String.format("%1$s[%2$s]:", ABSENTS, student), statusMap, Status.ABSENT));
+            presents.addPoint(getPoint(String.format("%1$s[%2$s]:", PRESENTS, student), statusMap, Status.PRESENT));
         }
         baseOptions.setxAxis(new Axis().setCategories(map.keySet().stream().map(Student::getFullname).collect(Collectors.toList())));
         baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
         baseOptions.addSeries(inactive.setName(INACTIVE));
-        baseOptions.addSeries(absents.setName(PRESENTS));
-        baseOptions.addSeries(presents.setName(ABSENTS));
+        baseOptions.addSeries(absents.setName(ABSENTS));
+        baseOptions.addSeries(presents.setName(PRESENTS));
         chart.setOptions(baseOptions);
     }
 
@@ -76,7 +76,6 @@ public class ChartPanel extends Panel {
         List<Attendance> attendances = Optional.ofNullable(map.get(status)).orElse(Lists.newArrayList());
         return new DrilldownPoint(baseOptions, new StudentDrillDownOptions(attendances)
                 .setTitle(new Title(title)))
-                .setColor(new HighchartsColor(status.ordinal()))
                 .setY(attendances.size());
     }
 
@@ -91,8 +90,8 @@ public class ChartPanel extends Panel {
                     .map(x -> x.getTimetable().getStart().format(DateTimeFormatter.ofPattern("dd.MM")))
                     .collect(Collectors.toList())));
             IntStream.range(0, attendances.size())
-                    .forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY(1).setColor(new HighchartsColor(status))));
-            baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
+                    .forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY(1).setColor(new HighchartsColor(2))));
+            setyAxis(new Axis().setTitle(new Title("Percent")));
             addSeries(pointSeries.setShowInLegend(false));
         }
     }
