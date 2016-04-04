@@ -82,8 +82,7 @@ public class ChartPanel extends Panel {
 
     private class StudentDrillDownOptions extends Options {
         StudentDrillDownOptions(List<Attendance> attendances) {
-//            Optional.ofNullable(attendances).orElse(Lists.newArrayList()).
-            int status = Optional.ofNullable(attendances.get(0)).orElse(new Attendance()).getStatus().ordinal();
+            int status = attendances.stream().distinct().findFirst().orElse(new Attendance()).getStatus().ordinal();
             copyFrom(baseOptions);
             setTooltip(new Tooltip().setFormatter(new Function("return this.x;")));
             PointSeries pointSeries = new PointSeries();
@@ -92,7 +91,7 @@ public class ChartPanel extends Panel {
                     .map(x -> x.getTimetable().getStart().format(DateTimeFormatter.ofPattern("dd.MM")))
                     .collect(Collectors.toList())));
             IntStream.range(0, attendances.size())
-                    .forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setColor(new HighchartsColor(status))));
+                    .forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY(1).setColor(new HighchartsColor(status))));
             baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
             addSeries(pointSeries.setShowInLegend(false));
         }
