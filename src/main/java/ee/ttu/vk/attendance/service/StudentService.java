@@ -16,4 +16,5 @@ public interface StudentService extends IReadService<Student>, ISaveService<Stud
     List<Student> findAll(Subject subject);
     List<Student> findAll(Programme programme);
     List<Student> findAll(List<Programme> programmes, Pageable pageable);
+    void clearAll();
 }
