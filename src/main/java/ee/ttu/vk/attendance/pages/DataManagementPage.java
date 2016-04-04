@@ -86,7 +86,6 @@ public class DataManagementPage extends AbstractPage {
             try {
                 scheduleService.updateGroups();
                 scheduleService.update();
-                studentService.findAll().forEach(y->attendanceService.generateAndSaveAttendances(y.getProgramme()));
             } catch (IOException | ParserException e) {
                 e.printStackTrace();
             }
