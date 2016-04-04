@@ -80,11 +80,13 @@ public class DataManagementPage extends AbstractPage {
         add(new BootstrapIndicatingAjaxLink<>("clear", Buttons.Type.Danger, (x)->{
             attendanceService.clearAll();
             timetableService.clearAll();
+            studentService.clearAll();
         }).setIconType(FontAwesomeIconType.trash));
         add(new BootstrapIndicatingAjaxLink<>("sync", Buttons.Type.Primary, (x)->{
             try {
                 scheduleService.updateGroups();
                 scheduleService.update();
+                studentService.findAll().forEach(y->attendanceService.generateAndSaveAttendances(y.getProgramme()));
             } catch (IOException | ParserException e) {
                 e.printStackTrace();
             }

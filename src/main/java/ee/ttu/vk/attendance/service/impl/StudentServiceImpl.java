@@ -52,6 +52,11 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAllByProgrammeIn(programmes);
     }
 
+    @Override
+    public void clearAll() {
+        studentRepository.deleteAllInBatch();
+    }
+
     public List<Student> findAll(Student student, Pageable pageable) {
         String code = Optional.ofNullable(student.getCode()).orElse("");
         String fullname = Optional.ofNullable(student.getFullname()).orElse("");
