@@ -31,6 +31,10 @@ import java.util.stream.IntStream;
  */
 public class ChartPanel extends Panel {
 
+    private static final String INACTIVE = "Inactive";
+    private static final String PRESENTS = "Presents";
+    private static final String ABSENTS = "Absents";
+
     private Chart chart;
     private BaseOptions baseOptions = new BaseOptions();
 
@@ -56,25 +60,30 @@ public class ChartPanel extends Panel {
         PointSeries inactive = new PointSeries();
         for (Student student : map.keySet()) {
             Map<Status, List<Attendance>> statusMap = map.get(student).stream().collect(Collectors.groupingBy(Attendance::getStatus));
-            inactive.addPoint(getPoint(String.format("%1$s[%2$s]:", "Inactive", student), statusMap, Status.INACTIVE));
-            absents.addPoint(getPoint(String.format("%1$s[%2$s]:", "Absents", student), statusMap, Status.ABSENT));
-            presents.addPoint(getPoint(String.format("%1$s[%2$s]:", "Presents", student), statusMap, Status.PRESENT));
+            inactive.addPoint(getPoint(String.format("%1$s[%2$s]:", INACTIVE, student), statusMap, Status.INACTIVE)).setColor(new HighchartsColor(10));
+            absents.addPoint(getPoint(String.format("%1$s[%2$s]:", ABSENTS, student), statusMap, Status.ABSENT)).setColor(new HighchartsColor(1));;
+            presents.addPoint(getPoint(String.format("%1$s[%2$s]:", PRESENTS, student), statusMap, Status.PRESENT)).setColor(new HighchartsColor(2));;
         }
         baseOptions.setxAxis(new Axis().setCategories(map.keySet().stream().map(Student::getFullname).collect(Collectors.toList())));
         baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
-        baseOptions.addSeries(inactive.setName("Inactive"));
-        baseOptions.addSeries(absents.setName("Absents"));
-        baseOptions.addSeries(presents.setName("Presents"));
+        baseOptions.addSeries(inactive.setName(INACTIVE));
+        baseOptions.addSeries(absents.setName(PRESENTS));
+        baseOptions.addSeries(presents.setName(ABSENTS));
         chart.setOptions(baseOptions);
     }
 
     private Point getPoint(String title, Map<Status, List<Attendance>> map, Status status){
         List<Attendance> attendances = Optional.ofNullable(map.get(status)).orElse(Lists.newArrayList());
-        return new DrilldownPoint(baseOptions, new StudentDrillDownOptions(attendances).setTitle(new Title(title))).setY(attendances.size());
+        return new DrilldownPoint(baseOptions, new StudentDrillDownOptions(attendances)
+                .setTitle(new Title(title)))
+                .setColor(new HighchartsColor(status.ordinal()))
+                .setY(attendances.size());
     }
 
     private class StudentDrillDownOptions extends Options {
         StudentDrillDownOptions(List<Attendance> attendances) {
+//            Optional.ofNullable(attendances).orElse(Lists.newArrayList()).
+            int status = Optional.ofNullable(attendances.get(0)).orElse(new Attendance()).getStatus().ordinal();
             copyFrom(baseOptions);
             setTooltip(new Tooltip().setFormatter(new Function("return this.x;")));
             PointSeries pointSeries = new PointSeries();
@@ -82,7 +91,8 @@ public class ChartPanel extends Panel {
                     .sorted((x, y) -> x.getTimetable().getStart().compareTo(y.getTimetable().getStart()))
                     .map(x -> x.getTimetable().getStart().format(DateTimeFormatter.ofPattern("dd.MM")))
                     .collect(Collectors.toList())));
-            IntStream.range(0, attendances.size()).forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY(1)));
+            IntStream.range(0, attendances.size())
+                    .forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setColor(new HighchartsColor(status))));
             baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
             addSeries(pointSeries.setShowInLegend(false));
         }
