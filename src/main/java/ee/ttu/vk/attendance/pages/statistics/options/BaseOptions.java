@@ -17,5 +17,6 @@ public class BaseOptions extends Options {
         setExporting(new ExportingOptions().setEnabled(false));
         setCredits(new CreditOptions().setEnabled(false));
         setPlotOptions(new PlotOptionsChoice().setSeries(new PlotOptions().setStacking(Stacking.PERCENT)));
+
     }
 }

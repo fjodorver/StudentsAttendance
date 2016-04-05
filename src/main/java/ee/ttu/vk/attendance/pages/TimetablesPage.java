@@ -25,6 +25,7 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -35,7 +36,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class TimetablesPage extends AbstractPage {
 
@@ -72,15 +75,16 @@ public class TimetablesPage extends AbstractPage {
             }
         };
 
-        searchForm.add(new DatetimePickerWithIcon("date", new DatetimePickerConfig().setShowToday(Boolean.TRUE)));
-        searchForm.add(new AjaxSubmitLink("search", searchForm) {
+        searchForm.add(new DateTextField("date", new DateTextFieldConfig()
+                .showTodayButton(DateTextFieldConfig.TodayButton.TRUE).autoClose(true).highlightToday(true))
+                .add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 TimetableFilter filter = searchForm.getModelObject();
-                dataProvider.getFilterState().setDate(filter.getDate());
+                dataProvider.getFilterState().setDate(Optional.ofNullable(filter.getDate()).orElse(new Date(0)));
                 target.add(body);
             }
-        });
+        }));
         body.add(rows);
         add(new BootstrapAjaxPagingNavigator("navigator", rows), body, searchForm, panel);
     }

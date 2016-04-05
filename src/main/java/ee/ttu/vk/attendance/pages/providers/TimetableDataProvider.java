@@ -28,7 +28,7 @@ public class TimetableDataProvider extends AbstractDataProvider<Timetable, Timet
 
     @Override
     public Iterator<? extends Timetable> iterator(long first, long count) {
-        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "subject");
+        Pageable pageable = new PageRequest((int)(first/count), (int)count, Sort.Direction.ASC, "start");
         return timetableService.findAll(filter, pageable).iterator();
     }
 
