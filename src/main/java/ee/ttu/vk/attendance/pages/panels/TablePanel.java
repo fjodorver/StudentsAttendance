@@ -34,12 +34,14 @@ public class TablePanel<T, F> extends Panel {
     private AbstractDataProvider<T, F> dataProvider;
     private List<IColumn<T, String>> columnList = Lists.newArrayList();
 
+    FilterToolbar filterToolbar;
+
     public TablePanel(String id, AbstractDataProvider<T, F> dataProvider) {
         super(id);
         this.dataProvider = dataProvider;
         FilterForm<F> filterForm = new FilterForm<>("form", dataProvider);
         DataTable<T, String> dataTable = new DataTable<>("table", columnList, dataProvider, 10);
-        FilterToolbar filterToolbar = new FilterToolbar(dataTable, filterForm);
+        filterToolbar = new FilterToolbar(dataTable, filterForm);
         dataTable.setOutputMarkupId(true);
         dataTable.setVersioned(false);
         dataTable.addTopToolbar(new AjaxFallbackHeadersToolbar<>(dataTable, dataProvider));
@@ -49,6 +51,10 @@ public class TablePanel<T, F> extends Panel {
         filterForm.add(dataTable);
         add(filterForm);
     }
+
+    public void setVisibleFilterPanel(Boolean isVisible){
+        filterToolbar.setVisible(false);
+    };
 
     public void addLink(String name, String propertyExpression, AjaxAction<T> ajaxAction){
         columnList.add(new PropertyColumn<T, String>(Model.of(name), propertyExpression){

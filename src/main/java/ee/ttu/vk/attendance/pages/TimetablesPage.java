@@ -1,5 +1,6 @@
 package ee.ttu.vk.attendance.pages;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.block.LabelType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
@@ -11,6 +12,8 @@ import ee.ttu.vk.attendance.CustomAuthenticatedWebSession;
 import ee.ttu.vk.attendance.domain.Attendance;
 import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.domain.Timetable;
+import ee.ttu.vk.attendance.enums.Status;
+import ee.ttu.vk.attendance.pages.components.ColorEnumLabel;
 import ee.ttu.vk.attendance.pages.filters.TimetableFilter;
 import ee.ttu.vk.attendance.pages.panels.AttendancePanel;
 import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
@@ -57,7 +60,7 @@ public class TimetablesPage extends AbstractPage {
                 item.add(new Label("end", Model.of(timetable.getEnd().format(DateTimeFormatter.ofPattern("HH:mm")))));
                 item.add(new Label("subject"));
                 item.add(new Label("programme"));
-                item.add(new Label("lessonType"));
+                item.add(new ColorEnumLabel<Status>("lessonType", null));
                 item.add(new AjaxLink<Timetable>("add") {
                     @Override
                     public void onClick(AjaxRequestTarget ajaxRequestTarget) {

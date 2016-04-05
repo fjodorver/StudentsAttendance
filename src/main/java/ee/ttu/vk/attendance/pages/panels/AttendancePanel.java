@@ -44,7 +44,6 @@ public class AttendancePanel extends Modal<Void> {
     private AttendanceService attendanceService;
 
     public AttendancePanel(String markupId) {
-
         super(markupId);
         dataProvider = new AttendanceDataProvider();
         body = new WebMarkupContainer("body");
@@ -65,8 +64,9 @@ public class AttendancePanel extends Modal<Void> {
                         }));
             }
         };
+        rows.setItemsPerPage(10);
         body.add(rows);
-        add(body);
+        add(body, new BootstrapAjaxPagingNavigator("navigator", rows));
     }
 
     public void changeFilter(IModel<Attendance> model) {

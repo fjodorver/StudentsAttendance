@@ -12,6 +12,7 @@ import ee.ttu.vk.attendance.pages.login.LoginPage;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
 public class WicketApplication extends AuthenticatedWebApplication
@@ -31,6 +32,7 @@ public class WicketApplication extends AuthenticatedWebApplication
 		Theme theme = new Theme("bootstrap", BootstrapCssReference.instance(), FontAwesomeCssReference.instance(), NutchUiCssReference.instance());
 		settings.setThemeProvider(new SingleThemeProvider(theme));
 		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+		getDebugSettings().setAjaxDebugModeEnabled(false);
 	}
 
 	@Override

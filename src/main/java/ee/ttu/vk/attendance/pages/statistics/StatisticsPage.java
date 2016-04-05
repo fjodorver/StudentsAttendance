@@ -54,6 +54,7 @@ public class StatisticsPage extends AbstractPage {
             target.add(chartPanel);
         });
         tablePanel.addColumn("Programme", "programme", "col-lg-6");
+        tablePanel.setVisibleFilterPanel(false);
         add(tablePanel, chartPanel = new ChartPanel("chart", new MapModel<>(map)));
     }
 }
