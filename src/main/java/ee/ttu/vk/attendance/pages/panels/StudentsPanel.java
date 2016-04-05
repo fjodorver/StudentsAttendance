@@ -1,6 +1,7 @@
 package ee.ttu.vk.attendance.pages.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.attendance.domain.Student;
@@ -29,6 +30,8 @@ public class StudentsPanel extends Modal<List<Student>> {
     @SpringBean
     private AttendanceService attendanceService;
 
+    private NotificationPanel notificationPanel;
+
     public StudentsPanel(String id, IModel<List<Student>> model) {
         super(id, model);
         TablePanel<Student, Student> studentsPanel = new TablePanel<>("students", new StudentDataProvider(){
@@ -45,11 +48,19 @@ public class StudentsPanel extends Modal<List<Student>> {
         studentsPanel.addColumn("Code", "code", "col-lg-2");
         studentsPanel.addColumn("Fullname", "fullname", "col-lg-8");
         studentsPanel.addColumn("Programme", "programme", "col-lg-2");
-        add(studentsPanel);
+        add(studentsPanel, notificationPanel = new NotificationPanel("notificationPanel"));
+        notificationPanel.setOutputMarkupId(true);
+        studentsPanel.setVisibleFilterPanel(false);
         addButton(new BootstrapIndicatingAjaxLink<>("button", Buttons.Type.Primary, (x) -> {
-            studentService.save(model.getObject());
-            studentService.findAll().forEach(y->attendanceService.generateAndSaveAttendances(y.getProgramme()));
-            close(x);
+            try {
+                studentService.save(model.getObject());
+                studentService.findAll().forEach(y->attendanceService.generateAndSaveAttendances(y.getProgramme()));
+                close(x);
+            }
+            catch (Exception e){
+                error("Something wrong!");
+                x.add(notificationPanel);
+            }
         }).setIconType(FontAwesomeIconType.save));
     }
 
