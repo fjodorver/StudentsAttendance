@@ -15,6 +15,7 @@ public class BaseOptions extends Options {
         getChartOptions().setHeight(800);
         getChartOptions().setBorderColor(Color.gray);
         setExporting(new ExportingOptions().setEnabled(false));
+        setCredits(new CreditOptions().setEnabled(false));
         setPlotOptions(new PlotOptionsChoice().setSeries(new PlotOptions().setStacking(Stacking.PERCENT)));
     }
 }
