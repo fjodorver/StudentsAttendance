@@ -34,7 +34,7 @@ public  class UserSettingsPanel extends Panel {
         notificationPanel.setOutputMarkupId(true);
         form = new BootstrapForm<>("form", new CompoundPropertyModel<>(authTeacher));
         form.add(new RequiredTextField<>("fullname").setRequired(true));
-        form.add(new TextField("username").setRequired(true));
+        form.add(new TextField("username").setEnabled(false));
         form.add(password = getPasswordTextField("password", null, "settings.fields.password"));
         form.add(cpassword = getPasswordTextField("cpassword", new PropertyModel<>(form.getModelObject(), "password"), "settings.fields.cpassword"));
         form.add(new EqualPasswordInputValidator(password, cpassword));
