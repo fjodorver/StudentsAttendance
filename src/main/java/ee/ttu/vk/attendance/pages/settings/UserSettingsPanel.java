@@ -44,6 +44,7 @@ public  class UserSettingsPanel extends Panel {
                 teacherService.save((Teacher) ajaxForm.getModelObject());
                 success(new NotificationMessage(Model.of(new ResourceModel("settings.success"))));
                 target.add(notificationPanel);
+                setResponsePage(Settings.class);
             }
 
             @Override
