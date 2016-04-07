@@ -19,6 +19,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -29,7 +30,7 @@ import java.util.Optional;
  * Created by fjodor on 6.02.16.
  */
 public class AbstractPage extends WebPage {
-    private VerticalMenu navbar;
+    protected VerticalMenu navbar;
 
     public AbstractPage() {
         navbar = new VerticalMenu("navigation");
@@ -44,7 +45,7 @@ public class AbstractPage extends WebPage {
         addMenuItem(StatisticsPage.class, "navbar.menu.statistics", FontAwesomeIconType.bar_chart_o, roles.hasRole(Roles.USER));
         addMenuItem(DataManagementPage.class, "navbar.menu.data-management", FontAwesomeIconType.database, roles.hasRole(Roles.ADMIN));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, addUserMenu()));
-
+        navbar.setOutputMarkupId(true);
         add(navbar);
 
     }
@@ -54,10 +55,12 @@ public class AbstractPage extends WebPage {
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, button));
     }
 
-    private Component addUserMenu(){
-        String fullname = Optional.ofNullable(CustomAuthenticatedWebSession.getSession().getTeacher()).orElse(new Teacher()).getFullname();
-        return new NavbarDropDownButton(Model.of(fullname)){
-
+    private Component addUserMenu() {
+        return new NavbarDropDownButton(new LoadableDetachableModel<String>() {
+            @Override
+            protected String load() {
+                return Optional.ofNullable(CustomAuthenticatedWebSession.getSession().getTeacher()).orElse(new Teacher()).getFullname();
+            }}){
             @Override
             protected List<AbstractLink> newSubMenuButtons(String s) {
                 List<AbstractLink> subMenu = Lists.newArrayList();
@@ -71,5 +74,7 @@ public class AbstractPage extends WebPage {
                 return CustomAuthenticatedWebSession.get().isSignedIn();
             }
         }.setIconType(FontAwesomeIconType.user);
+
+
     }
 }
