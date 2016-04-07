@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @NamedEntityGraph(name = "student.all", attributeNodes = {@NamedAttributeNode("programme")})
 @Table(name = "student")
-public class Student implements Serializable {
+public class Student implements Serializable, Comparable<Student> {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -73,5 +73,10 @@ public class Student implements Serializable {
     @Override
     public String toString() {
         return fullname;
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        return fullname.compareTo(o.getFullname());
     }
 }

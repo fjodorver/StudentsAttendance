@@ -25,7 +25,7 @@ public class Settings extends AbstractPage {
         tabs.add(new AbstractTab(new ResourceModel("navbar.menu.settings.user")) {
             @Override
             public WebMarkupContainer getPanel(String s) {
-                return new UserSettingsPanel(s);
+                return new UserSettingsPanel(s, target -> target.add(navbar));
             }
         });
         tabs.add(new AbstractTab(new ResourceModel("navbar.menu.settings.local")) {

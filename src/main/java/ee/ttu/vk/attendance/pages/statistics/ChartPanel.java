@@ -15,6 +15,7 @@ import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.enums.Status;
 import ee.ttu.vk.attendance.pages.statistics.options.BaseOptions;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.MapModel;
 
 import java.awt.*;
@@ -44,7 +45,7 @@ public class ChartPanel extends Panel {
         this.mapModel = mapModel;
         setOutputMarkupId(true);
         add(chart = new Chart("chart", baseOptions));
-        setTitle("Empty");
+        setTitle(new ResourceModel("chart.empty").getObject());
     }
 
     public void setTitle(String title) {
@@ -64,7 +65,7 @@ public class ChartPanel extends Panel {
             absents.addPoint(getPoint(String.format("%1$s[%2$s]:", ABSENTS, student), statusMap, Status.ABSENT)).setColor(new HighchartsColor(Status.ABSENT.ordinal()));;
             presents.addPoint(getPoint(String.format("%1$s[%2$s]:", PRESENTS, student), statusMap, Status.PRESENT)).setColor(new HighchartsColor(Status.PRESENT.ordinal()));;
         }
-        baseOptions.setxAxis(new Axis().setCategories(map.keySet().stream().map(Student::getFullname).sorted(String::compareTo)
+        baseOptions.setxAxis(new Axis().setCategories(map.keySet().stream().map(Student::getFullname)
                 .collect(Collectors.toList())));
         baseOptions.setyAxis(new Axis().setTitle(new Title("Percent")));
         baseOptions.addSeries(inactive.setName(INACTIVE));
@@ -82,7 +83,7 @@ public class ChartPanel extends Panel {
         StudentDrillDownOptions(List<Attendance> attendances) {
             int status = attendances.stream().findFirst().orElse(new Attendance()).getStatus().ordinal();
             copyFrom(baseOptions);
-            setPlotOptions(new PlotOptionsChoice().setSeries(new PlotOptions().setStacking(Stacking.PERCENT)));
+            setChartOptions(new ChartOptions().setType(SeriesType.AREA));
             setTooltip(new Tooltip().setFormatter(new Function("return this.x;")));
             PointSeries pointSeries = new PointSeries();
             pointSeries.setColor(new HighchartsColor(status));
@@ -91,8 +92,8 @@ public class ChartPanel extends Panel {
                     .map(x -> x.getTimetable().getStart().format(DateTimeFormatter.ofPattern("dd.MM")))
                     .collect(Collectors.toList())));
             IntStream.range(0, attendances.size())
-                    .forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY(1)));
-            setyAxis(new Axis().setTitle(new Title("Percent")));
+                    .forEach(x -> pointSeries.addPoint(new DrilldownPoint(this, baseOptions).setY(0)));
+            setyAxis(new Axis().setTitle(new Title("")).setCategories(Lists.newArrayList("")));
             addSeries(pointSeries.setShowInLegend(false));
         }
     }

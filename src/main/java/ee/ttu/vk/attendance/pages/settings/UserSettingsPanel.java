@@ -5,6 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import ee.ttu.vk.attendance.CustomAuthenticatedWebSession;
 import ee.ttu.vk.attendance.domain.Teacher;
+import ee.ttu.vk.attendance.pages.listeners.AjaxOnClick;
 import ee.ttu.vk.attendance.service.TeacherService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -26,7 +27,7 @@ public  class UserSettingsPanel extends Panel {
     private NotificationPanel notificationPanel;
 
 
-    public UserSettingsPanel(String id) {
+    public UserSettingsPanel(String id, AjaxOnClick ajaxOnClick) {
         super(id);
         FormComponent password, cpassword;
         Teacher authTeacher = CustomAuthenticatedWebSession.getSession().getTeacher();
@@ -44,6 +45,7 @@ public  class UserSettingsPanel extends Panel {
                 teacherService.save((Teacher) ajaxForm.getModelObject());
                 success(new NotificationMessage(Model.of(new ResourceModel("settings.success"))));
                 target.add(notificationPanel);
+                ajaxOnClick.onClick(target);
             }
 
             @Override
@@ -52,6 +54,7 @@ public  class UserSettingsPanel extends Panel {
             }
 
         });
+        form.setDefaultButton((IFormSubmittingComponent) form.get("save"));
         add(notificationPanel);
         add(form);
     }
