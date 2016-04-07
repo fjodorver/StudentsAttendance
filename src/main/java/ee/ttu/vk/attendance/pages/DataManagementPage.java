@@ -53,9 +53,9 @@ public class DataManagementPage extends AbstractPage {
             @Override
             public WebMarkupContainer getPanel(String s) {
                 TablePanel<Student, Student> subjectsPanel = new TablePanel<>(s, new StudentDataProvider());
-                subjectsPanel.addFilteredColumn("Code", "code", "filterState.code", "col-lg-2");
-                subjectsPanel.addFilteredColumn("Fullname", "fullname", "filterState.fullname", "col-lg-8");
-                subjectsPanel.addFilteredColumn("Programme", "programme", "filterState.programme.name", "col-lg-2");
+                subjectsPanel.addFilteredColumn(new ResourceModel("table.programme").getObject(), "code", "filterState.code", "col-lg-2");
+                subjectsPanel.addFilteredColumn(new ResourceModel("attendance.statistics.fullname").getObject(), "fullname", "filterState.fullname", "col-lg-8");
+                subjectsPanel.addFilteredColumn(new ResourceModel("subjects.table.code").getObject(), "programme", "filterState.programme.name", "col-lg-2");
                 return subjectsPanel;
             }
         });
@@ -63,8 +63,8 @@ public class DataManagementPage extends AbstractPage {
             @Override
             public WebMarkupContainer getPanel(String s) {
                 TablePanel<Subject, Subject> subjectTablePanel = new TablePanel<>(s, new SubjectDataProvider());
-                subjectTablePanel.addFilteredColumn("Code", "code", "filterState.code", "col-lg-2");
-                subjectTablePanel.addFilteredColumn("Name", "name", "filterState.name", "col-lg-10");
+                subjectTablePanel.addFilteredColumn(new ResourceModel("subjects.table.code").getObject(), "code", "filterState.code", "col-lg-2");
+                subjectTablePanel.addFilteredColumn(new ResourceModel("subjects.table.name").getObject(), "name", "filterState.name", "col-lg-10");
                 return subjectTablePanel;
             }
         });
@@ -72,8 +72,8 @@ public class DataManagementPage extends AbstractPage {
             @Override
             public WebMarkupContainer getPanel(String s) {
                 TablePanel<Teacher, Teacher> teachersPanel = new TablePanel<>(s, new TeacherDataProvider());
-                teachersPanel.addFilteredColumn("Username", "username", "filterState.username", "col-lg-4");
-                teachersPanel.addFilteredColumn("Name", "fullname", "filterState.fullname", "col-lg-10");
+                teachersPanel.addFilteredColumn(new ResourceModel("navbar.menu.settings.user").getObject(), "username", "filterState.username", "col-lg-4");
+                teachersPanel.addFilteredColumn(new ResourceModel("attendance.statistics.fullname").getObject(), "fullname", "filterState.fullname", "col-lg-10");
                 return teachersPanel;
             }
         });

@@ -14,12 +14,14 @@ import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
 import ee.ttu.vk.attendance.pages.providers.TimetableDataProvider;
 import ee.ttu.vk.attendance.service.AttendanceService;
 import ee.ttu.vk.attendance.service.StudentService;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.MapModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -37,13 +39,13 @@ public class StatisticsPage extends AbstractPage {
 
     private AbstractDataProvider<Timetable, TimetableFilter> dataProvider = new TimetableDataProvider();
 
-    private Map<Student, List<Attendance>> map = Maps.newLinkedHashMap();
+    private TreeMap<Student, List<Attendance>> map = Maps.newTreeMap();
 
     public StatisticsPage() {
         TablePanel<Timetable, TimetableFilter> tablePanel = new TablePanel<>("table", dataProvider);
         dataProvider.getFilterState().setDate(null);
         dataProvider.getFilterState().setTeacher(CustomAuthenticatedWebSession.getSession().getTeacher());
-        tablePanel.addLink("Subject", "subject", (target, model) -> {
+        tablePanel.addLink(new ResourceModel("table.subject").getObject(), "subject", (target, model) -> {
             Timetable timetable = model.getObject();
             Set<Attendance> attendances = Sets.newHashSet();
             studentService.findAll(timetable.getProgramme())
@@ -54,7 +56,7 @@ public class StatisticsPage extends AbstractPage {
             chartPanel.setTitle(String.format("%1$s - %2$s", timetable.getSubject(), timetable.getProgramme()));
             target.add(chartPanel);
         });
-        tablePanel.addColumn("Programme", "programme", "col-lg-6");
+        tablePanel.addColumn(new ResourceModel("table.programme").getObject(), "programme", "col-lg-6");
         tablePanel.setVisibleFilterPanel(false);
         add(tablePanel, chartPanel = new ChartPanel("chart", new MapModel<>(map)));
     }
