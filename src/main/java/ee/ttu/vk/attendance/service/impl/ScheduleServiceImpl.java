@@ -51,14 +51,18 @@ public class ScheduleServiceImpl implements ScheduleService {
     private static final String GROUPS_URL = "https://ois.ttu.ee/portal/page?_pageid=37,675060&_dad=portal&_schema=PORTAL&e=-1&e_sem=182&a=1&b={0}&c=-1&d=-1&k=&q=neto&g=";
     private static final String SCHEDULE_URL = "https://ois.ttu.ee/pls/portal/tunniplaan.PRC_EXPORT_DATA?p_page=view_plaan&pn=i&pv=2&pn=e_sem&pv=182&pn=e&pv=-1&pn=b&pv={0}&pn=g&pv={1,number,#}&pn=is_oppejoud&pv=false&pn=q&pv=1";
 
-    @Inject
-    private CloseableHttpClient httpClient;
+    private final CloseableHttpClient httpClient;
+
+    private final GroupService groupService;
+
+    private final TimetableService timetableService;
 
     @Inject
-    private GroupService groupService;
-
-    @Inject
-    private TimetableService timetableService;
+    public ScheduleServiceImpl(CloseableHttpClient httpClient, GroupService groupService, TimetableService timetableService) {
+        this.httpClient = httpClient;
+        this.groupService = groupService;
+        this.timetableService = timetableService;
+    }
 
     @Override
     @Scheduled(cron = "0 0 0 25 12 ?")
@@ -104,6 +108,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                     timetable.setTeacher(getTeacher(description));
                     timetable.setSubject(getSubject(summary));
                     timetable.setLessonType(getLessonType(summary));
+                    if(timetable.getTeacher() == null)
+                        continue;
                     timetables.add(timetable);
                 }
                 EntityUtils.consume(entity);
@@ -138,14 +144,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private Teacher getTeacher(String description){
         Matcher fullname = Pattern.compile("(?<=:|;)(.*)(?=)(?<=unnitasuline|ektor|otsent|taja|eadur|nsener|rofessor|jõud)(.*?)(?=\\n|,|;)").matcher(description);
-        Teacher teacher = new Teacher();
         if(fullname.find()){
-            teacher = new Teacher().setFullname(fullname.group(2));
-            teacher.setFullname(teacher.getFullname().trim());
+            Teacher teacher = new Teacher();
+            teacher.setFullname(fullname.group(2).trim());
             teacher.setUsername(teacher.getFullname().replace(' ', '.').replace("..", "."));
             teacher.setPassword("PASS");
+            return teacher;
         }
-        return teacher;
+        return null;
     }
 
     private ZonedDateTime getDateTime(String datetime) {
