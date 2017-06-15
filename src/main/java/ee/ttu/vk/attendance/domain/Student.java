@@ -4,12 +4,13 @@ import com.google.common.collect.Lists;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Entity
 @NamedEntityGraph(name = "student.all", attributeNodes = {@NamedAttributeNode("programme")})
-public class Student {
+public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
