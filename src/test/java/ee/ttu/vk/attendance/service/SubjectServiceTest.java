@@ -51,9 +51,9 @@ public class SubjectServiceTest {
 
     @Test
     public void testSave() throws Exception {
-        given(subjectRepository.findByCode("1")).willReturn(subjects.get(0).setId(0L));
-        given(subjectRepository.findByCode("2")).willReturn(subjects.get(1).setId(1L));
-        given(subjectRepository.findByCode("3")).willReturn(subjects.get(2).setId(2L));
+//        given(subjectRepository.findByCode("1")).willReturn(subjects.get(0).setId(0L));
+//        given(subjectRepository.findByCode("2")).willReturn(subjects.get(1).setId(1L));
+//        given(subjectRepository.findByCode("3")).willReturn(subjects.get(2).setId(2L));
         given(programmeRepository.findByName("RDIR12")).willReturn(newGroup(0L, "RDIR12"));
         given(subjectRepository.save(anyListOf(Subject.class))).will(x -> x.getArguments()[0]);
         List<Subject> subjectList = subjectService.save(subjects);
@@ -74,6 +74,7 @@ public class SubjectServiceTest {
     }
 
     private Programme newGroup(Long id, String name){
-        return new Programme().setId(id).setName(name);
+        return null;
+//        return new Programme().setId(id).setName(name);
     }
 }

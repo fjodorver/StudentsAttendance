@@ -77,7 +77,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                 for (Element span : doc.select("span").select("span:has(a)")) {
                     Matcher matcher = pattern.matcher(span.attr("onclick"));
                     if (matcher.find() && span.select("a").html().length() == 6) {
-                        Programme programme = new Programme().setName(span.select("a").html()).setGroupType(GroupType.values()[i-1]).setScheduleId(Long.valueOf(matcher.group(1)));
+                        Programme programme = new Programme();
+                        programme.setName(span.select("a").html());
+                        programme.setGroupType(GroupType.values()[i-1]);
+                        programme.setScheduleId(Long.valueOf(matcher.group(1)));
                         groupMap.put(programme.getName(), programme);
                     }
                 }
@@ -122,8 +125,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     private Subject getSubject(String summary) {
         Matcher code = Pattern.compile("(.*?)-").matcher(summary);
         Matcher name = Pattern.compile("-(.*?) -").matcher(summary);
-        if(code.find() && name.find())
-            return new Subject().setCode(code.group(1)).setName(name.group(1));
+        if(code.find() && name.find()){
+            return new Subject(code.group(1), name.group(1));
+        }
         return null;
     }
 

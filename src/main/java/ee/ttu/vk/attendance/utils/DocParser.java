@@ -15,10 +15,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DocParser implements IParser<Student> {
-    private List<Student> students;
-    public DocParser() {
-        students = new ArrayList<>();
-    }
+
+    private List<Student> students = new ArrayList<>();
+
     @Override
     public void parse(InputStream io){
         try(POIFSFileSystem fileSystem = new POIFSFileSystem(io)) {
@@ -34,7 +33,8 @@ public class DocParser implements IParser<Student> {
                 else if(line.charAt(0) == '\t'){
                     String userLine = line.replaceAll("OK", "").replaceAll("REV", "").replaceAll("TREV", "").replaceAll("\\*", "").trim();
                     String[] userParts = Arrays.stream(userLine.split("\\t")).map(x -> x = x.trim()).toArray(String[]::new);
-                    Programme programme = new Programme().setName(group_name);
+                    Programme programme = new Programme();
+                    programme.setName(group_name);
                     Student student = new Student();
                     student.setCode(userParts[2]);
                     student.setFullname(String.format("%1$s %2$s", userParts[0], userParts[1]));

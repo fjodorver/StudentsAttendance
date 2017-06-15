@@ -1,12 +1,15 @@
 package ee.ttu.vk.attendance.domain;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
+@Data
+@NoArgsConstructor
 @Entity
-@Table(name = "subject")
 public class Subject implements Serializable {
 
     @Id
@@ -18,59 +21,10 @@ public class Subject implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "subject")
-    List<Timetable> timetables;
+    private List<Timetable> timetables;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Subject subject = (Subject) o;
-        return Objects.equals(id, subject.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Subject setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public Subject setCode(String code) {
+    public Subject(String code, String name) {
         this.code = code;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Subject setName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public List<Timetable> getTimetables() {
-        return timetables;
-    }
-
-    public Subject setTimetables(List<Timetable> timetables) {
-        this.timetables = timetables;
-        return this;
     }
 }

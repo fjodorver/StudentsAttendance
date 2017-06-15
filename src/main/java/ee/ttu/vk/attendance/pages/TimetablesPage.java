@@ -1,16 +1,11 @@
 package ee.ttu.vk.attendance.pages;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.block.LabelType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.ajax.BootstrapAjaxPagingNavigator;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerWithIcon;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import ee.ttu.vk.attendance.CustomAuthenticatedWebSession;
 import ee.ttu.vk.attendance.domain.Attendance;
-import ee.ttu.vk.attendance.domain.Teacher;
 import ee.ttu.vk.attendance.domain.Timetable;
 import ee.ttu.vk.attendance.enums.Status;
 import ee.ttu.vk.attendance.pages.components.ColorEnumLabel;
@@ -18,14 +13,9 @@ import ee.ttu.vk.attendance.pages.filters.TimetableFilter;
 import ee.ttu.vk.attendance.pages.panels.AttendancePanel;
 import ee.ttu.vk.attendance.pages.providers.AbstractDataProvider;
 import ee.ttu.vk.attendance.pages.providers.TimetableDataProvider;
-import ee.ttu.vk.attendance.service.TimetableService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -33,11 +23,9 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public class TimetablesPage extends AbstractPage {
@@ -67,7 +55,9 @@ public class TimetablesPage extends AbstractPage {
                 item.add(new AjaxLink<Timetable>("add") {
                     @Override
                     public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                        panel.changeFilter(Model.of(new Attendance().setTimetable(timetable)));
+                        Attendance attendance = new Attendance();
+                        attendance.setTimetable(timetable);
+                        panel.changeFilter(Model.of(attendance));
                         ajaxRequestTarget.add(panel);
                         panel.appendShowDialogJavaScript(ajaxRequestTarget);
                     }

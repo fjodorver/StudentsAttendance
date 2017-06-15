@@ -60,14 +60,19 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void generateAndSaveAttendances(Programme programme) {
         List<Student> students = studentRepository.findAllByProgramme(programme);
-        Map<Student, List<Attendance>> map = students.stream().map(x -> attendanceRepository.findByStudent(x).stream().collect(Collectors.toList())).flatMap(Collection::stream).collect(Collectors.groupingBy(Attendance::getStudent));
+        Map<Student, List<Attendance>> attendanceMap = students.stream()
+                .map(x -> attendanceRepository.findByStudent(x))
+                .flatMap(Collection::stream)
+                .collect(Collectors.groupingBy(Attendance::getStudent));
         for (Student student : students) {
-            if(!map.containsKey(student)){
-                map.put(student, timetableRepository.findByProgramme(programme).stream().map(x -> new Attendance().setStudent(student).setTimetable(x)).collect(Collectors.toList()));
-            }
-            else map.remove(student);
+            List<Attendance> attendances = timetableRepository.findByProgramme(programme).stream()
+                    .map(timetable -> new Attendance(student, timetable))
+                    .collect(Collectors.toList());
+            attendanceMap.putIfAbsent(student, attendances);
         }
-        attendanceRepository.save(map.values().stream().flatMap(Collection::stream).collect(Collectors.toList()));
+        attendanceRepository.save(attendanceMap.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList()));
     }
 
     @Override

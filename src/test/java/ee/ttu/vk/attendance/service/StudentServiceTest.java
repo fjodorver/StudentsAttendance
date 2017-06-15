@@ -44,9 +44,9 @@ public class StudentServiceTest {
     @Before
     public void setUp(){
         students = Lists.newArrayList();
-        students.add(newStudent(0L, "131000", "Abdul", "Al Hazred", new Programme().setName("RDIR32")));
-        students.add(newStudent(1L, "131001", "Vadim", "Strukov", new Programme().setName("RDIR32")));
-        students.add(newStudent(2L, "131002", "Iron", "Man", new Programme().setName("RDIR31")));
+//        students.add(newStudent(0L, "131000", "Abdul", "Al Hazred", new Programme().setName("RDIR32")));
+//        students.add(newStudent(1L, "131001", "Vadim", "Strukov", new Programme().setName("RDIR32")));
+//        students.add(newStudent(2L, "131002", "Iron", "Man", new Programme().setName("RDIR31")));
     }
 
     @Test
@@ -59,13 +59,13 @@ public class StudentServiceTest {
     @Test
     public void testSave() throws Exception {
         List<Student> studentList = Lists.newArrayList();
-        List<Programme> programmes = Lists.newArrayList(new Programme().setId(0L).setName("RDIR61"), new Programme().setId(0L).setName("RDIR12"));
-        studentList.add(newStudent(null, "131000", "Abdul", "Al Hazred", new Programme().setName("RDIR61")));
-        studentList.add(newStudent(null, "131001", "Vadim", "Strukov", new Programme().setName("RDIR61")));
-        studentList.add(newStudent(null, "131002", "Iron", "Man", new Programme().setName("RDIR12")));
-        studentList.add(newStudent(null, "131003", "Kino", "Man", new Programme().setName("RDIR12")));
-        given(studentRepository.findAll()).willReturn(students);
-        given(programmeRepository.findAll()).willReturn(programmes);
+//        List<Programme> programmes = Lists.newArrayList(new Programme().setId(0L).setName("RDIR61"), new Programme().setId(0L).setName("RDIR12"));
+//        studentList.add(newStudent(null, "131000", "Abdul", "Al Hazred", new Programme().setName("RDIR61")));
+//        studentList.add(newStudent(null, "131001", "Vadim", "Strukov", new Programme().setName("RDIR61")));
+//        studentList.add(newStudent(null, "131002", "Iron", "Man", new Programme().setName("RDIR12")));
+//        studentList.add(newStudent(null, "131003", "Kino", "Man", new Programme().setName("RDIR12")));
+//        given(studentRepository.findAll()).willReturn(students);
+//        given(programmeRepository.findAll()).willReturn(programmes);
         given(studentRepository.save(anyListOf(Student.class))).will(x -> x.getArguments()[0]);
         Student[] studentArray = Iterators.toArray(studentService.save(studentList).iterator(), Student.class);
         Assert.assertArrayEquals(Iterables.toArray(studentList, Student.class), studentArray);

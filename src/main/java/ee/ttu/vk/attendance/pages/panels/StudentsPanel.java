@@ -47,7 +47,7 @@ public class StudentsPanel extends Modal<List<Student>> {
         });
         studentsPanel.addColumn("Code", "code", "col-lg-2");
         studentsPanel.addColumn("Fullname", "fullname", "col-lg-8");
-        studentsPanel.addColumn("Programme", "programme", "col-lg-2");
+        studentsPanel.addColumn("Programme", "programme.name", "col-lg-2");
         add(studentsPanel, notificationPanel = new NotificationPanel("notificationPanel"));
         notificationPanel.setOutputMarkupId(true);
         studentsPanel.setVisibleFilterPanel(false);

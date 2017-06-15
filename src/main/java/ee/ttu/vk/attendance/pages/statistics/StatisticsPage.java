@@ -1,7 +1,5 @@
 package ee.ttu.vk.attendance.pages.statistics;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import ee.ttu.vk.attendance.CustomAuthenticatedWebSession;
 import ee.ttu.vk.attendance.domain.Attendance;
@@ -19,14 +17,10 @@ import org.apache.wicket.model.util.MapModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-/**
- * Created by Fjodor Vershinin on 4/1/2016.
- */
 public class StatisticsPage extends AbstractPage {
 
     @SpringBean
@@ -37,19 +31,19 @@ public class StatisticsPage extends AbstractPage {
 
     private ChartPanel chartPanel;
 
-    private AbstractDataProvider<Timetable, TimetableFilter> dataProvider = new TimetableDataProvider();
-
-    private TreeMap<Student, List<Attendance>> map = Maps.newTreeMap();
+    private TreeMap<Student, List<Attendance>> map = new TreeMap<>();
 
     public StatisticsPage() {
+        AbstractDataProvider<Timetable, TimetableFilter> dataProvider = new TimetableDataProvider();
         TablePanel<Timetable, TimetableFilter> tablePanel = new TablePanel<>("table", dataProvider);
         dataProvider.getFilterState().setDate(null);
         dataProvider.getFilterState().setTeacher(CustomAuthenticatedWebSession.getSession().getTeacher());
         tablePanel.addLink(new ResourceModel("table.subject").getObject(), "subject", (target, model) -> {
             Timetable timetable = model.getObject();
             Set<Attendance> attendances = Sets.newHashSet();
-            studentService.findAll(timetable.getProgramme())
-                    .forEach(x -> attendances.addAll(attendanceService.findAll(new Attendance().setStudent(x).setTimetable(timetable))));
+            for (Student student : studentService.findAll(timetable.getProgramme())) {
+                attendances.addAll(attendanceService.findAll(new Attendance(student, timetable)));
+            }
             map.clear();
             map.putAll(attendances.stream().collect(Collectors.groupingBy(Attendance::getStudent)));
             chartPanel.onModelChanged();

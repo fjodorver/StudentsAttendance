@@ -34,7 +34,7 @@ public class RepositoryTest {
 
     @Test
     public void findCoursesTest(){
-        teacherRepository.save(new Teacher().setUsername("Admin2").setFullname("Abdul Alhazred").setPassword("12345678").setRole("ADMIN"));
+//        teacherRepository.save(new Teacher().setUsername("Admin2").setFullname("Abdul Alhazred").setPassword("12345678").setRole("ADMIN"));
         Assert.assertEquals(2, teacherRepository.count());
     }
 
