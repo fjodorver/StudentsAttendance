@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import ee.ttu.vk.attendance.OffsetDateTimeConverter;
 import ee.ttu.vk.attendance.enums.Type;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Entity
 @NamedEntityGraph(name = "timetable.detail", attributeNodes = {@NamedAttributeNode("subject"), @NamedAttributeNode("programme"), @NamedAttributeNode("teacher")})

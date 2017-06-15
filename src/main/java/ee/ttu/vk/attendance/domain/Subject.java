@@ -1,6 +1,7 @@
 package ee.ttu.vk.attendance.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Entity
 public class Subject implements Serializable {
@@ -26,5 +28,10 @@ public class Subject implements Serializable {
     public Subject(String code, String name) {
         this.code = code;
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return code + ": " + name;
     }
 }

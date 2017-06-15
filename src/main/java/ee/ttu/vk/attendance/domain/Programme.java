@@ -2,6 +2,7 @@ package ee.ttu.vk.attendance.domain;
 
 import ee.ttu.vk.attendance.enums.GroupType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
+@EqualsAndHashCode(of = "id")
 @Entity
 public class Programme implements Serializable {
 
@@ -37,4 +39,9 @@ public class Programme implements Serializable {
     @OneToMany
     @Fetch(FetchMode.SUBSELECT)
     private List<Timetable> timetables;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

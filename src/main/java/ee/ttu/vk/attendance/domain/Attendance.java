@@ -2,12 +2,14 @@ package ee.ttu.vk.attendance.domain;
 
 import ee.ttu.vk.attendance.enums.Status;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Entity
 @NamedEntityGraph(name = "attendance.all", attributeNodes = {@NamedAttributeNode("student"), @NamedAttributeNode("timetable")})
